@@ -23,7 +23,7 @@ export const SIDEBAR_TABS: SidebarTab[] = [
   {
     key: "dashboard",
     icon: DashboardIcon,
-    path: "/dashboard",
+    path: "/",
     label: "Dashboard",
     bg: "#FD8D5B",
   },
