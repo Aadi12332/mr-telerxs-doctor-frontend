@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StatsOverview from "../components/cards/StatCard";
-import PlusIcon from "../assets/plusIcon.svg";
+import PlusIcon from "../assets/plusicon.svg";
 import type { StatItem } from "../components/cards/StatCard";
 import EyeIcon from "../assets/EyeIcon.svg";
 import CameraIcon from "../assets/cameraicon.svg";
