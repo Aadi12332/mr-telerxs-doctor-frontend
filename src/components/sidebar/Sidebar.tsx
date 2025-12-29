@@ -78,6 +78,10 @@ export default function Sidebar() {
 
 const activeTab =
   SIDEBAR_TABS.find((tab) => {
+    if (tab.key === "dashboard") {
+      return location.pathname === "/";
+    }
+
     if (tab.key === "materials") {
       return (
         location.pathname.startsWith(tab.path) ||
