@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import ProtectedRoute from "./ProtectedRoute";
+// import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import Dashboard from "../app/Dashboard";
 import Projects from "../app/Projects";
@@ -14,7 +14,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route element={<PublicRoute />}>
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/" element={<Dashboard />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/materials" element={<Materials />} />
@@ -24,9 +24,9 @@ const AppRoutes = () => {
         <Route path="/notifications" element={<Notifications />} />
       </Route>
 
-      <Route element={<ProtectedRoute />}>
+      {/* <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
-      </Route>
+      </Route> */}
     </Routes>
   );
 };
