@@ -32,7 +32,7 @@ export default function Navbar() {
               </NavLink>
           ))}
         </div>
-      <div className="flex gap-[16px] items-center gap-4">
+      <div className="flex items-center gap-4">
         <CustomButton title="Login" />
         <CustomButton title="Sign-Up" />
       </div>

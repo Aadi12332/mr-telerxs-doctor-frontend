@@ -16,6 +16,7 @@ type SidebarTab = {
   path: string;
   label: string;
   bg: string;
+  subtitle?: string;
 };
 
 export const SIDEBAR_TABS: SidebarTab[] = [
@@ -32,6 +33,7 @@ export const SIDEBAR_TABS: SidebarTab[] = [
     path: "/projects",
     label: "Projects & Calendar",
     bg: "#A855F7",
+    subtitle: "Drawings & Attachments"
   },
   {
     key: "tasks",
@@ -65,7 +67,7 @@ export const SIDEBAR_TABS: SidebarTab[] = [
     key: "notifications",
     icon: NotificationIcon,
     path: "/notifications",
-    label: "Notifications",
+    label: "Notification",
     bg: "#000000",
   },
 ];
@@ -74,13 +76,21 @@ export default function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const activeTab =
-    SIDEBAR_TABS.find((tab) =>
-      location.pathname.startsWith(tab.path)
-    )?.key || "dashboard";
+const activeTab =
+  SIDEBAR_TABS.find((tab) => {
+    if (tab.key === "materials") {
+      return (
+        location.pathname.startsWith(tab.path) ||
+        location.pathname.startsWith("/material-view-page")
+      );
+    }
+
+    return location.pathname.startsWith(tab.path);
+  })?.key || "dashboard";
+
 
   return (
-    <aside className="h-svh overflow-auto flex items-start w-[258px]">
+    <aside className="h-svh overflow-auto flex items-start min-w-[258px]">
       <div className="w-[67px] h-full bg-[#1D51A4] pt-[147px] flex flex-col items-end py-6 space-y-6">
         <div className="flex flex-col items-center">
           {SIDEBAR_TABS.map((tab) => {
@@ -138,12 +148,18 @@ export default function Sidebar() {
           {SIDEBAR_TABS.map((tab) => (
             <div key={tab.key} className="h-[74px] flex items-center">
               {activeTab === tab.key && (
-                <p
-                  className="h-[44px] flex justify-center px-3 min-w-[150px] items-center text-white font-bold text-[15px] rounded-[11px]"
-                  style={{ backgroundColor: tab.bg }}
-                >
-                  {tab.label}
-                </p>
+                <div className="flex flex-col gap-3 relative">
+                  <p
+                    className="h-[44px] flex justify-center px-3 min-w-[150px] items-center text-white font-bold text-[15px] rounded-[11px]"
+                    style={{ backgroundColor: tab.bg }}
+                  >
+                    {tab.label}
+                  </p>
+                  {
+                    tab.subtitle &&
+                    <div className="absolute px-1 py-3 cursor-pointer bg-[#F9FAFB] rounded-[11px] text-center top-[52px] left-0 text-[#A855F7] w-full">{tab.subtitle}</div>
+                  }
+                </div>
               )}
             </div>
           ))}

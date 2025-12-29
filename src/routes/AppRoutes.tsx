@@ -8,6 +8,7 @@ import Materials from "../app/Materials";
 import Reports from "../app/Reports";
 import Communication from "../app/Communication";
 import Notifications from "../app/Notifications";
+import MaterialsViewPage from "../app/MaterialsViewPage";
 
 const AppRoutes = () => {
   return (
@@ -17,6 +18,7 @@ const AppRoutes = () => {
         <Route path="/projects" element={<Projects />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/materials" element={<Materials />} />
+        <Route path="/material-view-page" element={<MaterialsViewPage />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/communication" element={<Communication />} />
         <Route path="/notifications" element={<Notifications />} />
