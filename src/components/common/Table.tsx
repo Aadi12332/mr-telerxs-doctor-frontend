@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EyeIcon from "../../assets/EyeIcon.svg";
 import EditIcon from "../../assets/EditIcon.svg";
 import LeftArrowIcon from "../../assets/left-arrow.svg";
@@ -29,6 +30,7 @@ export default function AllProjectsTable({ projects }: Props) {
   const [activeTab, setActiveTab] = useState<"overview" | "calendar">(
     "overview"
   );
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(23);
   return (
     <div>
@@ -144,7 +146,7 @@ export default function AllProjectsTable({ projects }: Props) {
 
                   <td className="px-6 py-6">
                     <div className="flex gap-4 text-[#2563EB]">
-                      <button className="hover:opacity-70">
+                      <button onClick={() => navigate("/project-view-page")} className="hover:opacity-70">
                         <img src={EyeIcon} alt="" />
                       </button>
                       <button className="hover:opacity-70">

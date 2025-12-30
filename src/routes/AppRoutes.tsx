@@ -9,6 +9,8 @@ import Reports from "../app/Reports";
 import Communication from "../app/Communication";
 import Notifications from "../app/Notifications";
 import MaterialsViewPage from "../app/MaterialsViewPage";
+import ProjectViewPage from "../app/ProjectViewPage"; 
+import DrawingAttachment from "../app/DrawingAttachment";
 
 const AppRoutes = () => {
   return (
@@ -16,6 +18,8 @@ const AppRoutes = () => {
       <Route element={<PublicRoute />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/project-view-page" element={<ProjectViewPage />} />
+        <Route path="/drawing-attachment" element={<DrawingAttachment />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/materials" element={<Materials />} />
         <Route path="/material-view-page" element={<MaterialsViewPage />} />

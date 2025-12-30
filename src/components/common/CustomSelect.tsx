@@ -10,7 +10,8 @@ type CustomSelectProps = {
   options: Option[];
   value: string;
   onChange: (value: string) => void;
-  width?: string; // optional (default 150px)
+  width?: string;
+  upperSide?: boolean;
 };
 
 export default function CustomSelect({
@@ -19,6 +20,7 @@ export default function CustomSelect({
   value,
   onChange,
   width = "150px",
+  upperSide = false,
 }: CustomSelectProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -58,17 +60,18 @@ export default function CustomSelect({
           stroke="currentColor"
           strokeWidth={2}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M19 9l-7 7-7-7"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
-      {/* Dropdown */}
       {open && (
-        <div className="absolute mt-2 w-full bg-white rounded-[8px] border shadow-lg overflow-hidden z-50">
+        <div
+          className={`
+            absolute w-full bg-white rounded-[8px] border shadow-lg
+            overflow-hidden z-50
+            ${upperSide ? "bottom-full mb-2" : "top-full mt-2"}
+          `}
+        >
           {options.map((opt) => {
             const selected = opt.value === value;
             return (
@@ -94,11 +97,7 @@ export default function CustomSelect({
                     stroke="currentColor"
                     strokeWidth={3}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
-                    />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 )}
               </button>
@@ -109,3 +108,4 @@ export default function CustomSelect({
     </div>
   );
 }
+

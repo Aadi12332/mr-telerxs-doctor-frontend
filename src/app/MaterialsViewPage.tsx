@@ -1,37 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import StatsOverview from "../components/cards/StatCard";
-import type { StatItem } from "../components/cards/StatCard";
 import BackArrow from "../assets/backarrowicon.svg";
 import PlusIcon from "../assets/plusicon.svg";
 import UploadImg from "../assets/uploadimg.png";
 import UploadCamera from "../assets/uploadcameraicon.svg";
 import RequestMaterialModel from "../components/requestMaterialModel";
 import PhotoModel from "../components/photoModel";
-
-const stats: StatItem[] = [
-  {
-    key: "activeProjects",
-    title: "Pending",
-    value: 1,
-  },
-  {
-    key: "completionRate",
-    title: "Approved",
-    value: 1,
-  },
-  {
-    key: "pendingMaterials",
-    title: "Dispatched",
-    value: 1,
-  },
-  {
-    key: "safetyScore",
-    title: "Delivered",
-    value: 1,
-  },
-];
-
 
 export default function MaterialsViewPage() {
   const navigate = useNavigate();
@@ -68,7 +42,6 @@ export default function MaterialsViewPage() {
               Statement of Work (SOW)
             </h1>
         </div>
-        <StatsOverview stats={stats} />
       </div>
       <div
         className="
