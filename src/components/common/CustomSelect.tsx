@@ -46,10 +46,10 @@ export default function CustomSelect({
           w-full bg-white px-4 h-[40px]
           rounded-[8px] border
           flex items-center justify-between
-          text-sm font-medium
+          text-sm
         "
       >
-        <span className="truncate">{selectedLabel}</span>
+        <span className="truncate text-[#111827]">{selectedLabel}</span>
 
         <svg
           className={`w-4 h-4 transition-transform ${

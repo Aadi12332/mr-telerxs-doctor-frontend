@@ -89,6 +89,16 @@ const stats: StatItem[] = [
 export default function Notifications() {
   const [active, setActive] = useState("all");
 
+  const filteredNotifications = notifications.filter((item) => {
+    if (active === "all") return true;
+    if (active === "unread") return false;
+    if (active === "leads") return item.type.toLowerCase() === "lead";
+    if (active === "tasks") return item.type.toLowerCase() === "task";
+    if (active === "meetings") return item.type.toLowerCase() === "meeting";
+    if (active === "escalations") return item.type.toLowerCase().includes("escalation");
+    return true;
+  });
+
   return (
     <div className="space-y-6">
       <div>
@@ -102,11 +112,12 @@ export default function Notifications() {
         </div>
         <StatsOverview stats={stats} />
       </div>
+
       <div
         className="
-            rounded-[8px] p-6 px-10 border !bg-white border-[#F3F4F6]
-            !shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
-          "
+          rounded-[8px] p-6 px-10 border !bg-white border-[#F3F4F6]
+          !shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
+        "
       >
         <div className="flex items-center gap-4 flex-wrap">
           <span className="text-[#111827] text-[17px]">Filter by:</span>
@@ -119,13 +130,13 @@ export default function Notifications() {
                 key={item.value}
                 onClick={() => setActive(item.value)}
                 className={`
-                    px-6 py-2 rounded-[8px] text-sm transition
-                    ${
-                      isActive
-                        ? "bg-[#2563EB] text-white"
-                        : "bg-[#F3F4F6] text-[#4B5563]"
-                    }
-                  `}
+                  px-6 py-2 rounded-[8px] text-sm transition
+                  ${
+                    isActive
+                      ? "bg-[#2563EB] text-white"
+                      : "bg-[#F3F4F6] text-[#4B5563]"
+                  }
+                `}
               >
                 {item.label}
                 {item.count !== undefined && (
@@ -136,49 +147,59 @@ export default function Notifications() {
           })}
         </div>
       </div>
+
       <div
         className="
-        rounded-[8px] border !bg-white border-[#F3F4F6] py-10
-        !shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
-      "
+          rounded-[8px] border !bg-white border-[#F3F4F6] py-10
+          !shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
+        "
       >
         <div className="divide-y">
-          {notifications.map((item) => (
-            <div key={item.id} className="flex gap-4 px-10 pb-6 last:pb-0 pt-6 first:pt-0">
+          {filteredNotifications.length > 0 ? (
+            filteredNotifications.map((item) => (
               <div
-                className={`w-10 min-w-10 h-10 rounded-xl flex items-center justify-center text-lg ${item.iconBg}`}
+                key={item.id}
+                className="flex gap-4 px-10 pb-6 last:pb-0 pt-6 first:pt-0"
               >
-                <img src={item.icon} alt="" />
-              </div>
+                <div
+                  className={`w-10 min-w-10 h-10 rounded-xl flex items-center justify-center text-lg ${item.iconBg}`}
+                >
+                  <img src={item.icon} alt="" />
+                </div>
 
-              <div className="flex-1">
-                <p className="text-[14px] font-semibold text-[#4B5563]">
-                  {item.title}
-                </p>
-                <p className="text-[14px] text-[#3D3D3D] mt-1.5">
-                  {item.description}
-                </p>
+                <div className="flex-1">
+                  <p className="text-[14px] font-semibold text-[#4B5563]">
+                    {item.title}
+                  </p>
+                  <p className="text-[14px] text-[#3D3D3D] mt-1.5">
+                    {item.description}
+                  </p>
 
-                <div className="flex items-center gap-3 mt-4">
-                  <span className="text-[12px] text-[#3D3D3D]">
-                    {item.time}
-                  </span>
+                  <div className="flex items-center gap-3 mt-4">
+                    <span className="text-[12px] text-[#3D3D3D]">
+                      {item.time}
+                    </span>
 
-                  <span
-                    className={`px-3 py-1 rounded-full text-[13px] font-medium ${priorityStyle(
-                      item.priority
-                    )}`}
-                  >
-                    {item.priority}
-                  </span>
+                    <span
+                      className={`px-3 py-1 rounded-full text-[13px] font-medium ${priorityStyle(
+                        item.priority
+                      )}`}
+                    >
+                      {item.priority}
+                    </span>
 
-                  <span className="px-3 py-1 rounded-full text-[12px] bg-[#F3F4F6] text-[#3D3D3D]">
-                    {item.type}
-                  </span>
+                    <span className="px-3 py-1 rounded-full text-[12px] bg-[#F3F4F6] text-[#3D3D3D]">
+                      {item.type}
+                    </span>
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="py-20 text-center">
+              <p className="text-[#6B7280] text-[15px]">No data found</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>
