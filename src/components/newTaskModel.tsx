@@ -1,6 +1,5 @@
 import { useState } from "react";
 import CustomSelect from "./common/CustomSelect";
-import UploadCameraIcon from "../assets/uploadcameraicon.svg";
 
 type IssueReportingModalProps = {
   open: boolean;
