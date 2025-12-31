@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import DailyLogModel from "../dailyLogModel";
+import NewTaskModel from "../newTaskModel";
 type TaskPriority = "High" | "Medium" | "Low";
 
 type Task = {
@@ -73,18 +75,29 @@ const priorityStyles: Record<TaskPriority, string> = {
 };
 
 export default function TaskBoard() {
+    const [openDailyLogModel, setDailyLogModel] = useState(false);
+    const [openNewTaskModel, setNewTaskModel] = useState(false);
+  
   return (
     <div className="bg-white rounded-[8px] p-8 border border-[#F3F4F6]
       shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-[17px] font-semibold">Task Board</h2>
         <div className="flex gap-4">
-          <button className="bg-[#3AB449] text-white px-6 py-2 rounded-[8px] text-[16px] font-normal">
+          <button onClick={() => setDailyLogModel(true)} className="bg-[#3AB449] text-white px-6 py-2 rounded-[8px] text-[16px] font-normal">
             Daily Work Log
           </button>
-          <button className="bg-[#2563EB] text-white px-6 py-2 rounded-[8px] text-[16px] font-normal">
+          <button onClick={() => setNewTaskModel(true)} className="bg-[#2563EB] text-white px-6 py-2 rounded-[8px] text-[16px] font-normal">
             Add Task
           </button>
+          <DailyLogModel
+            open={openDailyLogModel}
+            onClose={() => setDailyLogModel(false)}
+          />
+          <NewTaskModel
+            open={openNewTaskModel}
+            onClose={() => setNewTaskModel(false)}
+          />
         </div>
       </div>
 
