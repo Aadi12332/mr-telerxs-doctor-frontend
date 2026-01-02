@@ -87,7 +87,7 @@ export default function CustomSelect({
                   text-sm hover:bg-gray-50
                 "
               >
-                <span>{opt.label}</span>
+                <span className="text-start">{opt.label}</span>
 
                 {selected && (
                   <svg

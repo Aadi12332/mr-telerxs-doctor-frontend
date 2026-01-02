@@ -83,13 +83,13 @@ export default function ProjectViewPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-2 mb-8">
-        <div className="flex items-center justify-start gap-5">
+      <div className="flex lg:flex-row flex-col lg:items-center justify-between gap-2 mb-8">
+        <div className="flex sm:flex-row flex-col sm:items-center justify-start gap-5">
             <button onClick={() => navigate("/projects")}
               className="
                 flex items-center gap-2
                 bg-[#3F63E1] text-white
-                px-3
+                px-3 w-fit
                 h-[36px]
                 rounded-[8px]
                 text-[14px] font-medium
@@ -104,7 +104,7 @@ export default function ProjectViewPage() {
               Statement of Work (SOW)
             </h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <CustomSelect
             title="All Projects"
             options={projectFilterOptions}
@@ -116,7 +116,7 @@ export default function ProjectViewPage() {
             className="
               flex items-center gap-2
               bg-[#3F63E1] text-white
-              px-5 rounded-lg h-[36px]
+              px-5 rounded-lg h-[36px] min-w-fit
               text-sm font-medium
               hover:opacity-90 transition
             "
@@ -127,7 +127,7 @@ export default function ProjectViewPage() {
       </div>
       <div
         className="
-          rounded-[8px] p-6 border !bg-white border-[#F3F4F6]
+          rounded-[8px] lg:p-6 p-3 border !bg-white border-[#F3F4F6]
           !shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
         "
       >
@@ -209,7 +209,7 @@ export default function ProjectViewPage() {
       </div>
       <div
           className="
-            rounded-[8px] p-6 border !bg-white border-[#F3F4F6]
+            rounded-[8px] lg:p-6 p-3 border !bg-white border-[#F3F4F6]
             !shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
           "
         >
@@ -217,11 +217,11 @@ export default function ProjectViewPage() {
             Key Deliverables
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-6 gap-3">
             {deliverables.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-4 bg-[#F9FAFB] rounded-lg px-5 py-4"
+                className="flex items-center gap-4 bg-[#F9FAFB] rounded-lg lg:px-5 px-3 lg:py-4 py-3"
               >
                 <div className="w-10 h-10 rounded-full bg-[#1E40AF] flex items-center justify-center text-white font-medium">
                   {item.id}
@@ -236,7 +236,7 @@ export default function ProjectViewPage() {
       </div>
       <div
       className="
-        rounded-[8px] p-6 border !bg-white border-[#F3F4F6]
+        rounded-[8px] lg:p-6 p-3 border !bg-white border-[#F3F4F6]
         !shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
       "
     >
@@ -248,7 +248,7 @@ export default function ProjectViewPage() {
         {phases.map((phase, idx) => (
           <div
             key={idx}
-            className="flex items-center justify-between rounded-[8px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-6 py-5"
+            className="flex items-center justify-between rounded-[8px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] lg:px-5 px-3 lg:py-4 py-3"
           >
             <div>
               <p className="text-sm font-semibold text-[#111827]">
@@ -281,7 +281,7 @@ export default function ProjectViewPage() {
       </div>
       <div
       className="
-        rounded-[8px] p-6 border !bg-white border-[#F3F4F6]
+        rounded-[8px] lg:p-6 p-3 border !bg-white border-[#F3F4F6]
         !shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)]
       "
     >
@@ -295,7 +295,7 @@ export default function ProjectViewPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 lg:gap-6 gap-3">
         {files.map((file, idx) => (
           <div
             key={idx}
@@ -318,10 +318,10 @@ export default function ProjectViewPage() {
 
             <div className="flex items-center gap-4">
               <button className="hover:opacity-70">
-                <img src={DownloadIcon} alt="" />
+                <img src={DownloadIcon} alt="" className="min-w-fit" />
               </button>
               <button className="hover:opacity-70">
-                <img src={EyeIcon} alt="" />
+                <img src={EyeIcon} alt="" className="min-w-fit" />
               </button>
             </div>
           </div>

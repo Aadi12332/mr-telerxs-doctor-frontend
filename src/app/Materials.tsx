@@ -12,27 +12,39 @@ import CustomSelect from "../components/common/CustomSelect";
 import IssueReportingModal from "../components/reportingIssueModel";
 import RequestMaterialModel from "../components/requestMaterialModel";
 import PhotoModel from "../components/photoModel";
+import FolderIcon from "../assets/clockicon.svg";
+import BoxIcon from "../assets/dispatchicon.svg";
+import ShieldCheckIcon from "../assets/SieldIcon";
+import RightCheckIcon from "../assets/RightTickIcon";
 
 const stats: StatItem[] = [
   {
     key: "activeProjects",
     title: "Pending",
     value: 1,
+    icon: FolderIcon,
+    bg: "#EAB308"
   },
   {
     key: "completionRate",
     title: "Approved",
     value: 1,
+    iconsvg: <RightCheckIcon color="#9333EA" />,
+    bg: "#9333EA"
   },
   {
     key: "pendingMaterials",
     title: "Dispatched",
     value: 1,
+    icon: BoxIcon,
+    bg: "#1D51A4"
   },
   {
     key: "safetyScore",
     title: "Delivered",
     value: 1,
+    iconsvg: <ShieldCheckIcon color="#3AB449" />,
+    bg: "#3AB449"
   },
 ];
 
@@ -123,13 +135,13 @@ export default function Materials() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex xl:flex-row flex-col gap-6 xl:items-center justify-between mb-8">
           <div>
             <h1 className="text-[#111827] lg:text-[30px] text-[24px] font-bold leading-[36px]">
               Material Requests & Tracking
             </h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <CustomSelect
               title="All Requests"
               options={options}
@@ -167,103 +179,110 @@ export default function Materials() {
         </div>
         <StatsOverview stats={stats} />
 
-        <div className="rounded-[8px] bg-white border border-[#F3F4F6] shadow overflow-hidden mt-6">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="text-[12px] uppercase text-[#6B7280] bg-[#F9FAFB] border-b">
-                <th className="px-6 py-4 font-normal text-start">Request</th>
-                <th className="px-6 py-4 font-normal text-start">Project</th>
-                <th className="px-6 py-4 font-normal text-start">Material</th>
-                <th className="px-6 py-4 font-normal text-start">Timeline</th>
-                <th className="px-6 py-4 font-normal text-start">Status</th>
-                <th className="px-6 py-4 font-normal text-start">Supplier</th>
-                <th className="px-6 py-4 font-normal text-start">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {requests.map((r) => (
-                <tr
-                  key={r.id}
-                  className="border-b last:border-b-0 even:bg-[#F9FAFB]"
-                >
-                  <td className="px-6 py-6">
-                    <p className="text-sm text-[#111827]">{r.requestNo}</p>
-                    <p className="text-xs text-[#6B7280] mt-1">
-                      by {r.requestedBy}
-                    </p>
-                  </td>
-
-                  <td className="px-6 py-6">
-                    <p className="text-sm text-[#111827]">{r.projectName}</p>
-                    <p className="text-xs text-[#6B7280] mt-1">
-                      {r.projectCode}
-                    </p>
-                  </td>
-
-                  <td className="px-6 py-6">
-                    <p className="text-sm text-[#111827]">{r.material}</p>
-                    <p className="text-xs text-[#6B7280] mt-1">{r.quantity}</p>
-                    <p className="text-xs text-[#6B7280]">{r.spec}</p>
-                  </td>
-
-                  <td className="px-6 py-6">
-                    <p className="text-sm text-[#111827]">
-                      Need by: {r.needBy}
-                    </p>
-                    <p className="text-xs text-[#6B7280] mt-1">
-                      Delivery: {r.delivery}
-                    </p>
-                  </td>
-
-                  <td className="px-6 py-6">
-                    <span
-                      className={`px-4 py-1 rounded-full text-sm ${
-                        statusStyle[r.status]
-                      }`}
-                    >
-                      {r.status}
-                    </span>
-                  </td>
-
-                  <td className="px-6 py-6 text-sm text-[#111827]">
-                    {r.supplier}
-                  </td>
-
-                  <td className="px-6 py-6">
-                    <div className="flex gap-4 text-[#2563EB]">
-                      <button onClick={() => navigate("/material-view-page")} className="hover:opacity-70">
-                        <img src={EyeIcon} alt="" />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSelectedRequestId(r.id);
-                          setPhotoModel(true);
-                        }}
-                        className="hover:opacity-70"
-                      >
-                        <img src={CameraIcon} alt="" />
-                      </button>
-                    </div>
-                  </td>
+        <div className="rounded-[8px] bg-white border border-[#F3F4F6] shadow mt-6 overflow-hidden">
+          <div className="overflow-x-auto scroll-hide w-[calc(100vw-26px)] lg:w-[calc(100vw-324px)]">
+            <table className="min-w-[900px] w-full border-collapse rounded-[8px]">
+              <thead>
+                <tr className="text-[12px] uppercase text-[#6B7280] bg-[#F9FAFB] border-b">
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal text-start">Request</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal text-start">Project</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal text-start">Material</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal text-start">Timeline</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal text-start">Status</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal text-start">Supplier</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal text-start">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {requests.map((r) => (
+                  <tr
+                    key={r.id}
+                    className="border-b last:border-b-0 even:bg-[#F9FAFB]"
+                  >
+                    <td className="lg:px-6 px-3 lg:py-6 py-3">
+                      <p className="text-sm text-[#111827]">{r.requestNo}</p>
+                      <p className="text-xs text-[#6B7280] mt-1">
+                        by {r.requestedBy}
+                      </p>
+                    </td>
+
+                    <td className="lg:px-6 px-3 lg:py-6 py-3">
+                      <p className="text-sm text-[#111827]">{r.projectName}</p>
+                      <p className="text-xs text-[#6B7280] mt-1">
+                        {r.projectCode}
+                      </p>
+                    </td>
+
+                    <td className="lg:px-6 px-3 lg:py-6 py-3">
+                      <p className="text-sm text-[#111827]">{r.material}</p>
+                      <p className="text-xs text-[#6B7280] mt-1">
+                        {r.quantity}
+                      </p>
+                      <p className="text-xs text-[#6B7280]">{r.spec}</p>
+                    </td>
+
+                    <td className="lg:px-6 px-3 lg:py-6 py-3">
+                      <p className="text-sm text-[#111827]">
+                        Need by: {r.needBy}
+                      </p>
+                      <p className="text-xs text-[#6B7280] mt-1">
+                        Delivery: {r.delivery}
+                      </p>
+                    </td>
+
+                    <td className="lg:px-6 px-3 lg:py-6 py-3">
+                      <span
+                        className={`px-4 py-1 rounded-full text-sm ${
+                          statusStyle[r.status]
+                        }`}
+                      >
+                        {r.status}
+                      </span>
+                    </td>
+
+                    <td className="lg:px-6 px-3 lg:py-6 py-3 text-sm text-[#111827]">
+                      {r.supplier}
+                    </td>
+
+                    <td className="lg:px-6 px-3 lg:py-6 py-3">
+                      <div className="flex gap-4 text-[#2563EB]">
+                        <button
+                          onClick={() => navigate("/material-view-page")}
+                          className="hover:opacity-70"
+                        >
+                          <img src={EyeIcon} alt="" className="min-w-fit" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedRequestId(r.id);
+                            setPhotoModel(true);
+                          }}
+                          className="hover:opacity-70"
+                        >
+                          <img src={CameraIcon} alt="" className="min-w-fit" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <PhotoModel
-            open={openPhotoModel}
-            requestId={selectedRequestId}
-            onClose={() => {
-              setPhotoModel(false);
-              setSelectedRequestId(null);
-            }}
-          />
+          open={openPhotoModel}
+          requestId={selectedRequestId}
+          onClose={() => {
+            setPhotoModel(false);
+            setSelectedRequestId(null);
+          }}
+        />
 
         <div
           className="
-            rounded-[8px] p-6 border !bg-white border-[#F3F4F6] mt-6
+            rounded-[8px] lg:p-6 p-3 border !bg-white border-[#F3F4F6] mt-6
             !shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
           "
         >
@@ -271,7 +290,7 @@ export default function Materials() {
             Material Requests & Tracking
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="flex items-center gap-4 border border-[#4ADE80] rounded-[8px] p-4 bg-[#F0FDF4]">
               <div className="text-[#166534] mt-1">
                 <img src={DoubleCheck} alt="Double Check" />

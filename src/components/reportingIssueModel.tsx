@@ -24,8 +24,8 @@ export default function IssueReportingModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onClose}>
-      <div className="w-full max-w-[640px] bg-white rounded-xl shadow-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
-        <div className="px-6 py-4 border-b">
+      <div className="md:max-w-[640px] w-[96%] bg-white rounded-xl shadow-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
+        <div className="lg:px-6 px-3 py-4 border-b">
           <h2 className="text-lg font-semibold text-[#111827]">
             Issue Reporting
           </h2>

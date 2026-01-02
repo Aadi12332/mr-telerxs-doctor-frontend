@@ -4,10 +4,9 @@ export default function ProjectOverviewCard() {
   const progressPercent = Math.round((completed / total) * 100);
 
   return (
-    <div className="bg-white rounded-[8px] p-8 border border-[#F3F4F6]
+    <div className="bg-white rounded-[8px] lf:p-8 p-3 border border-[#F3F4F6]
       shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]">
 
-      {/* Header */}
       <div className="mb-8">
         <h2 className="text-[20px] font-semibold text-[#111827]">
           Downtown Office Complex
@@ -15,10 +14,8 @@ export default function ProjectOverviewCard() {
         <p className="text-[#6B7280] text-sm mt-1">PRJ-001</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-10">
-        {/* LEFT */}
+      <div className="grid md:grid-cols-2 grid-cols-1 xl:gap-10 gap-6">
         <div>
-          {/* Task Progress */}
           <h3 className="text-[16px] font-semibold mb-4">Task Progress</h3>
 
           <div className="flex justify-between text-sm text-[#6B7280] mb-2">
@@ -35,7 +32,6 @@ export default function ProjectOverviewCard() {
             />
           </div>
 
-          {/* Stats */}
           <div className="flex gap-12 mb-8">
             <div className="text-center">
               <p className="text-[#5DBB63] text-[22px] font-semibold">
@@ -55,7 +51,6 @@ export default function ProjectOverviewCard() {
             </div>
           </div>
 
-          {/* Timeline Status */}
           <h3 className="text-[16px] font-semibold mb-4">Timeline Status</h3>
 
           <div className="bg-[#F9FAFB] rounded-xl p-4 space-y-3">
@@ -82,7 +77,6 @@ export default function ProjectOverviewCard() {
           </div>
         </div>
 
-        {/* RIGHT */}
         <div>
           <h3 className="text-[18px] font-semibold mb-6">
             Project Milestones

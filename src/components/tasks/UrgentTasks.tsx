@@ -31,15 +31,15 @@ export default function UrgentTasks() {
       className="rounded-[8px] bg-white border border-[#F3F4F6]
       shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]"
     >
-      <div className="px-6 py-4 border-b border-[#E5E7EB]">
+      <div className="lg:px-6 px-3 py-4 border-b border-[#E5E7EB]">
         <h3 className="text-[18px] text-[#111827]">
           Urgent Tasks
         </h3>
       </div>
 
-      <div className="p-6 space-y-6">
+      <div className="lg:p-6 p-3 lg:space-y-6 space-y-3">
         {tasks.map((task, idx) => (
-          <div key={idx} className="flex items-start gap-4 border-l-4 border-[#F87171] pl-5">
+          <div key={idx} className="flex items-start gap-4 border-l-4 border-[#F87171] lg:pl-5 pl-2">
             <div className="flex-1">
               <p className="text-[16px] text-[#111827]">
                 {task.title}

@@ -30,11 +30,11 @@ export default function DrawingPreviewModal({
       onClick={onClose}
     >
       <div
-        className="w-[92%] max-w-[1100px] max-h-[95vh] bg-white rounded-2xl overflow-auto scroll-hide"
+        className="w-[96%] max-w-[1100px] max-h-[95vh] bg-white rounded-2xl overflow-auto scroll-hide"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-4 border-b flex items-center justify-between gap-2">
-          <div className="flex justify-start gap-4 items-center">
+        <div className="lg:px-6 px-3 py-4 border-b flex md:items-center items-start justify-between gap-2">
+          <div className="flex md:flex-row flex-col justify-start gap-4 md:items-center">
             <div className="space-y-1">
               <h2 className="text-xl font-semibold text-[#111827]">
                 Architectural Plans
@@ -42,17 +42,17 @@ export default function DrawingPreviewModal({
               <p className="text-sm text-[#6B7280]">PEB-1021</p>
             </div>
 
-            <div className="flex items-center gap-10 text-sm text-[#111827]">
+            <div className="flex flex-wrap items-center lg:gap-10 gap-3 text-sm text-[#111827]">
               <div>
-                <p className="text-[#6B7280]">Location</p>
+                <p className="text-[#6B7280] max-w-[200px] min-w-[100px]">Location</p>
                 <p>Pune, Maharashtra</p>
               </div>
               <div>
-                <p className="text-[#6B7280]">Uploaded By</p>
+                <p className="text-[#6B7280] max-w-[200px] min-w-[100px]">Uploaded By</p>
                 <p>Rahul Sharma</p>
               </div>
               <div>
-                <p className="text-[#6B7280]">Received on</p>
+                <p className="text-[#6B7280] max-w-[200px] min-w-[100px]">Received on</p>
                 <p>25-April-2025</p>
               </div>
             </div>
@@ -60,13 +60,13 @@ export default function DrawingPreviewModal({
 
           <img
             src={CloseIcon}
-            className="w-4 cursor-pointer"
+            className="w-4 cursor-pointer mt-2 md:mt-0"
             onClick={onClose}
             alt=""
           />
         </div>
 
-        <div className="bg-[#F9FAFB] flex justify-center items-center px-6 py-4">
+        <div className="bg-[#F9FAFB] flex justify-center items-center lg:px-6 px-3 py-4">
           <img
             src={
                 fileId === "Approved"
@@ -81,8 +81,8 @@ export default function DrawingPreviewModal({
 
         </div>
 
-        <div className="px-6 py-4 flex justify-between items-center border-t">
-          <button className="flex items-center gap-2 bg-[#9CA3AF] text-white px-5 py-1 rounded-full">
+        <div className="lg:px-6 px-3 py-4 flex sm:flex-row flex-col gap-3 sm:justify-between items-end sm:items-center border-t">
+          <button className="flex items-center gap-2 bg-[#9CA3AF] text-white px-5 py-1 rounded-full w-fit">
             <img src={DownloadIcon} className="brightness-[10]" alt="" />
             Download
           </button>
@@ -108,16 +108,16 @@ export default function DrawingPreviewModal({
           </div>
         </div>
         {fileId == "Pending" && (
-          <div className="px-6 py-3 border-t flex gap-4 items-center">
-            <div className="h-[40px] border rounded-lg flex items-center gap-1 flex-1 px-4">
+          <div className="lg:px-6 px-3 py-3 border-t flex sm:gap-4 gap-2 items-center">
+            <div className="h-[40px] border rounded-lg flex items-center gap-1 flex-1 sm:px-4 px-2">
               <input
                 placeholder="Type your Comment..."
                 className="flex-1 outline-none"
               />
               <img src={LinkIcon} alt="" />
             </div>
-            <button className="bg-[#2563EB] text-white px-6 py-2 h-10 rounded-lg">
-              Send Comment
+            <button className="bg-[#2563EB] text-white sm:px-6 px-3 py-2 h-10 rounded-lg">
+              Send <span className="hidden sm:inline-block">Comment</span>
             </button>
           </div>
         )}

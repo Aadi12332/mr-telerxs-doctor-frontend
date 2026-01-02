@@ -28,10 +28,10 @@ export default function DailyLogModel({
       onClick={onClose}
     >
       <div
-        className="w-full max-h-[98vh] max-w-[550px] bg-white rounded-xl shadow-lg overflow-auto scroll-hide"
+        className="w-[96%] max-h-[98vh] max-w-[550px] bg-white rounded-xl shadow-lg overflow-auto scroll-hide"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-4 border-b">
+        <div className="lg:px-6 px-3 py-4 border-b">
           <h2 className="text-lg font-semibold text-[#111827]">
             Daily Work Log
           </h2>

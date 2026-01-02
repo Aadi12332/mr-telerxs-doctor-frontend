@@ -30,10 +30,10 @@ const [status, setStatus] = useState("all");
       onClick={onClose}
     >
       <div
-        className="w-full max-w-[486px] bg-white rounded-xl shadow-lg overflow-hidden"
+        className="w-[96%] max-w-[486px] bg-white rounded-xl shadow-lg overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-4 border-b flex items-center justify-between gap-2">
+        <div className="lg:px-6 px-3 py-4 border-b flex items-center justify-between gap-2">
           <h2 className="text-lg font-semibold text-[#111827]">
             Upload Drawings & Images
           </h2>

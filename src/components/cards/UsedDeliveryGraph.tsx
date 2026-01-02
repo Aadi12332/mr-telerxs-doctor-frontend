@@ -103,7 +103,7 @@ export default function MaterialUsageVsDelivery() {
       className="rounded-[8px] bg-white border border-[#F3F4F6]
       shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]"
     >
-      <div className="px-6 py-4 border-b border-[#E5E7EB]">
+      <div className="lg:px-6 px-3 py-4 border-b border-[#E5E7EB]">
         <h3 className="text-[18px] text-[#1F2937]">
           Material Usage vs Delivery
         </h3>

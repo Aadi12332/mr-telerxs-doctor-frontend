@@ -30,7 +30,7 @@ export default function RecentProjects() {
   ];
 
   return (
-    <div className="rounded-[8px] p-6 border border-[#F3F4F6] bg-white
+    <div className="rounded-[8px] sm:p-6 p-3 border border-[#F3F4F6] bg-white
       shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]"
     >
       <div className="flex justify-between items-center pb-4 border-b border-[#E5E7EB]">
@@ -55,7 +55,7 @@ export default function RecentProjects() {
                   {p.name}
                 </p>
                  <span
-                    className={`px-3 py-1 rounded-full text-[12px] ${p.statusBg} ${p.statusText}`}
+                    className={`px-3 py-1 rounded-full min-w-max text-[12px] ${p.statusBg} ${p.statusText}`}
                   >
                     {p.status}
                   </span>

@@ -34,7 +34,7 @@ export default function AllProjectsTable({ projects }: Props) {
   const [selectedDate, setSelectedDate] = useState(23);
   return (
     <div>
-      <div className="flex items-center justify-between mb-5 mt-11">
+      <div className="flex flex-wrap items-center justify-between gap-6 mb-5 mt-11">
         <h2 className="text-[18px] font-bold text-[#111827]">All Projects</h2>
 
         <div className="flex bg-[#F3F4F6] rounded-[10px] p-1 h-11 border border-[#E5E7EB]">
@@ -70,101 +70,106 @@ export default function AllProjectsTable({ projects }: Props) {
             shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
             overflow-hidden"
         >
-          <table className="w-full border-collapse">
-            <thead className="bg-white">
-              <tr className="text-left text-[12px] uppercase text-[#6B7280] border-b border-[#E5E7EB]">
-                <th className="px-6 py-4 font-normal">Project</th>
-                <th className="px-6 py-4 font-normal">Client</th>
-                <th className="px-6 py-4 font-normal">Timeline</th>
-                <th className="px-6 py-4 font-normal">Progress</th>
-                <th className="px-6 py-4 font-normal">Team</th>
-                <th className="px-6 py-4 font-normal">Status</th>
-                <th className="px-6 py-4 font-normal">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {projects.map((project) => (
-                <tr
-                  key={project.id}
-                  className="border-b border-[#E5E7EB] last:border-b-0"
-                >
-                  <td className="px-6 py-6">
-                    <p className="text-[13.8px] text-[#111827]">
-                      {project.name}
-                    </p>
-                    <p className="text-[12px] text-[#6B7280] mt-1">
-                      {project.code}
-                    </p>
-                  </td>
-
-                  <td className="px-6 py-6 text-[#111827] text-[14px]">
-                    {project.client}
-                  </td>
-
-                  <td className="px-6 py-6">
-                    <p className="text-[#111827] text-[14px]">
-                      {project.startDate}
-                    </p>
-                    <p className="text-[12px] text-[#6B7280]">
-                      to {project.endDate}
-                    </p>
-                  </td>
-
-                  <td className="px-6 py-6">
-                    <div className="w-[120px]">
-                      <div className="h-2 bg-[#E5E7EB] rounded-full">
-                        <div
-                          className="h-2 bg-[#2563EB] rounded-full"
-                          style={{ width: `${project.progress}%` }}
-                        />
-                      </div>
-                      <p className="text-[14px] mt-2 text-[#111827]">
-                        {project.progress}%
-                      </p>
-                    </div>
-                  </td>
-
-                  <td className="px-6 py-6 space-y-2">
-                    {project.team.map((member, idx) => (
-                      <div key={idx} className="flex items-center gap-3">
-                        <span className="bg-[#F3F4F6] text-[#111827] text-[12px] px-3 py-1 rounded-md">
-                          {member.role}
-                        </span>
-                        <span className="text-[#6B7280] text-[12px]">
-                          {member.name}
-                        </span>
-                      </div>
-                    ))}
-                  </td>
-
-                  <td className="px-6 py-6">
-                    <span className="bg-[#DBEAFE] text-[#1E40AF] px-4 py-1 rounded-full text-[14px]">
-                      {project.status}
-                    </span>
-                  </td>
-
-                  <td className="px-6 py-6">
-                    <div className="flex gap-4 text-[#2563EB]">
-                      <button onClick={() => navigate("/project-view-page")} className="hover:opacity-70">
-                        <img src={EyeIcon} alt="" />
-                      </button>
-                      <button className="hover:opacity-70">
-                        <img src={EditIcon} alt="" />
-                      </button>
-                    </div>
-                  </td>
+          <div className="overflow-x-auto scroll-hide w-[calc(100vw-26px)] lg:w-[calc(100vw-324px)]">
+            <table className="min-w-[900px] w-full border-collapse rounded-[8px]">
+              <thead className="bg-white">
+                <tr className="text-left text-[12px] uppercase text-[#6B7280] border-b border-[#E5E7EB]">
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Project</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Client</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Timeline</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Progress</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Team</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Status</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {projects.map((project) => (
+                  <tr
+                    key={project.id}
+                    className="border-b border-[#E5E7EB] last:border-b-0"
+                  >
+                    <td className="lg:px-6 px-3 lg:py-6 py-3">
+                      <p className="text-[13.8px] text-[#111827]">
+                        {project.name}
+                      </p>
+                      <p className="text-[12px] text-[#6B7280] mt-1">
+                        {project.code}
+                      </p>
+                    </td>
+
+                    <td className="lg:px-6 px-3 lg:py-6 py-3 text-[#111827] text-[14px]">
+                      {project.client}
+                    </td>
+
+                    <td className="lg:px-6 px-3 lg:py-6 py-3">
+                      <p className="text-[#111827] text-[14px]">
+                        {project.startDate}
+                      </p>
+                      <p className="text-[12px] text-[#6B7280]">
+                        to {project.endDate}
+                      </p>
+                    </td>
+
+                    <td className="lg:px-6 px-3 lg:py-6 py-3">
+                      <div className="w-[120px]">
+                        <div className="h-2 bg-[#E5E7EB] rounded-full">
+                          <div
+                            className="h-2 bg-[#2563EB] rounded-full"
+                            style={{ width: `${project.progress}%` }}
+                          />
+                        </div>
+                        <p className="text-[14px] mt-2 text-[#111827]">
+                          {project.progress}%
+                        </p>
+                      </div>
+                    </td>
+
+                    <td className="lg:px-6 px-3 lg:py-6 py-3 space-y-2">
+                      {project.team.map((member, idx) => (
+                        <div key={idx} className="flex items-center gap-3">
+                          <span className="bg-[#F3F4F6] text-[#111827] text-[12px] px-3 py-1 rounded-md">
+                            {member.role}
+                          </span>
+                          <span className="text-[#6B7280] text-[12px]">
+                            {member.name}
+                          </span>
+                        </div>
+                      ))}
+                    </td>
+
+                    <td className="lg:px-6 px-3 lg:py-6 py-3">
+                      <span className="bg-[#DBEAFE] text-[#1E40AF] px-4 py-1 rounded-full text-[14px]">
+                        {project.status}
+                      </span>
+                    </td>
+
+                    <td className="lg:px-6 px-3 lg:py-6 py-3">
+                      <div className="flex gap-4 text-[#2563EB]">
+                        <button
+                          onClick={() => navigate("/project-view-page")}
+                          className="hover:opacity-70"
+                        >
+                          <img src={EyeIcon} alt="" className="w-fit" />
+                        </button>
+                        <button className="hover:opacity-70">
+                          <img src={EditIcon} alt="" className="w-fit" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
       {activeTab === "calendar" && (
-        <div className="grid grid-cols-[2fr_1fr] gap-6">
+        <div className="grid lg:grid-cols-[2fr_1fr] gap-6">
           <div className="bg-white rounded-[12px] border border-[#E5E7EB]">
-            <div className="px-6 py-5 border-b border-[#E5E7EB]">
+            <div className="lg:p-6 p-3 border-b border-[#E5E7EB]">
               <h3 className="text-[17px] font-bold text-[#111827]">
                 Upcoming Events
               </h3>
@@ -186,7 +191,7 @@ export default function AllProjectsTable({ projects }: Props) {
               </div>
             </div>
 
-            <div className="px-6 py-6">
+            <div className="lg:p-6 p-3">
               <div className="grid grid-cols-7 text-center text-[13px] text-gray-500 mb-4">
                 {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
                   <div key={d}>{d}</div>
@@ -223,7 +228,7 @@ export default function AllProjectsTable({ projects }: Props) {
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="bg-white rounded-[12px] border border-[#E5E7EB] px-6 py-5">
+            <div className="bg-white rounded-[12px] border border-[#E5E7EB] lg:p-6 p-3">
               <h3 className="text-[18px] font-bold mb-4">Event Types</h3>
 
               <div className="space-y-4">
@@ -246,7 +251,7 @@ export default function AllProjectsTable({ projects }: Props) {
               </div>
             </div>
 
-            <div className="bg-white rounded-[12px] border border-[#E5E7EB] px-6 py-5">
+            <div className="bg-white rounded-[12px] border border-[#E5E7EB] lg:p-6 p-3">
               <h3 className="text-[18px] font-bold mb-4">Upcoming Events</h3>
 
               <div className="space-y-4">
@@ -266,7 +271,7 @@ export default function AllProjectsTable({ projects }: Props) {
                 ].map((e) => (
                   <div
                     key={e.title}
-                    className="flex items-center justify-between bg-gray-50 rounded-[10px] px-4 py-4"
+                    className="flex items-center gap-2 justify-between bg-gray-50 rounded-[10px] xl:px-4 xl:py-4 p-2"
                   >
                     <div className="flex items-start gap-4">
                       <span

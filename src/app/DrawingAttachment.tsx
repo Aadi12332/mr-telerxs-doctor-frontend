@@ -126,9 +126,9 @@ export default function DrawingAttachment() {
                 shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
                 overflow-hidden"
         >
-          <div className="flex items-center justify-between gap-2 px-6 py-4 border-b border-[#0000001A]">
+          <div className="flex flex-wrap items-center justify-between gap-2 lg:px-6 px-3 py-4 border-b border-[#0000001A]">
             <p>Projects & Drawings</p>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center flex-wrap">
               <button
                 onClick={() => {
                   setDrawingModel(true);
@@ -138,26 +138,26 @@ export default function DrawingAttachment() {
                 <img src={PlusIcon} alt="" />
                 Upload Drawings & images
               </button>
-              <div className="flex gap-2 items-center px-2 border border-[#D1D5DB] rounded-[8px] h-[38px] min-w-[256px]">
+              <div className="flex gap-2 items-center px-2 border border-[#D1D5DB] rounded-[8px] h-[38px]">
                 <img src={SearchIcon} alt="" />
                 <input
                   type="text"
                   placeholder="Search leads, projects..."
-                  className="text-[14px] outline-none"
+                  className="text-[14px] outline-none lg:min-w-[256px] w-[150px]"
                 />
               </div>
             </div>
           </div>
-          <div className="space-y-6 px-6 py-4">
+          <div className="space-y-6 lg:px-6 px-3 py-4">
             {projects.map((project, idx) => (
               <div
                 key={idx}
                 className="
-                        rounded-[8px] p-6 border !bg-white border-[#F3F4F6]
+                        rounded-[8px] lg:p-6 p-3 border !bg-white border-[#F3F4F6]
                         !shadow-[0px_0px_4px_0px_rgba(0,0,0,0.26)]
                     "
               >
-                <div className="flex justify-between items-start mb-6">
+                <div className="flex md:flex-row flex-col gap-6 justify-between items-start mb-6">
                   <div>
                     <p className="text-lg font-semibold text-[#111827]">
                       {project.name}
@@ -167,20 +167,20 @@ export default function DrawingAttachment() {
                     </p>
                   </div>
 
-                  <div className="flex gap-10 text-sm">
-                    <div className="w-[100px]">
+                  <div className="flex flex-wrap sm:gap-10 gap-4 text-sm">
+                    <div className="sm:w-[100px] w-full">
                       <p className="text-[#4B5563] text-xs leading-[21px]">Uploaded By:</p>
                       <p className="text-black text-[14px] leading-[21px]">
                         {project.uploadedBy}
                       </p>
                     </div>
-                    <div className="w-[100px]">
-                      {/* <p className="text-[#4B5563] text-xs leading-[21px]">Location:</p> */}
+                    <div className="sm:w-[100px] w-full">
+                      <p className="text-[#4B5563] text-xs leading-[21px]">Location:</p>
                       <p className="text-black text-[14px] leading-[21px]">
                         {project.location}
                       </p>
                     </div>
-                    <div className="w-[100px]">
+                    <div className="sm:w-[100px] w-full">
                       <p className="text-[#4B5563] text-xs leading-[21px]">Last Update on</p>
                       <p className="text-black text-[14px] leading-[21px]">
                         {project.updatedOn}
@@ -189,15 +189,15 @@ export default function DrawingAttachment() {
                   </div>
                 </div>
 
-                <p className="text-sm font-semibold text-[#111827] mb-4">
+                <p className="text-sm font-semibold text-[#111827] md:mb-4 mb-6">
                   Attachments & Drawings
                 </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 xl:grid-cols-3 sm:grid-cols-2 gap-6">
                   {project.files.map((file) => (
                     <div
                       key={file.id}
-                      className="relative flex items-center justify-between rounded-xl border border-[#E5E7EB] px-5 py-4"
+                      className="relative flex items-center justify-between gap-2 rounded-xl border border-[#E5E7EB] px-5 py-4"
                     >
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-lg bg-pink-100 flex items-center justify-center">
@@ -216,7 +216,7 @@ export default function DrawingAttachment() {
 
                       <div className="flex items-center gap-4">
                         <button className="hover:opacity-70">
-                          <img src={DownloadIcon} alt="" />
+                          <img src={DownloadIcon} alt="" className="min-w-fit" />
                         </button>
 
                         <button
@@ -227,7 +227,7 @@ export default function DrawingAttachment() {
                             setDrawingPreviewModel(true);
                           }}
                         >
-                          <img src={EyeIcon} alt="" />
+                          <img src={EyeIcon} alt="" className="min-w-fit" />
                         </button>
                       </div>
 

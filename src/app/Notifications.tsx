@@ -5,6 +5,7 @@ import AssignedIcon from "../assets/assignedicon.svg";
 import MeetingIcon from "../assets/meetingicon.svg";
 import RedAlertIcon from "../assets/redalerticon.svg";
 import ReminderIcon from "../assets/remindericon.svg";
+import NotificationBellIcon from "../assets/NotificationCardIcon";
 
 const filters = [
   { label: "All", value: "all" },
@@ -68,21 +69,25 @@ const stats: StatItem[] = [
     key: "activeProjects",
     title: "Total",
     value: 8,
+    iconsvg: <NotificationBellIcon color="#1D51A4" />,
   },
   {
     key: "completionRate",
     title: "Unread",
     value: 3,
+    iconsvg: <NotificationBellIcon color="#3AB449" />,
   },
   {
     key: "pendingMaterials",
     title: "High Priority",
     value: 3,
+    iconsvg: <NotificationBellIcon color="#EAB308" />,
   },
   {
     key: "safetyScore",
     title: "Today",
     value: 5,
+    iconsvg: <NotificationBellIcon color="#FD8D5B" />,
   },
 ];
 
@@ -115,11 +120,11 @@ export default function Notifications() {
 
       <div
         className="
-          rounded-[8px] p-6 px-10 border !bg-white border-[#F3F4F6]
+          rounded-[8px] lg:p-6 lg:px-10 p-3 border !bg-white border-[#F3F4F6]
           !shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
         "
       >
-        <div className="flex items-center gap-4 flex-wrap">
+        <div className="flex items-center md:gap-4 gap-2 flex-wrap">
           <span className="text-[#111827] text-[17px]">Filter by:</span>
 
           {filters.map((item) => {
@@ -130,7 +135,7 @@ export default function Notifications() {
                 key={item.value}
                 onClick={() => setActive(item.value)}
                 className={`
-                  px-6 py-2 rounded-[8px] text-sm transition
+                  md:px-6 px-2 py-2 min-w-[60px] rounded-[8px] text-sm transition
                   ${
                     isActive
                       ? "bg-[#2563EB] text-white"
@@ -150,7 +155,7 @@ export default function Notifications() {
 
       <div
         className="
-          rounded-[8px] border !bg-white border-[#F3F4F6] py-10
+          rounded-[8px] border !bg-white border-[#F3F4F6] lg:py-10 py-5
           !shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
         "
       >
@@ -159,10 +164,10 @@ export default function Notifications() {
             filteredNotifications.map((item) => (
               <div
                 key={item.id}
-                className="flex gap-4 px-10 pb-6 last:pb-0 pt-6 first:pt-0"
+                className="flex sm:gap-4 gap-2 lg:px-10 px-3 lg:pb-6 pb-3 last:pb-0 lg:pt-6 pt-3 first:pt-0"
               >
                 <div
-                  className={`w-10 min-w-10 h-10 rounded-xl flex items-center justify-center text-lg ${item.iconBg}`}
+                  className={`w-8 min-w-8 h-8 sm:w-10 sm:min-w-10 sm:h-10 sm:rounded-xl rounded-md flex items-center justify-center text-lg ${item.iconBg}`}
                 >
                   <img src={item.icon} alt="" />
                 </div>

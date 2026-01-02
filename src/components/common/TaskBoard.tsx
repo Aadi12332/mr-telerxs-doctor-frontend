@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DailyLogModel from "../dailyLogModel";
 import NewTaskModel from "../newTaskModel";
+import RightCheckIcon from "../../assets/RightTickIcon";
 type TaskPriority = "High" | "Medium" | "Low";
 
 type Task = {
@@ -63,6 +64,7 @@ const tasks: {
       description:
         "Complete electrical wiring installation for first floor units",
       priority: "Low",
+      due: "NA",
       assignee: "Robert Chen",
     },
   ],
@@ -79,9 +81,9 @@ export default function TaskBoard() {
     const [openNewTaskModel, setNewTaskModel] = useState(false);
   
   return (
-    <div className="bg-white rounded-[8px] p-8 border border-[#F3F4F6]
+    <div className="bg-white rounded-[8px] lg:p-8 p-3 border border-[#F3F4F6]
       shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex sm:flex-row flex-col gap-3 sm:justify-between sm:items-center mb-6">
         <h2 className="text-[17px] font-semibold">Task Board</h2>
         <div className="flex gap-4">
           <button onClick={() => setDailyLogModel(true)} className="bg-[#3AB449] text-white px-6 py-2 rounded-[8px] text-[16px] font-normal">
@@ -101,21 +103,23 @@ export default function TaskBoard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
-        <Column title={`To Do (${tasks.todo.length})`} bg="bg-[#F9FAFB]">
-          {tasks.todo.map(renderTask)}
-        </Column>
+      <div className="overflow-auto scroll-hide w-[calc(100vw-50px)] lg:w-[calc(100vw-388px)]">
+        <div className="grid grid-cols-3 lg:gap-6 gap-3 min-w-[800px]">
+          <Column title={`To Do (${tasks.todo.length})`} bg="bg-[#F9FAFB]">
+            {tasks.todo.map(renderTask)}
+          </Column>
 
-        <Column
-          title={`In Progress (${tasks.inProgress.length})`}
-          bg="bg-[#EFF6FF]"
-        >
-          {tasks.inProgress.map(renderTask)}
-        </Column>
+          <Column
+            title={`In Progress (${tasks.inProgress.length})`}
+            bg="bg-[#EFF6FF]"
+          >
+            {tasks.inProgress.map(renderTask)}
+          </Column>
 
-        <Column title={`Done (${tasks.done.length})`} bg="bg-[#F0FDF4]">
-          {tasks.done.map(renderTask)}
-        </Column>
+          <Column title={`Done (${tasks.done.length})`} bg="bg-[#F0FDF4]">
+            {tasks.done.map(renderTask)}
+          </Column>
+        </div>
       </div>
     </div>
   );
@@ -126,11 +130,17 @@ function renderTask(task: Task) {
     <div key={task.id} className="bg-white rounded-xl p-4 shadow-sm mb-4">
       <div className="flex justify-between items-start mb-2">
         <h3 className="font-bold text-[14px] text-[#111827]">{task.title}</h3>
-        <span
-          className={`px-3 py-1 rounded-full text-sm ${priorityStyles[task.priority]}`}
-        >
-          {task.priority}
-        </span>
+        {
+          task.due !== "NA" ?
+          <span
+            className={`px-3 py-1 rounded-full text-sm ${priorityStyles[task.priority]}`}
+          >
+            {task.priority}
+          </span> :
+          <>
+            <RightCheckIcon />
+          </>
+        }
       </div>
 
       <p className="text-gray-600 text-sm mb-2">{task.project}</p>
@@ -152,7 +162,10 @@ function renderTask(task: Task) {
       )}
 
       <div className="flex justify-between text-sm text-gray-600">
-        <span>{task.due ? `Due ${task.due}` : "Completed"}</span>
+        <span>
+          {task.due && task.due !== "NA" ? `Due ${task.due}` : "Completed"}
+        </span>
+
         <span>{task.assignee}</span>
       </div>
     </div>

@@ -11,26 +11,35 @@ import DelayComaprisonGraph from "../components/cards/DelayComaprisonGraph";
 import DelayProgress from "../components/tables/DelayProgress";
 import InfoIcon from "../assets/InfoIcon.svg";
 import type {StatItem} from "../components/cards/StatCard";
+import FolderIcon from "../assets/activeproject.svg";
+import MoneyIcon from "../assets/completionicon.svg";
+import BoxIcon from "../assets/pendingmaterialicon.svg";
+import ShieldIcon from "../assets/safetyscoreicon.svg";
+
 const stats: StatItem[] = [
   {
     key: "activeProjects",
     title: "Active Projects",
     value: 12,
+    icon: FolderIcon,
   },
   {
     key: "completionRate",
     title: "Completion Rate",
     value: "78%",
+    icon: MoneyIcon,
   },
   {
     key: "pendingMaterials",
     title: "Pending Materials",
-    value: 8,
+    value: 8, 
+    icon: BoxIcon,
   },
   {
     key: "safetyScore",
     title: "Safety Score",
     value: "95%",
+    icon: ShieldIcon,
   },
 ];
 
@@ -38,7 +47,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex sm:flex-row flex-col sm:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-[#111827] lg:text-[30px] text-[24px] font-bold mb-2 leading-[36px]">Dashboard Overview</h1>
             <p className="text-[#4B5563] lg:text-[16px] text-[14px]">Construction Department Performance</p>
@@ -59,22 +68,22 @@ export default function Dashboard() {
 
       <RecentProjects />
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
         <UrgentTasks />
         <PlannedVsActualChart />
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
         <UsedDeliveryGraph />
         <DelayComaprisonGraph />
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
         <SafetyCompliance />
         <DelayProgress />
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
         <ResourceUtilizationDistribution />
       </div>
 

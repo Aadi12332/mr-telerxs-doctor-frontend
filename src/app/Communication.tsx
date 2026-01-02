@@ -5,6 +5,8 @@ import InfoCircleIcon from "../assets/infocircleicon.svg";
 import VideoCallIcon from "../assets/videocallicon.svg";
 import ChatInfoDrawer from "../components/chatInfoModal";
 import MegaphoneIcon from "../assets/megaphoneicon.svg";
+import BackArrowIcon from "../assets/backarrowicon.svg";
+import ChatIcon from "../assets/chaticon.svg";
 
 const departments = [
   { name: "Marketing Team", color: "bg-blue-500", count: 3 },
@@ -33,6 +35,7 @@ export default function Communication() {
     "departments"
   );
   const [activeChat, setActiveChat] = useState(false);
+  const [mobileChatOpen, setMobileChatOpen] = useState(false);
   const [chatMeta, setChatMeta] = useState<{
     name: string;
     type: "department" | "direct";
@@ -42,7 +45,7 @@ export default function Communication() {
     <div className="h-[calc(100vh-130px)] rounded-xl overflow-hidden">
       <div className="h-full overflow-hide bg-[#F9FAFB] rounded-xl border border-[#E5E7EB] relative">
         <div className="flex border-b">
-          <div className="w-[320px] border-r flex flex-col bg-white">
+          <div className={`md:w-[320px] w-full md:border-r flex-col bg-white ${mobileChatOpen ? "hidden" : "flex"}`}>
             <div className="p-4 flex items-center gap-3 border-b">
               <div className="relative">
                 <img
@@ -91,7 +94,7 @@ export default function Communication() {
               </button>
             </div>
 
-            <div className="p-2 space-y-1 h-[calc(100vh-446px)] overflow-auto scroll-hide">
+            <div className="p-2 space-y-1 h-[calc(100vh-438px)] overflow-auto scroll-hide">
               {activeTab === "departments" &&
                 departments.map((item) => (
                   <div
@@ -102,6 +105,9 @@ export default function Communication() {
                         name: item.name,
                         type: "department",
                       });
+                      if (window.innerWidth < 767) {
+                        setMobileChatOpen(true);
+                      }
                     }}
                     className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer
                       ${
@@ -139,6 +145,9 @@ export default function Communication() {
                         name: user.name,
                         type: "direct",
                       });
+                      if (window.innerWidth < 767) {
+                        setMobileChatOpen(true);
+                      }
                     }}
                     className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer
                       ${
@@ -166,15 +175,17 @@ export default function Communication() {
               <span className="text-xl">+ New Chat</span>
             </div>
           </div>
-          <div className="flex-1 flex flex-col">
+          <div className={`flex-1 ${mobileChatOpen ? "md:flex" : "hidden"} md:flex flex-col`}>
             <div className="flex-1 flex flex-col ">
               {!activeChat ? (
                 <div className="flex-1 flex flex-col items-center justify-center text-center">
-                  <div className="text-gray-300 text-6xl mb-4">💬</div>
+                  <div className="text-gray-300 text-6xl mb-4">
+                    <img src={ChatIcon} alt="" />
+                  </div>
                   <p className="text-lg font-medium text-[#111827]">
                     Select a chat to start messaging
                   </p>
-                  <p className="text-sm text-[#6B7280] mt-2 max-w-sm">
+                  <p className="text-sm text-[#6B7280] mt-2 max-w-lg">
                     Choose from your departments, direct messages, or
                     cross-department channels
                   </p>
@@ -182,11 +193,14 @@ export default function Communication() {
               ) : (
                 <>
                   <div className="border-b px-6 py-4 flex items-center justify-between bg-white">
-                    <div className="flex items-center cursor-pointer gap-3" onClick={() => setOpenInfoModal(true)}>
-                      <div className="w-10 h-10 rounded-lg bg-blue-500 flex items-center justify-center text-white">
+                    <div className="flex items-center cursor-pointer gap-3">
+                      <div className="h-10 flex items-center md:hidden">
+                        <img src={BackArrowIcon} alt="" className="invert" onClick={() => setMobileChatOpen(false)} />
+                      </div>
+                      <div className="w-10 h-10 rounded-lg bg-blue-500 flex items-center justify-center text-white" onClick={() => setOpenInfoModal(true)}>
                         <img src={MegaphoneIcon} alt="" />
                       </div>
-                      <div>
+                      <div onClick={() => setOpenInfoModal(true)}>
                         <p className="font-semibold text-[#111827]">
                           Marketing Team
                         </p>
@@ -196,14 +210,14 @@ export default function Communication() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-5 text-[#6B7280]">
+                    <div className="flex items-center md:gap-5 gap-2 text-[#6B7280]">
                       <img className="cursor-pointer" src={CallIcon} alt="" />
                       <img className="cursor-pointer" src={VideoCallIcon} alt="" />
                       <img onClick={() => setOpenInfoModal(true)} className="cursor-pointer" src={InfoCircleIcon} alt="" />
                     </div>
                   </div>
 
-                  <div className="p-6 space-y-6 h-[calc(100vh-330px)] overflow-auto bg-white">
+                  <div className="p-6 space-y-6 h-[calc(100vh-316px)] overflow-auto bg-white">
                     <div className="flex gap-3 items-start">
                       <img
                         src="https://i.pravatar.cc/40?img=3"
@@ -334,11 +348,11 @@ export default function Communication() {
             </div>
           </div>
         </div>
-        <div className="flex items-center">
-          <div className="w-[320px] px-4 py-1 text-sm text-[#6B7280] items-center flex justify-center gap-1">
-            🟢 Online <span className="text-3xl">·</span> 4 users online
+        <div className="flex items-center h-11">
+          <div className={`md:w-[320px] w-full px-4 py-1 text-sm text-[#6B7280] items-center justify-center gap-1 ${mobileChatOpen ? "hidden" : "flex"} md:flex`}>
+            <span className="inline-block mr-1">🟢</span> Online <span className="text-3xl">·</span> 4 users online
           </div>
-          <div className=" flex-1 text-center text-xs text-[#6B7280] py-3">
+          <div className={`flex-1 text-center text-xs text-[#6B7280] py-3 ${mobileChatOpen ? "md:flex" : "hidden"} md:flex justify-center`}>
             Last sync: just now
           </div>
         </div>

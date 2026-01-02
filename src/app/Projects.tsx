@@ -2,27 +2,35 @@ import StatsOverview from "../components/cards/StatCard";
 import type {StatItem} from "../components/cards/StatCard";
 import ProjectsTable from "../components/common/Table";
 import type {Project} from "../components/common/Table";
+import FolderIcon from "../assets/activeproject.svg";
+import MoneyIcon from "../assets/completionicon.svg";
+import BoxIcon from "../assets/pendingmaterialicon.svg";
+import ShieldIcon from "../assets/safetyscoreicon.svg";
 
 const stats: StatItem[] = [
   {
     key: "activeProjects",
     title: "Total Projects",
     value: 12,
+    icon: FolderIcon,
   },
   {
     key: "completionRate",
     title: "Active",
     value: 9,
+    icon: MoneyIcon,
   },
   {
     key: "pendingMaterials",
     title: "Upcoming",
     value: 8,
+    icon: BoxIcon,
   },
   {
     key: "safetyScore",
     title: "Completed",
     value: 1,
+    icon: ShieldIcon,
   },
 ];
 
