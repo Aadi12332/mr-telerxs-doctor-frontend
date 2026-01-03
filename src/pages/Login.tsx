@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import loginsideimg from "../assets/loginimg.jpg";
 import closeicon from "../assets/closeicon.svg";
 import closeeyeicon from "../assets/closeeyeicon.svg";
-import eyeicon from "../assets/eyeicon.svg";
+import EyeIcon from "../assets/eyeicon.svg";
 import logo from "../assets/logo.svg";
 
 export default function Login() {
@@ -75,7 +75,7 @@ export default function Login() {
                 className="absolute right-3 top-2.5"
               >
                 <img
-                  src={showPassword ? closeeyeicon : eyeicon}
+                  src={showPassword ? closeeyeicon : EyeIcon}
                   alt="Toggle Password"
                   className="w-5 h-5"
                 />
