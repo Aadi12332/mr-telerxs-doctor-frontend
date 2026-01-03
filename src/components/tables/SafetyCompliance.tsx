@@ -13,7 +13,7 @@ export default function SafetyComplianceOverTime() {
     },
 
     grid: {
-      left: 30,
+      left: 10,
       right: 30,
       top: 90,
       bottom: 30,
@@ -22,13 +22,13 @@ export default function SafetyComplianceOverTime() {
 
     legend: {
       top: 30,
-      left: 24,
-      itemGap: 24,
+      left: 10,
+      itemGap: 10,
       icon: "circle",
       itemWidth: 14,
       itemHeight: 14,
       textStyle: {
-        fontSize: 15,
+        fontSize: 14,
         color: "#374151",
       },
       data: [
@@ -69,6 +69,52 @@ export default function SafetyComplianceOverTime() {
 
     series: [
       {
+        name: "Safe (≥95%)",
+        color: "#10B981",
+        type: "line",
+        data: data.map((v) => ({
+          value: v,
+          itemStyle: {
+            color:
+              v >= 95
+                ? "#10B981"
+                : v >= 90
+                ? "#F97316"
+                : "#EF4444",
+          },
+        })),
+        symbol: "circle",
+        symbolSize: 10,
+        lineStyle: {
+          color: "#6B7280",
+          width: 2,
+        },
+      },
+        {
+        name: "Warning (90-94%)",
+        color: "#F97316",
+        type: "line",
+        data: data.map((v) => ({
+          value: v,
+          itemStyle: {
+            color:
+              v >= 95
+                ? "#10B981"
+                : v >= 90
+                ? "#F97316"
+                : "#EF4444",
+          },
+        })),
+        symbol: "circle",
+        symbolSize: 10,
+        lineStyle: {
+          color: "#6B7280",
+          width: 2,
+        },
+      },
+        {
+        name: "Critical (<90%)",
+        color: "#EF4444",
         type: "line",
         data: data.map((v) => ({
           value: v,

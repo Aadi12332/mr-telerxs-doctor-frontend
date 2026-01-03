@@ -1,36 +1,18 @@
 import ReactECharts from "echarts-for-react";
 
 export default function ResourceUtilizationDistribution() {
-  const data = [
-    { name: "Labor", value: 78, color: "#3B82F6" },
-    { name: "Material", value: 92, color: "#F59E0B" },
-    { name: "Equipment", value: 85, color: "#10B981" },
-    { name: "Admin", value: 65, color: "#8B5CF6" },
+  const colors = [
+    "#3B82F6", // Labor
+    "#3B82F6", // Material
+    "#3B82F6", // Equipment
+    "#3B82F6", // Admin
   ];
 
   const option = {
     tooltip: { show: false },
 
     series: [
-      {
-        type: "pie",
-        radius: ["65%", "80%"],
-        center: ["50%", "45%"],
-        clockwise: true,
-        avoidLabelOverlap: true,
-        label: { show: false },
-        labelLine: { show: false },
-
-        data: data.map((d) => ({
-          value: d.value,
-          name: d.name,
-          itemStyle: {
-            color: d.color,
-            borderColor: "#fff",
-            borderWidth: 6,
-          },
-        })),
-      },
+      // 🔹 Base grey ring
       {
         type: "pie",
         radius: ["65%", "80%"],
@@ -39,10 +21,44 @@ export default function ResourceUtilizationDistribution() {
         label: { show: false },
         data: [
           {
-            value: 100,
-            itemStyle: { color: "#F3F4F6" },
+            value: 1,
+            itemStyle: { color: "#E5E7EB" },
           },
         ],
+      },
+
+      // 🔹 Colored ticks + gaps
+      {
+        type: "pie",
+        radius: ["65%", "80%"],
+        center: ["50%", "45%"],
+        silent: true,
+        startAngle: 90,
+        clockwise: true,
+        label: { show: false },
+        labelLine: { show: false },
+
+        data: colors.flatMap((c:any) => [
+          {
+            value: 0.3, 
+            itemStyle: { color: "#F59E0B" },
+          },
+          {
+            value: 1.2, 
+            itemStyle: {
+              color: c,
+            },
+          },
+          {
+            value: 0.3, 
+            itemStyle: { color: "#F59E0B" },
+          },
+          {
+            value: 4.8,
+            itemStyle: { color: "transparent" },
+          },
+        ]),
+
       },
     ],
   };
@@ -58,30 +74,57 @@ export default function ResourceUtilizationDistribution() {
         </h3>
       </div>
 
+      {/* Chart */}
       <div className="relative h-[260px]">
-        <ReactECharts option={option} style={{ height: "100%" }} />
+        <ReactECharts
+          option={option}
+          style={{ height: "100%", width: "100%" }}
+        />
 
+        {/* Center text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <p className="text-[28px] font-semibold text-[#111827]">80%</p>
+          <p className="text-[28px] font-semibold text-[#111827]">
+            80%
+          </p>
           <p className="text-[14px] text-gray-500">
             Total Utilization
           </p>
         </div>
       </div>
 
-      <div className="px-6 pb-6 grid grid-cols-2 gap-y-4 gap-x-8">
-        {data.map((d) => (
-          <div key={d.name} className="flex items-center gap-3">
-            <span
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: d.color }}
-            />
-            <div>
-              <p className="text-[14px] text-[#1F2937]">{d.name}</p>
-              <p className="text-[13px] text-gray-500">{d.value}%</p>
-            </div>
-          </div>
-        ))}
+      {/* Legend */}
+      <div className="px-6 pb-6 grid grid-cols-2 gap-y-4 gap-x-10">
+        <Legend color="#3B82F6" label="Labor" value="78%" />
+        <Legend color="#10B981" label="Equipment" value="85%" />
+        <Legend color="#F59E0B" label="Material" value="92%" />
+        <Legend color="#8B5CF6" label="Admin" value="65%" />
+      </div>
+    </div>
+  );
+}
+
+function Legend({
+  color,
+  label,
+  value,
+}: {
+  color: string;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <span
+        className="w-3.5 h-3.5 rounded-full mt-1"
+        style={{ backgroundColor: color }}
+      />
+      <div>
+        <p className="text-[14px] text-[#1F2937] leading-tight">
+          {label}
+        </p>
+        <p className="text-[13px] text-gray-500">
+          {value}
+        </p>
       </div>
     </div>
   );
