@@ -1,4 +1,4 @@
-export default function Dashboard() {
+export default function MedicineOrder() {
   return (
     <div className="space-y-6">
 

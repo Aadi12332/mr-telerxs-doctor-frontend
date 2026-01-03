@@ -1,16 +1,33 @@
-import Sidebar from "../components/sidebar/Sidebar";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "../components/header/Header";
-import { useState } from "react";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  
+const NO_HEADER_ROUTES = [
+  "/login",
+  "/otp",
+  "/signup",
+  "/forget-password",
+  "/new-credential",
+];
+
+export default function Layout() {
+  const location = useLocation();
+
+  const hideHeader = NO_HEADER_ROUTES.some((route) =>
+    location.pathname.startsWith(route)
+  );
+
   return (
     <div className="flex min-h-screen bg-[#E5ECFF]">
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
       <div className="flex flex-1 flex-col">
-        <Header  onToggleSidebar={() => setSidebarOpen((p) => !p)} />
-        <main className="lg:px-8 px-3 py-6 h-[calc(100vh-81px)] overflow-auto scroll-hide">{children}</main>
+        {!hideHeader && <Header />}
+
+        <main
+          className={`overflow-auto scroll-hide bg-white ${
+            hideHeader ? "h-screen" : "h-[calc(100vh-159px)]"
+          }`}
+        >
+          <Outlet />
+        </main>
       </div>
     </div>
   );
