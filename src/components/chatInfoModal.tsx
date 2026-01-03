@@ -25,12 +25,12 @@ export default function ChatInfoDrawer({ open, onClose }: Props) {
           </button>
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#3B82F6] rounded-[8px] flex items-center justify-center">
                 <img src={MegaphoneIcon} alt="" />
             </div>
 
             <div>
-                <p className="font-semibold text-[#111827]">Marketing Team</p>
+                <p className="font-semibold text-[#111827] text-base">Marketing Team</p>
                 <p className="text-sm text-[#6B7280]">2 members · Marketing</p>
             </div>
           </div>
@@ -40,7 +40,7 @@ export default function ChatInfoDrawer({ open, onClose }: Props) {
           Marketing department discussions and campaigns
         </p>
 
-        <button className="flex items-center justify-center gap-2 px-4 py-4 pt-6 text-[#6B7280]">
+        <button className="flex items-center justify-center text-sm gap-2 px-4 py-4 pt-6 text-[#6B7280]">
            <img src={MuteIcon} alt="" />
            Mute
         </button>
@@ -50,7 +50,7 @@ export default function ChatInfoDrawer({ open, onClose }: Props) {
             onClick={() => setActiveTab("members")}
             className={`flex-1 py-3 text-sm ${
               activeTab === "members"
-                ? "text-blue-600 border-b-2 border-blue-600 font-medium"
+                ? "text-[#2563EB] border-b-2 border-[#2563EB] font-medium"
                 : "text-[#6B7280] border-b-2 border-transparent"
             }`}
           >
@@ -61,7 +61,7 @@ export default function ChatInfoDrawer({ open, onClose }: Props) {
             onClick={() => setActiveTab("files")}
             className={`flex-1 py-3 text-sm ${
               activeTab === "files"
-                ? "text-blue-600 border-b-2 border-blue-600 font-medium"
+                ? "text-[#2563EB] border-b-2 border-[#2563EB] font-medium"
                 : "text-[#6B7280] border-b-2 border-transparent"
             }`}
           >
@@ -75,40 +75,44 @@ export default function ChatInfoDrawer({ open, onClose }: Props) {
               <div className="flex items-center gap-3">
                 <img
                   src="https://i.pravatar.cc/40?img=1"
-                  className="w-10 h-10 rounded-full"
+                  className="w-8 h-8 rounded-full"
                 />
                 <div className="flex-1">
-                  <p className="font-medium text-[#111827]">John Doe</p>
-                  <p className="text-sm text-[#6B7280]">Marketing</p>
+                  <p className="font-medium text-[#111827] text-sm">John Doe</p>
+                  <p className="text-[12px] text-[#6B7280]">Marketing</p>
                 </div>
-                <span className="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-full">
+                <span className="px-3 py-1 text-xs bg-[#DBEAFE] text-[#2563EB] rounded-full">
+                  Admin
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <img
+                  src="https://i.pravatar.cc/40?img=1"
+                  className="w-8 h-8 rounded-full"
+                />
+                <div className="flex-1">
+                  <p className="font-medium text-[#111827] text-sm">John Doe</p>
+                  <p className="text-[12px] text-[#6B7280]">Marketing</p>
+                </div>
+                <span className="px-3 py-1 text-xs bg-[#DBEAFE] text-[#2563EB] rounded-full">
+                  Admin
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <img
+                  src="https://i.pravatar.cc/40?img=1"
+                  className="w-8 h-8 rounded-full"
+                />
+                <div className="flex-1">
+                  <p className="font-medium text-[#111827] text-sm">John Doe</p>
+                  <p className="text-[12px] text-[#6B7280]">Marketing</p>
+                </div>
+                <span className="px-3 py-1 text-xs bg-[#DBEAFE] text-[#2563EB] rounded-full">
                   Admin
                 </span>
               </div>
 
-              <div className="flex items-center gap-3">
-                <img
-                  src="https://i.pravatar.cc/40?img=2"
-                  className="w-10 h-10 rounded-full"
-                />
-                <div>
-                  <p className="font-medium text-[#111827]">James Wilson</p>
-                  <p className="text-sm text-[#6B7280]">Marketing</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <img
-                  src="https://i.pravatar.cc/40?img=2"
-                  className="w-10 h-10 rounded-full"
-                />
-                <div>
-                  <p className="font-medium text-[#111827]">James Wilson</p>
-                  <p className="text-sm text-[#6B7280]">Marketing</p>
-                </div>
-              </div>
-
-              <button className="flex items-center justify-center gap-2 !mt-6 w-full">
+              <button className="flex items-center text-[#6B7280] text-sm justify-center gap-2 !mt-6 w-full">
                 <img src={AddUserIcon} alt="" />
                  Add member
               </button>
@@ -118,15 +122,15 @@ export default function ChatInfoDrawer({ open, onClose }: Props) {
           {activeTab === "files" && (
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-[8px] bg-[#DBEAFE] flex items-center justify-center">
                   <img src={FileIcon} alt="" />
                 </div>
 
                 <div className="flex-1">
-                  <p className="font-medium text-[#111827]">
+                  <p className="font-medium text-sm text-[#000]">
                     Q1-Marketing-Budget-2024
                   </p>
-                  <p className="text-sm text-[#6B7280]">Sarah Johnson</p>
+                  <p className="text-[12px] text-[#6B7280]">Sarah Johnson</p>
                 </div>
 
                 <button>
@@ -135,15 +139,15 @@ export default function ChatInfoDrawer({ open, onClose }: Props) {
               </div>
               
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-[8px] bg-[#DBEAFE] flex items-center justify-center">
                   <img src={FileIcon} alt="" />
                 </div>
 
                 <div className="flex-1">
-                  <p className="font-medium text-[#111827]">
+                  <p className="font-medium text-sm text-[#000]">
                     Campaign-Strategy-Deck
                   </p>
-                  <p className="text-sm text-[#6B7280]">Michael Chen</p>
+                  <p className="text-[12px] text-[#6B7280]">Michael Chen</p>
                 </div>
 
                 <button>
@@ -152,15 +156,15 @@ export default function ChatInfoDrawer({ open, onClose }: Props) {
               </div>
               
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-[8px] bg-[#DBEAFE] flex items-center justify-center">
                   <img src={FileIcon} alt="" />
                 </div>
 
                 <div className="flex-1">
-                  <p className="font-medium text-[#111827]">
+                  <p className="font-medium text-sm text-[#000]">
                     Market-Research-Report
                   </p>
-                  <p className="text-sm text-[#6B7280]">Emily Davis</p>
+                  <p className="text-[12px] text-[#6B7280]">Emily Davis</p>
                 </div>
 
                 <button>

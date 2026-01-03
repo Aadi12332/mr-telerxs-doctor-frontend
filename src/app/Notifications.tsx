@@ -135,7 +135,7 @@ export default function Notifications() {
                 key={item.value}
                 onClick={() => setActive(item.value)}
                 className={`
-                  md:px-6 px-2 py-2 min-w-[60px] rounded-[8px] text-sm transition
+                  md:px-6 px-2 py-2 min-w-[60px] rounded-[10px] text-sm transition
                   ${
                     isActive
                       ? "bg-[#2563EB] text-white"
@@ -186,7 +186,7 @@ export default function Notifications() {
                     </span>
 
                     <span
-                      className={`px-3 py-1 rounded-full text-[13px] font-medium ${priorityStyle(
+                      className={`px-3 py-1 rounded-full text-[12px] ${priorityStyle(
                         item.priority
                       )}`}
                     >

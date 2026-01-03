@@ -75,7 +75,7 @@ export default function StatsOverview({
         return (
           <div
             key={item.key}
-            className="rounded-[8px] min-h-[106px] lg:px-6 px-3 flex items-center justify-between gap-1"
+            className="rounded-[8px] min-h-[106px] py-1.5 lg:px-6 px-3 flex items-center justify-between gap-1"
             style={{ backgroundColor: backgroundColor }}
           >
             <div className="text-white flex-1">

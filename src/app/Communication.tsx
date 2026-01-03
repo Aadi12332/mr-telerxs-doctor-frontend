@@ -46,7 +46,7 @@ export default function Communication() {
       <div className="h-full overflow-hide bg-[#F9FAFB] rounded-xl border border-[#E5E7EB] relative">
         <div className="flex border-b">
           <div className={`md:w-[320px] w-full md:border-r flex-col bg-white ${mobileChatOpen ? "hidden" : "flex"}`}>
-            <div className="p-4 flex items-center gap-3 border-b">
+            <div className="p-4 pb-0 flex items-center gap-3">
               <div className="relative">
                 <img
                   src="https://i.pravatar.cc/40"
@@ -55,17 +55,17 @@ export default function Communication() {
                 <span className="absolute left-7 top-7 w-3 h-3 bg-green-500 rounded-full" />
               </div>
               <div>
-                <p className="font-semibold text-[#111827]">Sarah Johnson</p>
+                <p className="font-semibold text-base text-[#111827]">Sarah Johnson</p>
                 <p className="text-sm text-[#6B7280]">Marketing</p>
               </div>
             </div>
 
             <div className="p-4 border-b">
-              <div className="flex items-center border rounded-lg px-3 py-2 text-sm text-[#6B7280]">
+              <div className="flex items-center border border-[#D1D5DB] rounded-lg px-3 py-2">
                 <img src={SearchIcon} alt="" />
                 <input
                   placeholder="Search chats..."
-                  className="ml-2 outline-none w-full"
+                  className="ml-2 outline-none w-full text-sm placeholder:text-[#9CA3AF] text-[#111827]"
                 />
               </div>
             </div>
@@ -73,9 +73,9 @@ export default function Communication() {
             <div className="flex border-b">
               <button
                 onClick={() => setActiveTab("departments")}
-                className={`flex-1 py-3 font-medium ${
+                className={`flex-1 py-3 text-sm font-medium ${
                   activeTab === "departments"
-                    ? "text-blue-600 border-b-2 border-blue-600"
+                    ? "text-[#2563EB] border-b-2 border-[#2563EB]"
                     : "text-[#6B7280] border-b-2 border-transparent"
                 }`}
               >
@@ -84,9 +84,9 @@ export default function Communication() {
 
               <button
                 onClick={() => setActiveTab("direct")}
-                className={`flex-1 py-3 font-medium ${
+                className={`flex-1 py-3 text-sm font-medium ${
                   activeTab === "direct"
-                    ? "text-blue-600 border-b-2 border-blue-600"
+                    ? "text-[#2563EB] border-b-2 border-[#2563EB]"
                     : "text-[#6B7280] border-b-2 border-transparent"
                 }`}
               >
@@ -94,7 +94,7 @@ export default function Communication() {
               </button>
             </div>
 
-            <div className="p-2 space-y-1 h-[calc(100vh-438px)] overflow-auto scroll-hide">
+            <div className="p-2 space-y-1 h-[calc(100vh-415px)] overflow-auto scroll-hide">
               {activeTab === "departments" &&
                 departments.map((item) => (
                   <div
@@ -118,17 +118,17 @@ export default function Communication() {
                     `}
                   >
                     <div
-                      className={`w-10 h-10 rounded-lg ${item.color} flex items-center justify-center text-white`}
+                      className={`w-8 h-8 rounded-[8px] ${item.color} flex items-center justify-center text-white`}
                     >
                       <img src={MegaphoneIcon} alt="" />
                     </div>
 
-                    <span className="flex-1 font-medium text-[#111827]">
+                    <span className="flex-1 text-sm font-medium text-[#111827] text-sm">
                       {item.name}
                     </span>
 
                     {item.count && (
-                      <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full">
+                      <span className="bg-[#3B82F6] text-white text-xs px-2 py-0.5 rounded-full">
                         {item.count}
                       </span>
                     )}
@@ -161,18 +161,18 @@ export default function Communication() {
                     <img
                       src={user.avatar}
                       alt={user.name}
-                      className="w-10 h-10 rounded-full object-cover"
+                      className="w-8 h-8 rounded-full object-cover"
                     />
 
-                    <span className="font-medium text-[#111827]">
+                    <span className="font-medium text-sm text-[#111827]">
                       {user.name}
                     </span>
                   </div>
                 ))}
             </div>
 
-            <div className="p-4 border-t text-sm text-[#6B7280] flex justify-center">
-              <span className="text-xl">+ New Chat</span>
+            <div className="p-4 border-t text-[#4B5563] flex justify-center h-[61px]">
+              <span className="text-sm flex justify-center items-center font-medium">+ New Chat</span>
             </div>
           </div>
           <div className={`flex-1 ${mobileChatOpen ? "md:flex" : "hidden"} md:flex flex-col`}>
@@ -182,10 +182,10 @@ export default function Communication() {
                   <div className="text-gray-300 text-6xl mb-4">
                     <img src={ChatIcon} alt="" />
                   </div>
-                  <p className="text-lg font-medium text-[#111827]">
+                  <p className="text-lg font-medium text-[#111827] text-sm">
                     Select a chat to start messaging
                   </p>
-                  <p className="text-sm text-[#6B7280] mt-2 max-w-lg">
+                  <p className="text-base text-[#6B7280] mt-2">
                     Choose from your departments, direct messages, or
                     cross-department channels
                   </p>
@@ -197,11 +197,11 @@ export default function Communication() {
                       <div className="h-10 flex items-center md:hidden">
                         <img src={BackArrowIcon} alt="" className="invert" onClick={() => setMobileChatOpen(false)} />
                       </div>
-                      <div className="w-10 h-10 rounded-lg bg-blue-500 flex items-center justify-center text-white" onClick={() => setOpenInfoModal(true)}>
+                      <div className="w-10 h-10 rounded-[8px] bg-[#3B82F6] flex items-center justify-center text-white" onClick={() => setOpenInfoModal(true)}>
                         <img src={MegaphoneIcon} alt="" />
                       </div>
                       <div onClick={() => setOpenInfoModal(true)}>
-                        <p className="font-semibold text-[#111827]">
+                        <p className="font-semibold text-base text-[#111827]">
                           Marketing Team
                         </p>
                         <p className="text-sm text-[#6B7280] flex items-center gap-1">
@@ -217,17 +217,17 @@ export default function Communication() {
                     </div>
                   </div>
 
-                  <div className="p-6 space-y-6 h-[calc(100vh-316px)] overflow-auto bg-white">
+                  <div className="p-6 space-y-6 h-[calc(100vh-314px)] overflow-auto bg-white">
                     <div className="flex gap-3 items-start">
                       <img
                         src="https://i.pravatar.cc/40?img=3"
-                        className="w-8 h-8 rounded-full"
+                        className="w-8 h-8 rounded-full object-cover"
                       />
                       <div>
-                        <p className="font-medium text-[#111827]">John Doe</p>
-                        <div className="mt-1 bg-[#F3F4F6] rounded-xl px-4 py-3 max-w-md">
+                        <p className="font-medium text-[#111827] text-sm">John Doe</p>
+                        <div className="mt-1 bg-[#F3F4F6] rounded-[10px] px-4 py-3 max-w-md text-[13px]">
                           Hi, I need a quote for a 40×60 workshop in Texas.
-                          <p className="text-xs text-[#9CA3AF] mt-1">
+                          <p className="text-[11px] text-[#767676] mt-1">
                             2024-10-10 09:30 pm
                           </p>
                         </div>
@@ -236,12 +236,12 @@ export default function Communication() {
 
                     <div className="flex gap-3 items-start justify-end">
                       <div className="text-right">
-                        <p className="font-medium text-[#111827]">Sarah Lee</p>
-                        <div className="mt-1 text-start bg-[#2563EB] text-white rounded-xl px-4 py-3 max-w-md">
+                        <p className="font-medium text-[#111827] text-sm">Sarah Lee</p>
+                        <div className="mt-1 text-start bg-[#2563EB] text-white rounded-[10px] text-[13px] px-4 py-3 max-w-md">
                           Hello John! I'd be happy to help you with that. Can
                           you tell me more about the intended use and
                           requirements?
-                          <p className="text-xs text-[#E5E7EB] mt-1">
+                          <p className="text-[11px] text-[#E5E7EB] mt-1">
                             2024-10-10 09:30 pm
                           </p>
                         </div>
@@ -255,12 +255,12 @@ export default function Communication() {
                     <div className="flex gap-3 items-start">
                       <div className="text-2xl">🤖</div>
                       <div>
-                        <p className="font-medium text-[#111827]">
+                        <p className="font-medium text-[#111827] text-sm">
                           Artificial Intelligence
                         </p>
-                        <div className="mt-1 bg-[#F3F4F6] rounded-xl px-4 py-3 max-w-md">
+                        <div className="mt-1 bg-[#F3F4F6] rounded-[10px] px-4 py-3 max-w-md text-[13px]">
                           Okay Sir, sending details to your inbox
-                          <p className="text-xs text-[#9CA3AF] mt-1">
+                          <p className="text-[11px] text-[#767676] mt-1">
                             2024-10-10 09:30 pm
                           </p>
                         </div>
@@ -269,12 +269,12 @@ export default function Communication() {
 
                     <div className="flex gap-3 items-start justify-end">
                       <div className="text-right">
-                        <p className="font-medium text-[#111827]">Sarah Lee</p>
-                        <div className="mt-1 text-start bg-[#2563EB] text-white rounded-xl px-4 py-3 max-w-md">
+                        <p className="font-medium text-[#111827] text-sm">Sarah Lee</p>
+                        <div className="mt-1 text-start bg-[#2563EB] text-white rounded-[10px] text-[13px] px-4 py-3 max-w-md">
                           Hello John! I'd be happy to help you with that. Can
                           you tell me more about the intended use and
                           requirements?
-                          <p className="text-xs text-[#E5E7EB] mt-1">
+                          <p className="text-[11px] text-[#E5E7EB] mt-1">
                             2024-10-10 09:30 pm
                           </p>
                         </div>
@@ -288,12 +288,12 @@ export default function Communication() {
                     <div className="flex gap-3 items-start">
                       <div className="text-2xl">🤖</div>
                       <div>
-                        <p className="font-medium text-[#111827]">
+                        <p className="font-medium text-[#111827] text-sm">
                           Artificial Intelligence
                         </p>
-                        <div className="mt-1 bg-[#F3F4F6] rounded-xl px-4 py-3 max-w-md">
+                        <div className="mt-1 bg-[#F3F4F6] rounded-[10px] px-4 py-3 max-w-md text-[13px]">
                           Okay Sir, sending details to your inbox
-                          <p className="text-xs text-[#9CA3AF] mt-1">
+                          <p className="text-[11px] text-[#767676] mt-1">
                             2024-10-10 09:30 pm
                           </p>
                         </div>
@@ -302,12 +302,12 @@ export default function Communication() {
 
                     <div className="flex gap-3 items-start justify-end">
                       <div className="text-right">
-                        <p className="font-medium text-[#111827]">Sarah Lee</p>
-                        <div className="mt-1 text-start bg-[#2563EB] text-white rounded-xl px-4 py-3 max-w-md">
+                        <p className="font-medium text-[#111827] text-sm">Sarah Lee</p>
+                        <div className="mt-1 text-start bg-[#2563EB] text-white rounded-[10px] text-[13px] px-4 py-3 max-w-md">
                           Hello John! I'd be happy to help you with that. Can
                           you tell me more about the intended use and
                           requirements?
-                          <p className="text-xs text-[#E5E7EB] mt-1">
+                          <p className="text-[11px] text-[#E5E7EB] mt-1">
                             2024-10-10 09:30 pm
                           </p>
                         </div>
@@ -321,12 +321,12 @@ export default function Communication() {
                     <div className="flex gap-3 items-start">
                       <div className="text-2xl">🤖</div>
                       <div>
-                        <p className="font-medium text-[#111827]">
+                        <p className="font-medium text-[#111827] text-sm">
                           Artificial Intelligence
                         </p>
-                        <div className="mt-1 bg-[#F3F4F6] rounded-xl px-4 py-3 max-w-md">
+                        <div className="mt-1 bg-[#F3F4F6] rounded-[10px] px-4 py-3 max-w-md text-[13px]">
                           Okay Sir, sending details to your inbox
-                          <p className="text-xs text-[#9CA3AF] mt-1">
+                          <p className="text-[11px] text-[#767676] mt-1">
                             2024-10-10 09:30 pm
                           </p>
                         </div>
@@ -340,9 +340,9 @@ export default function Communication() {
             <div className="px-4 py-[10px] border-t flex items-center gap-3 bg-white">
               <input
                 placeholder="Type your message..."
-                className="flex-1 border rounded-lg px-4 h-[40px] flex items-center outline-none"
+                className="flex-1 border border-[#D6D6D6] rounded-[8px] px-4 h-[40px] text-sm placeholder:text-[#767676] flex items-center outline-none"
               />
-              <button className="bg-gradient-to-r from-[#2563EB] to-[#4F46E5] text-white px-6 h-[38px] flex rounded-lg items-center gap-2">
+              <button className="bg-gradient-to-r from-[#2563EB] to-[#4F46E5] text-white px-6 h-[38px] flex rounded-[8px] items-center gap-2">
                 ➤ Send
               </button>
             </div>
@@ -352,7 +352,7 @@ export default function Communication() {
           <div className={`md:w-[320px] w-full px-4 py-1 text-sm text-[#6B7280] items-center justify-center gap-1 ${mobileChatOpen ? "hidden" : "flex"} md:flex`}>
             <span className="inline-block mr-1">🟢</span> Online <span className="text-3xl">·</span> 4 users online
           </div>
-          <div className={`flex-1 text-center text-xs text-[#6B7280] py-3 ${mobileChatOpen ? "md:flex" : "hidden"} md:flex justify-center`}>
+          <div className={`flex-1 text-center text-sm text-[#6B7280] py-3 ${mobileChatOpen ? "md:flex" : "hidden"} md:flex justify-center`}>
             Last sync: just now
           </div>
         </div>

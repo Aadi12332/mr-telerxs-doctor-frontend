@@ -108,10 +108,10 @@ const requests = [
 ];
 
 const statusStyle: Record<string, string> = {
-  Approved: "bg-purple-100 text-purple-700",
-  Dispatched: "bg-blue-100 text-blue-700",
-  Pending: "bg-yellow-100 text-yellow-700",
-  Delivered: "bg-green-100 text-green-700",
+  Approved: "bg-[#F1E1FF] text-[#9333EA]",
+  Dispatched: "bg-[#D0E2FF] text-[#1D51A4]",
+  Pending: "bg-[#FFF5D5] text-[#EAB308]",
+  Delivered: "bg-[#D0FFDA] text-[#3AB449]",
 };
 
 const options = [
@@ -201,21 +201,21 @@ export default function Materials() {
                     className="border-b last:border-b-0 even:bg-[#F9FAFB]"
                   >
                     <td className="lg:px-6 px-3 lg:py-6 py-3">
-                      <p className="text-sm text-[#111827]">{r.requestNo}</p>
+                      <p className="text-[13px] text-[#111827]">{r.requestNo}</p>
                       <p className="text-xs text-[#6B7280] mt-1">
                         by {r.requestedBy}
                       </p>
                     </td>
 
                     <td className="lg:px-6 px-3 lg:py-6 py-3">
-                      <p className="text-sm text-[#111827]">{r.projectName}</p>
+                      <p className="text-[13px] text-[#111827]">{r.projectName}</p>
                       <p className="text-xs text-[#6B7280] mt-1">
                         {r.projectCode}
                       </p>
                     </td>
 
                     <td className="lg:px-6 px-3 lg:py-6 py-3">
-                      <p className="text-sm text-[#111827]">{r.material}</p>
+                      <p className="text-[13px] text-[#111827]">{r.material}</p>
                       <p className="text-xs text-[#6B7280] mt-1">
                         {r.quantity}
                       </p>
@@ -223,7 +223,7 @@ export default function Materials() {
                     </td>
 
                     <td className="lg:px-6 px-3 lg:py-6 py-3">
-                      <p className="text-sm text-[#111827]">
+                      <p className="text-[13px] text-[#111827]">
                         Need by: {r.needBy}
                       </p>
                       <p className="text-xs text-[#6B7280] mt-1">
@@ -233,7 +233,7 @@ export default function Materials() {
 
                     <td className="lg:px-6 px-3 lg:py-6 py-3">
                       <span
-                        className={`px-4 py-1 rounded-full text-sm ${
+                        className={`px-4 py-1 rounded-full text-[12px] ${
                           statusStyle[r.status]
                         }`}
                       >
@@ -241,7 +241,7 @@ export default function Materials() {
                       </span>
                     </td>
 
-                    <td className="lg:px-6 px-3 lg:py-6 py-3 text-sm text-[#111827]">
+                    <td className="lg:px-6 px-3 lg:py-6 py-3 text-[13px] text-[#111827]">
                       {r.supplier}
                     </td>
 
@@ -291,43 +291,43 @@ export default function Materials() {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="flex items-center gap-4 border border-[#4ADE80] rounded-[8px] p-4 bg-[#F0FDF4]">
+            <div className="flex items-center gap-4 border border-[#22C55E] rounded-[8px] p-4 bg-[#F0FDF4]">
               <div className="text-[#166534] mt-1">
                 <img src={DoubleCheck} alt="Double Check" />
               </div>
               <div>
-                <p className="text-[#166534] font-medium text-[15px]">
+                <p className="text-[#006927] font-medium text-[16px]">
                   Inventory Connected
                 </p>
-                <p className="text-[#166534] text-[13px] mt-1 opacity-80">
+                <p className="text-[#006927] text-[12px] mt-1">
                   Real-time stock levels available
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 border border-[#6366F1] rounded-[8px] p-4 bg-[#EEF2FF]">
+            <div className="flex items-center gap-4 border border-[#674EDA] rounded-[8px] p-4 bg-[#EFF6FF]">
               <div className="text-[#4338CA] mt-1">
                 <img src={Dispatch} alt="Dispatch icon" />
               </div>
               <div>
-                <p className="text-[#4338CA] font-medium text-[15px]">
+                <p className="text-[#003562] font-medium text-[16px]">
                   Auto Dispatch
                 </p>
-                <p className="text-[#4338CA] text-[13px] mt-1 opacity-80">
+                <p className="text-[#003562] text-[12px] mt-1">
                   Automatic delivery scheduling
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 border border-[#FACC15] rounded-[8px] p-4 bg-[#FEFCE8]">
+            <div className="flex items-center gap-4 border border-[#EAB308] rounded-[8px] p-4 bg-[#FEFCE8]">
               <div className="text-[#854D0E] mt-1">
                 <img src={Alert} alt="Alert Icon" />
               </div>
               <div>
-                <p className="text-[#854D0E] font-medium text-[15px]">
+                <p className="text-[#735700] font-medium text-[16px]">
                   Low Stock Alerts
                 </p>
-                <p className="text-[#854D0E] text-[13px] mt-1 opacity-80">
+                <p className="text-[#735700] text-[12px] mt-1">
                   Proactive inventory monitoring
                 </p>
               </div>

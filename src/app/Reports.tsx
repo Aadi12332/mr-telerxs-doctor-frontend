@@ -71,7 +71,9 @@ const rows = [
 ];
 
 const statusStyles: Record<string, string> = {
-  "On Track": "bg-green-100 text-green-700",
+  "On Track": "bg-[#DCFCE7] text-[#16A34A]",
+  "Passed": "bg-[#DCFCE7] text-[#16A34A]",
+  "Warning": "bg-[#FEF9C3] text-[#8C6A00]",
   Delayed: "bg-red-100 text-red-600",
   "Not Started": "bg-gray-200 text-gray-600",
   Completed: "bg-blue-100 text-blue-700",
@@ -99,28 +101,28 @@ const materials = [
     percent: 95,
     used: 950,
     planned: 1000,
-    color: "bg-green-600",
+    color: "bg-[#16A34A]",
   },
   {
     name: "Concrete",
     percent: 96,
     used: 520,
     planned: 500,
-    color: "bg-green-600",
+    color: "bg-[#16A34A]",
   },
   {
     name: "Electrical",
     percent: 90,
     used: 180,
     planned: 200,
-    color: "bg-yellow-500",
+    color: "bg-[#EAB308]",
   },
   {
     name: "Tiles",
     percent: 95,
     used: 285,
     planned: 300,
-    color: "bg-green-600",
+    color: "bg-[#16A34A]",
   },
 ];
 
@@ -192,7 +194,7 @@ export default function Reports() {
         <StatsOverview stats={stats} showProgress />
 
         <div className="rounded-[8px] bg-white border border-[#F3F4F6] shadow overflow-hidden mt-6">
-          <div className="xl:px-6 px-3 py-5 border-b">
+          <div className="lg:px-6 px-3 py-5 border-b">
             <h2 className="text-[20px] font-medium text-[#111827]">
               Project Progress vs Plan
             </h2>
@@ -200,7 +202,7 @@ export default function Reports() {
           <div className="overflow-x-auto scroll-hide w-[calc(100vw-26px)] lg:w-[calc(100vw-324px)]">
             <table className="min-w-[900px] w-full border-collapse rounded-[8px]">
               <thead>
-                <tr className="text-left text-sm text-[#6B7280] border-b">
+                <tr className="text-left text-[12px] text-[#6B7280] border-b">
                   <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal min-w-[150px]">Project</th>
                   <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Actual Progress</th>
                   <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Planned Progress</th>
@@ -214,45 +216,41 @@ export default function Reports() {
                     key={row.id}
                     className="border-b last:border-b-0 even:bg-[#F9FAFB]"
                   >
-                    {/* Project */}
-                    <td className="lg:px-6 px-3 lg:py-6 py-3 text-sm text-[#111827]">
+                    <td className="lg:px-6 px-3 lg:py-6 py-3 text-[13px] text-[#111827]">
                       {row.project}
                     </td>
 
-                    {/* Actual Progress */}
                     <td className="lg:px-6 px-3 lg:py-6 py-3">
                       <div className="flex items-center gap-4">
-                        <div className="w-[150px] lg:w-[260px] h-2 bg-gray-200 rounded-full">
+                        <div className="w-[160px] lg:w-[260px] h-2 bg-[#D9D9D9] rounded-full">
                           <div
-                            className="h-2 bg-blue-600 rounded-full"
+                            className="h-2 bg-[#2563EB] rounded-full"
                             style={{ width: `${row.actual}%` }}
                           />
                         </div>
-                        <span className="text-sm text-[#111827]">
+                        <span className="text-[13px] text-[#111827]">
                           {row.actual}%
                         </span>
                       </div>
                     </td>
 
-                    {/* Planned Progress */}
                     <td className="lg:px-6 px-3 lg:py-6 py-3">
                       <div className="flex items-center gap-4">
-                        <div className="w-[150px] lg:w-[260px] h-2 bg-gray-200 rounded-full">
+                        <div className="w-[160px] lg:w-[260px] h-2 bg-[#D9D9D9] rounded-full">
                           <div
-                            className="h-2 bg-gray-500 rounded-full"
+                            className="h-2 bg-[#9CA3AF] rounded-full"
                             style={{ width: `${row.planned}%` }}
                           />
                         </div>
-                        <span className="text-sm text-[#111827]">
+                        <span className="text-[13px] text-[#111827]">
                           {row.planned}%
                         </span>
                       </div>
                     </td>
 
-                    {/* Status */}
                     <td className="lg:px-6 px-3 lg:py-6 py-3">
                       <span
-                        className={`px-4 py-2 rounded-full min-w-max inline-block text-sm font-medium ${
+                        className={`px-4 py-2 rounded-full min-w-max inline-block text-[13px] ${
                           statusStyles[row.status]
                         }`}
                       >
@@ -269,7 +267,7 @@ export default function Reports() {
         <div className="flex md:flex-row flex-col gap-6 mt-6">
           <div
             className="flex-1 
-                rounded-[8px] xl:p-6 p-3 border !bg-white border-[#F3F4F6]
+                rounded-[8px] lg:p-6 p-3 border !bg-white border-[#F3F4F6]
                 !shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]
               "
           >
@@ -281,22 +279,22 @@ export default function Reports() {
               {materials.map((m) => (
                 <div key={m.name}>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-[15px] text-[#111827] font-medium">
+                    <span className="text-[13px] text-[#111827] font-medium">
                       {m.name}
                     </span>
-                    <span className="text-[15px] text-[#111827] font-medium">
+                    <span className="text-[13px] text-[#111827] font-medium">
                       {m.percent}%
                     </span>
                   </div>
 
-                  <div className="h-[10px] bg-[#E5E7EB] rounded-full overflow-hidden">
+                  <div className="h-[8px] bg-[#E5E7EB] rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full ${m.color}`}
                       style={{ width: `${m.percent}%` }}
                     />
                   </div>
 
-                  <div className="flex justify-between text-[14px] text-[#6B7280] mt-2">
+                  <div className="flex justify-between text-[12px] text-[#6B7280] mt-2">
                     <span>Used:{m.used}</span>
                     <span>Planned: {m.planned}</span>
                   </div>
@@ -318,23 +316,23 @@ export default function Reports() {
               {reports.map((item, idx) => (
                 <div key={idx} className="flex items-start justify-between">
                   <div>
-                    <p className="text-[15px] font-semibold text-[#111827]">
+                    <p className="text-[13px] font-semibold text-[#111827]">
                       {item.title}
                     </p>
-                    <p className="text-[14px] text-[#6B7280] mt-1">
+                    <p className="text-[12px] text-[#6B7280] mt-1">
                       {item.project}, {item.date}
                     </p>
                   </div>
 
                   <div className="text-right">
                     <span
-                      className={`inline-block px-4 py-1 rounded-full text-[14px] font-medium ${
+                      className={`inline-block px-4 py-1 rounded-full text-[13px] ${
                         statusStyles[item.status]
                       }`}
                     >
                       {item.status}
                     </span>
-                    <p className="text-[14px] text-[#6B7280] mt-2">
+                    <p className="text-[12px] text-[#6B7280] mt-2">
                       Score-{item.score}
                     </p>
                   </div>

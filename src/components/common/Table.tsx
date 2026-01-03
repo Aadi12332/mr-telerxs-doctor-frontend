@@ -22,6 +22,8 @@ export type Project = {
   status: "Active" | "Completed" | "On Hold";
 };
 
+const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 export type Props = {
   projects: Project[];
 };
@@ -31,7 +33,44 @@ export default function AllProjectsTable({ projects }: Props) {
     "overview"
   );
   const navigate = useNavigate();
-  const [selectedDate, setSelectedDate] = useState(23);
+    const today = new Date();
+
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  const [selectedDate, setSelectedDate] = useState<number | null>(
+    today.getDate()
+  );
+
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+
+  const hasEventDays = [15, 16, 18, 22];
+
+  const handlePrevMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear((y) => y - 1);
+    } else {
+      setCurrentMonth((m) => m - 1);
+    }
+    setSelectedDate(null);
+  };
+
+  const handleNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear((y) => y + 1);
+    } else {
+      setCurrentMonth((m) => m + 1);
+    }
+    setSelectedDate(null);
+  };
+
+  const handleToday = () => {
+    setCurrentMonth(today.getMonth());
+    setCurrentYear(today.getFullYear());
+    setSelectedDate(today.getDate());
+  };
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-6 mb-5 mt-11">
@@ -74,13 +113,27 @@ export default function AllProjectsTable({ projects }: Props) {
             <table className="min-w-[900px] w-full border-collapse rounded-[8px]">
               <thead className="bg-white">
                 <tr className="text-left text-[12px] uppercase text-[#6B7280] border-b border-[#E5E7EB]">
-                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Project</th>
-                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Client</th>
-                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Timeline</th>
-                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Progress</th>
-                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Team</th>
-                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Status</th>
-                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">Actions</th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">
+                    Project
+                  </th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">
+                    Client
+                  </th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">
+                    Timeline
+                  </th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">
+                    Progress
+                  </th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">
+                    Team
+                  </th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">
+                    Status
+                  </th>
+                  <th className="lg:px-6 px-3 lg:py-4 py-3 font-normal">
+                    Actions
+                  </th>
                 </tr>
               </thead>
 
@@ -167,92 +220,113 @@ export default function AllProjectsTable({ projects }: Props) {
       )}
 
       {activeTab === "calendar" && (
-        <div className="grid lg:grid-cols-[2fr_1fr] gap-6">
-          <div className="bg-white rounded-[12px] border border-[#E5E7EB]">
+        <div className="grid lg:grid-cols-[2fr_1fr] items-start gap-6">
+          <div className="bg-white rounded-[12px] border border-[#E5E7EB] pb-10">
             <div className="lg:p-6 p-3 border-b border-[#E5E7EB]">
               <h3 className="text-[17px] font-bold text-[#111827]">
                 Upcoming Events
               </h3>
-              <p className="text-[14px] text-gray-500 mt-1">
+              <p className="text-[13px] text-[#4B5563] mt-1">
                 Quick view of scheduled activities
               </p>
 
               <div className="flex items-center justify-between mt-6">
-                <p className="text-[18px] font-semibold">October 2025</p>
+                <p className="text-[17px] font-bold">
+                  {new Date(currentYear, currentMonth).toLocaleString(
+                    "default",
+                    {
+                      month: "long",
+                    }
+                  )}{" "}
+                  {currentYear}
+                </p>
+
                 <div className="flex items-center gap-4 text-gray-600">
-                  <button className="text-[14px]">TODAY</button>
-                  <button>
-                    <img src={LeftArrowIcon} alt="" />
+                  <button
+                    onClick={handleToday}
+                    className="text-[14px] text-[#272C42]"
+                  >
+                    TODAY
                   </button>
-                  <button>
-                    <img src={RightArrowIcon} alt="" />
+
+                  <button onClick={handlePrevMonth}>
+                    <img src={LeftArrowIcon} alt="" className="w-1.5" />
+                  </button>
+
+                  <button onClick={handleNextMonth}>
+                    <img src={RightArrowIcon} alt="" className="w-1.5" />
                   </button>
                 </div>
               </div>
             </div>
 
             <div className="lg:p-6 p-3">
-              <div className="grid grid-cols-7 text-center text-[13px] text-gray-500 mb-4">
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-                  <div key={d}>{d}</div>
-                ))}
-              </div>
+        <div className="grid grid-cols-7 text-center text-[13px] text-gray-500 mb-12">
+          {weekDays.map((d) => (
+            <div key={d}>{d}</div>
+          ))}
+        </div>
 
-              <div className="grid grid-cols-7 gap-3 text-[14px]">
-                {Array.from({ length: 28 }, (_, i) => i + 1).map((day) => {
-                  const hasEvent = [15, 16, 18, 22].includes(day);
-                  const isSelected = day === selectedDate;
+        <div className="grid grid-cols-7 gap-3 text-[14px]">
+          {Array.from({ length: firstDayIndex }).map((_, i) => (
+            <div key={`empty-${i}`} />
+          ))}
 
-                  return (
-                    <button
-                      key={day}
-                      onClick={() => setSelectedDate(day)}
-                      className={`h-[44px] rounded-[8px] flex items-center justify-center relative
-                            ${
-                              isSelected
-                                ? "bg-blue-600 text-white"
-                                : hasEvent
-                                ? "bg-red-50 text-red-500"
-                                : "text-gray-700"
-                            }`}
-                    >
-                      {day}
-                      {hasEvent && !isSelected && (
-                        <span className="absolute right-2 top-2 w-1.5 h-1.5 bg-red-500 rounded-full" />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+          {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
+            const isSelected = day === selectedDate;
+            const hasEvent = hasEventDays.includes(day);
+
+            return (
+              <button
+                key={day}
+                onClick={() => setSelectedDate(day)}
+                className={`h-[44px] rounded-[8px] flex items-center justify-center relative
+                  ${
+                    isSelected
+                      ? "bg-blue-600 text-white"
+                      : hasEvent
+                      ? "bg-red-50 text-red-500"
+                      : "text-gray-700"
+                  }`}
+              >
+                {day}
+
+                {hasEvent && !isSelected && (
+                  <span className="absolute right-2 top-2 w-1.5 h-1.5 bg-red-500 rounded-full" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
           </div>
 
           <div className="flex flex-col gap-6">
             <div className="bg-white rounded-[12px] border border-[#E5E7EB] lg:p-6 p-3">
-              <h3 className="text-[18px] font-bold mb-4">Event Types</h3>
+              <h3 className="text-[17px] font-bold mb-4">Event Types</h3>
 
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <span className="w-3 h-3 rounded-full bg-blue-700" />
-                  <p>Site Inspection</p>
+                  <p className="text-[#4B5563] text-sm">Site Inspection</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="w-3 h-3 rounded-full bg-green-500" />
-                  <p>Material Delivery</p>
+                  <p className="text-[#4B5563] text-sm">Material Delivery</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="w-3 h-3 rounded-full bg-yellow-400" />
-                  <p>Installation</p>
+                  <p className="text-[#4B5563] text-sm">Installation</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="w-3 h-3 rounded-full bg-orange-400" />
-                  <p>Testing</p>
+                  <p className="text-[#4B5563] text-sm">Testing</p>
                 </div>
               </div>
             </div>
 
             <div className="bg-white rounded-[12px] border border-[#E5E7EB] lg:p-6 p-3">
-              <h3 className="text-[18px] font-bold mb-4">Upcoming Events</h3>
+              <h3 className="text-[17px] font-bold mb-4">Upcoming Events</h3>
 
               <div className="space-y-4">
                 {[
@@ -271,21 +345,23 @@ export default function AllProjectsTable({ projects }: Props) {
                 ].map((e) => (
                   <div
                     key={e.title}
-                    className="flex items-center gap-2 justify-between bg-gray-50 rounded-[10px] xl:px-4 xl:py-4 p-2"
+                    className="flex items-center gap-2 justify-between bg-[#F9FAFB] rounded-[10px] xl:px-4 xl:py-4 p-2"
                   >
                     <div className="flex items-start gap-4">
                       <span
                         className={`w-3 h-3 rounded-full mt-1 ${e.color}`}
                       />
                       <div>
-                        <p className="font-medium">{e.title}</p>
-                        <p className="text-[14px] text-gray-500">
+                        <p className="font-bold text-[#4B5563] text-sm">
+                          {e.title}
+                        </p>
+                        <p className="text-[12px] text-[#4B5563]">
                           2024-01-26 at 14:00
                         </p>
                       </div>
                     </div>
 
-                    <p className="text-gray-500 text-[14px]">PRJ-001</p>
+                    <p className="text-[#4B5563] text-[12px]">PRJ-001</p>
                   </div>
                 ))}
               </div>

@@ -133,7 +133,7 @@ export default function ProjectViewPage() {
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <p className="text-xs uppercase text-[#6B7280] mb-3">
+            <p className="text-sm uppercase text-[#6B7280] mb-3">
               Project Details
             </p>
 
@@ -157,12 +157,12 @@ export default function ProjectViewPage() {
           </div>
 
           <div>
-            <p className="text-xs uppercase text-[#6B7280] mb-3">
+            <p className="text-sm uppercase text-[#6B7280] mb-3">
               Assigned Manager
             </p>
 
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full bg-[#1E40AF] flex items-center justify-center text-white text-lg font-medium">
+              <div className="w-14 h-14 rounded-full bg-[#1D51A4] flex items-center justify-center text-white text-lg font-medium">
                 JS
               </div>
 
@@ -178,17 +178,17 @@ export default function ProjectViewPage() {
           </div>
 
           <div>
-            <p className="text-xs uppercase text-[#6B7280] mb-3">
+            <p className="text-sm uppercase text-[#6B7280] mb-3">
               Timeline
             </p>
 
             <p className="text-sm text-[#111827] mb-3">
-              <span className="font-medium">Start:</span>{" "}
+              <span className="font-bold">Start:</span>{" "}
               2024-01-15
             </p>
 
             <p className="text-sm text-[#111827] mb-3">
-              <span className="font-medium">End:</span>{" "}
+              <span className="font-bold">End:</span>{" "}
               2024-08-30
             </p>
 
@@ -199,7 +199,7 @@ export default function ProjectViewPage() {
         </div>
 
         <div className="mt-6">
-            <p className="text-sm font-medium text-[#111827]">
+            <p className="text-sm text-[#111827]">
               Job Scope
             </p>
             <p className="text-sm text-[#6B7280] mt-1">
@@ -221,9 +221,9 @@ export default function ProjectViewPage() {
             {deliverables.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-4 bg-[#F9FAFB] rounded-lg lg:px-5 px-3 lg:py-4 py-3"
+                className="flex items-center gap-4 bg-[#F9FAFB] rounded-[8px] lg:px-5 px-3 lg:py-4 py-3"
               >
-                <div className="w-10 h-10 rounded-full bg-[#1E40AF] flex items-center justify-center text-white font-medium">
+                <div className="w-8 h-8 rounded-full bg-[#1D51A4] flex items-center justify-center text-white font-medium">
                   {item.id}
                 </div>
 
@@ -251,7 +251,7 @@ export default function ProjectViewPage() {
             className="flex items-center justify-between rounded-[8px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] lg:px-5 px-3 lg:py-4 py-3"
           >
             <div>
-              <p className="text-sm font-semibold text-[#111827]">
+              <p className="text-sm font-bold text-[#111827]">
                 {phase.title}
               </p>
               <p className="text-sm text-[#6B7280] mt-1">
@@ -307,7 +307,7 @@ export default function ProjectViewPage() {
               </div>
 
               <div>
-                <p className="text-sm font-medium text-[#111827]">
+                <p className="text-sm font-bold text-[#111827]">
                   {file.name}
                 </p>
                 <p className="text-sm text-[#6B7280] mt-1">

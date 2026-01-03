@@ -81,7 +81,7 @@ export default function TaskBoard() {
     const [openNewTaskModel, setNewTaskModel] = useState(false);
   
   return (
-    <div className="bg-white rounded-[8px] lg:p-8 p-3 border border-[#F3F4F6]
+    <div className="bg-white rounded-[8px] lg:p-6 p-3 border border-[#F3F4F6]
       shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.1),_0px_4px_6px_-1px_rgba(0,0,0,0.1)]">
       <div className="flex sm:flex-row flex-col gap-3 sm:justify-between sm:items-center mb-6">
         <h2 className="text-[17px] font-semibold">Task Board</h2>
@@ -143,8 +143,8 @@ function renderTask(task: Task) {
         }
       </div>
 
-      <p className="text-gray-600 text-sm mb-2">{task.project}</p>
-      <p className="text-gray-500 text-sm mb-4">{task.description}</p>
+      <p className="text-[#6B7280] text-xs mb-2">{task.project}</p>
+      <p className="text-[#6B7280] text-xs mb-4">{task.description}</p>
 
       {typeof task.progress === "number" && (
         <>
@@ -161,12 +161,12 @@ function renderTask(task: Task) {
         </>
       )}
 
-      <div className="flex justify-between text-sm text-gray-600">
-        <span>
+      <div className="flex justify-between text-xs ">
+        <span className="text-[#6B7280]">
           {task.due && task.due !== "NA" ? `Due ${task.due}` : "Completed"}
         </span>
 
-        <span>{task.assignee}</span>
+        <span className="text-[#000000]">{task.assignee}</span>
       </div>
     </div>
   );
@@ -183,7 +183,7 @@ function Column({
 }) {
   return (
     <div className={`${bg} rounded-[8px] p-4 min-h-[600px]`}>
-      <h3 className="font-semibold mb-4">{title}</h3>
+      <h3 className="font-semibold mb-4 text-sm text-[#111827]">{title}</h3>
       {children}
     </div>
   );
