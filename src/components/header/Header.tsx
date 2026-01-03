@@ -1,7 +1,7 @@
 import { useState } from "react";
 import locationicon from "../../assets/locationicon.svg";
 import backarrowicon from "../../assets/backlongarrow.svg";
-import SearchIcon from "../../assets/searchicon.svg";
+import SearchIcon from "../../assets/searchIcon.svg";
 import Logo from "../../assets/logo.svg";
 import { NavLink } from "react-router-dom";
 

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import loginsideimg from "../assets/loginimg.jpg";
 import closeicon from "../assets/closeicon.svg";
 import closeeyeicon from "../assets/closeeyeicon.svg";
-import eyeicon from "../assets/eyeicon.svg";
+import eyeicon from "../assets/EyeIcon.svg";
 import logo from "../assets/logo.svg";
 
 export default function Login() {
