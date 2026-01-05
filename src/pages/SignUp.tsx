@@ -10,7 +10,7 @@ import profileimg from "../assets/profileimg.svg";
 import cameraicon from "../assets/cameraicon.svg";
 import calendaricon from "../assets/calendaricon.svg";
 import uploadicon from "../assets/uploadicon.svg";
-import downarrowicon from "../assets/backlongarrow.svg";
+import CustomSelect from "../components/common/customSelect";
 
 const SPECIALIZATIONS = [
   "Cardiology",
@@ -24,7 +24,6 @@ export default function Signup() {
   const navigate = useNavigate();
   const [dob, setDob] = useState<any>(null);
   const [specialization, setSpecialization] = useState("");
-  const [openDropdown, setOpenDropdown] = useState(false);
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -156,39 +155,15 @@ export default function Signup() {
                 </label>
               </div>
 
-              <div className="relative">
-                <label className="text-base font-medium text-[#012047] mb-1 block">
-                  Specialization
-                </label>
-                <div
-                  onClick={() => setOpenDropdown(!openDropdown)}
-                  className="border rounded-lg px-4 py-2 cursor-pointer flex justify-between items-center h-[56px] bg-white"
-                >
-                  <span className={specialization ? "" : "text-gray-400"}>
-                    {specialization || "Select Specialization..."}
-                  </span>
-                  <span>
-                    <img src={downarrowicon} alt="" className="rotate-[270deg] invert w-4" />
-                  </span>
-                </div>
-
-                {openDropdown && (
-                  <div className="absolute z-10 mt-1 w-full bg-white border rounded-lg shadow-md">
-                    {SPECIALIZATIONS.map((item) => (
-                      <div
-                        key={item}
-                        onClick={() => {
-                          setSpecialization(item);
-                          setOpenDropdown(false);
-                        }}
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      >
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <CustomSelect
+                title="Specialization"
+                data={SPECIALIZATIONS}
+                value={specialization}
+                onChange={setSpecialization}
+                placeholder="ALL"
+                openDirection="bottom"
+                width="w-full"
+              />
 
               <Input label="Years of Experience" defaultValue="10" />
               <Input label="Hospital Affiliation" defaultValue="412101" />

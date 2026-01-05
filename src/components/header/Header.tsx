@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import locationicon from "../../assets/locationicon.svg";
 import backarrowicon from "../../assets/backlongarrow.svg";
-import SearchIcon from "../../assets/searchicon.svg";
+import SearchIcon from "../../assets/searchIcon.svg";
 import Logo from "../../assets/logo.svg";
-import { NavLink } from "react-router-dom";
 
 const LOCATIONS = ["Pune", "Mumbai", "Delhi", "Bangalore"];
 
@@ -12,12 +12,17 @@ const TABS = [
   { label: "Consultations", path: "/consultations" },
   { label: "Medicine Orders", path: "/medicine-orders" },
   { label: "Messages", path: "/messages" },
-  { label: "Settings", path: "/settings" },
+  {
+    label: "Settings",
+    path: "#",
+    activePaths: ["/settings", "/add-bank"],
+  },
 ];
+
 export default function Header() {
+  const location = useLocation();
   const [open, setOpen] = useState(false);
-  const [location, setLocation] = useState("Pune");
-  // const [activeTab, setActiveTab] = useState("Dashboard");
+  const [locationList, setLocationList] = useState("Pune");
 
   return (
     <>
@@ -44,7 +49,7 @@ export default function Header() {
                     Delivering to:
                   </span>
                   <span className="text-[#4F4F4F] text-[16px] font-semibold">
-                    {location}
+                    {locationList}
                   </span>
                 </div>
 
@@ -56,12 +61,12 @@ export default function Header() {
               </div>
 
               {open && (
-                <div className="absolute left-0 right-0 mt-3 bg-white rounded-xl shadow-lg overflow-hidden z-10">
+                <div className="absolute left-0 right-0 mt-3 bg-white rounded-xl shadow-lg overflow-hidden z-[11]">
                   {LOCATIONS.map((item) => (
                     <div
                       key={item}
                       onClick={() => {
-                        setLocation(item);
+                        setLocationList(item);
                         setOpen(false);
                       }}
                       className="px-6 py-3 text-[16px] hover:bg-gray-100 cursor-pointer"
@@ -85,29 +90,31 @@ export default function Header() {
           </div>
         </header>
       </div>
-      <div className="w-full bg-[#F2F2F2] shadow-sm">
+      <div className="w-full bg-[#F2F2F2] shadow-sm z-10">
         <div className="max-w-[1440px] mx-auto lg:px-6 px-3">
           <div className="flex items-center justify-between gap-16 h-[56px]">
-            {TABS.map((tab) => (
-              <NavLink
-                key={tab.path}
-                to={tab.path}
-                className={({ isActive }) =>
-                  `relative h-full flex items-center text-[18px] font-semibold transition ${
+            {TABS.map((tab) => {
+              const isActive = tab.activePaths
+                ? tab.activePaths.some((p) => location.pathname.startsWith(p))
+                : location.pathname === tab.path;
+
+              return (
+                <NavLink
+                  key={tab.path}
+                  to={tab.path}
+                  className={`relative h-full flex items-center text-[18px] font-semibold transition ${
                     isActive ? "text-[#1F5A8F]" : "text-[#4F4F4F]"
-                  }`
-                }
-              >
-                {({ isActive }) => (
+                  }`}
+                >
                   <>
                     {tab.label}
                     {isActive && (
                       <span className="absolute left-0 -bottom-[5px] w-full h-[5px] bg-[#1F5A8F] rounded-b-md" />
                     )}
                   </>
-                )}
-              </NavLink>
-            ))}
+                </NavLink>
+              );
+            })}
           </div>
         </div>
       </div>

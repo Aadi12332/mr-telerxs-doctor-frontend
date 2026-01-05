@@ -1,46 +1,11 @@
-import { forwardRef, useState } from "react";
-import EyeIcon from "../../assets/icon-eye.svg";
-import EyeOffIcon from "../../assets/icon-eye-off.svg";
-type Props = {
-  label?: string;
-  error?: string;
-  icon?: React.ReactNode;
-  isPassword?: boolean;
-} & React.InputHTMLAttributes<HTMLInputElement>;
-
-const Input = forwardRef<HTMLInputElement, Props>(
-  ({ label, error, icon, isPassword, type, className, ...props }, ref) => {
-    const [show, setShow] = useState(false);
-    const inputType = isPassword ? (show ? "text" : "password") : type;
-
-    return (
-      <div className="space-y-1">
-        {label && <p className="mb-2 block text-sm font-medium">{label}</p>}
-
-        <div className="flex items-center gap-3 rounded-xl border border-white/30 bg-white/10 px-4 py-3 backdrop-blur">
-          {icon && <span className="opacity-70">{icon}</span>}
-
-          <input
-            ref={ref}
-            type={inputType}
-            className={`w-full bg-transparent outline-none placeholder:text-white/60 ${className ?? ""}`}
-            {...props}
-          />
-
-          {isPassword && (
-            <span
-              onClick={() => setShow((v) => !v)}
-              className="cursor-pointer opacity-70"
-            >
-              {show ? <img src={EyeIcon} alt="" /> : <img src={EyeOffIcon} alt="" />}
-            </span>
-          )}
-        </div>
-
-        {error && <p className="text-xs text-red-400">{error}</p>}
-      </div>
-    );
-  }
-);
-
-export default Input;
+export function Input({ label, value }: { label?: string; value?: string }) {
+  return (
+    <div>
+      <label className="block mb-3 text-[20px]">{label}</label>
+      <input
+        value={value}
+        className="w-full border rounded-[20px] border-[#00000033] text-[20px] placeholder:text-[#00000080] h-[56px] px-4 py-3 outline-none"
+      />
+    </div>
+  );
+}

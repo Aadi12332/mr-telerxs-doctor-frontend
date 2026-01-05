@@ -10,6 +10,7 @@ import Setting from "../app/Setting";
 import Consultation from "../app/Consultation";
 import MedicineOrder from "../app/MedicineOrder";
 import Message from "../app/Message";
+import AddBank from "../app/AddBank";
 
 export default function AppRoutes() {
   return (
@@ -25,6 +26,7 @@ export default function AppRoutes() {
           <Route path="/consultations" element={<Consultation />} />
           <Route path="/medicine-orders" element={<MedicineOrder />} />
           <Route path="/messages" element={<Message />} />
+          <Route path="/add-bank" element={<AddBank />} />
         </Route>
       </Routes>
   );
