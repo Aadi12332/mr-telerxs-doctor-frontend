@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Input } from "../components/common/Input";
 
 const NOTIFICATION_SETTINGS = [
   { id: "consultation", label: "New patient consultation requests" },
