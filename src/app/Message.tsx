@@ -1,6 +1,6 @@
 import { useState } from "react";
 import notificationicon from "../assets/messagenotiicon.svg";
-import searchicon from "../assets/searchicon.svg";
+import searchicon from "../assets/searchIcon.svg";
 import lockimg from "../assets/lockimg.svg";
 import sendicon from "../assets/sendicon.svg";
 import deleteicon from "../assets/deleteicon.svg";
