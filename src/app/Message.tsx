@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PatientProfileModal from "./PatientProfileModal";
 import notificationicon from "../assets/messagenotiicon.svg";
 import searchicon from "../assets/searchIcon.svg";
 import lockimg from "../assets/lockimg.svg";
@@ -112,7 +113,8 @@ const conversations: Conversation[] = [
 
 export default function MedicineOrder() {
   const [chatList, setChatList] = useState(conversations);
-  console.log({chatList});
+  console.log({ chatList });
+  const [openProfile, setOpenProfile] = useState(false);
   const [activeChat, setActiveChat] = useState<Conversation | null>(null);
   const handleDeleteChat = () => {
     if (!activeChat) return;
@@ -236,7 +238,10 @@ export default function MedicineOrder() {
                       </div>
                     </div>
                     <div className="flex gap-5 items-center">
-                      <div className="border-[0.32px] border-[#00000066] text-[14px] font-medium px-4 py-2 rounded-lg cursor-pointer">
+                      <div
+                        onClick={() => setOpenProfile(true)}
+                        className="border-[0.32px] border-[#00000066] text-[14px] font-medium px-4 py-2 rounded-lg cursor-pointer"
+                      >
                         View Profile
                       </div>
                       <img
@@ -285,6 +290,10 @@ export default function MedicineOrder() {
             </div>
           </div>
         </div>
+
+        {openProfile && (
+          <PatientProfileModal onClose={() => setOpenProfile(false)} />
+        )}
 
         <div className="bg-[#F6D6D6] rounded-2xl px-6 py-5 flex justify-between mb-8">
           <div className="flex gap-4 items-center">

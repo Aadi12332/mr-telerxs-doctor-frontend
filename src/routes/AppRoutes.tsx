@@ -6,11 +6,14 @@ import Otp from "../pages/Otp";
 import ForgetPassword from "../pages/ForgetPassword";
 import NewCredential from "../pages/NewCredential";
 import Signup from "../pages/SignUp";
-// import Setting from "../app/Setting";
+import Setting from "../app/Setting";
 import Consultation from "../app/Consultation";
 import MedicineOrder from "../app/MedicineOrder";
 import Message from "../app/Message";
-// import AddBank from "../app/AddBank";
+import AddBank from "../app/AddBank";
+import PayoutSetting from "../app/PayoutSetting";
+import RequestPayout from "../app/RequestPayout";
+import PaymentSuccess from "../app/PaymentSuccess";
 
 export default function AppRoutes() {
   return (
@@ -22,11 +25,14 @@ export default function AppRoutes() {
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/new-credential" element={<NewCredential />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          {/* <Route path="/settings" element={<Setting />} /> */}
+          <Route path="/settings" element={<Setting />} />
           <Route path="/consultations" element={<Consultation />} />
           <Route path="/medicine-orders" element={<MedicineOrder />} />
           <Route path="/messages" element={<Message />} />
-          {/* <Route path="/add-bank" element={<AddBank />} /> */}
+          <Route path="/add-bank" element={<AddBank />} />
+          <Route path="/payout-setting" element={<PayoutSetting />} />
+          <Route path="/request-payout" element={<RequestPayout />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
         </Route>
       </Routes>
   );

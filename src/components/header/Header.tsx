@@ -14,7 +14,7 @@ const TABS = [
   { label: "Messages", path: "/messages" },
   {
     label: "Settings",
-    path: "#",
+    path: "/settings",
     activePaths: ["/settings", "/add-bank"],
   },
 ];
