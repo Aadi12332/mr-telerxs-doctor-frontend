@@ -18,6 +18,7 @@ export default function PatientProfileModal({ onClose }: Props) {
   const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState(false);
   const [openProfile, setOpenProfile] = useState(true);
+  console.log(openProfile);
   const [openPrescription, setOpenPrescription] = useState(false);
   const [medicalHistory, setMedicalHistory] = useState(
     "Asthma (diagnosed 2018), Seasonal allergies"
@@ -189,7 +190,12 @@ export default function PatientProfileModal({ onClose }: Props) {
                 <img src={reporticon} alt="" />
                 chest-xray-2025.pdf
               </div>
-              <button onClick={()=>navigate("/reports")} className="text-[#0E82FD]">View</button>
+              <button
+                onClick={() => navigate("/reports")}
+                className="text-[#0E82FD]"
+              >
+                View
+              </button>
             </div>
 
             <div className="bg-white rounded-lg p-4 flex justify-between items-center">
@@ -197,7 +203,12 @@ export default function PatientProfileModal({ onClose }: Props) {
                 <img src={redreporticon} alt="" />
                 lab-results.pdf
               </div>
-              <button onClick={()=>navigate("/reports")} className="text-[#0E82FD]">View</button>
+              <button
+                onClick={() => navigate("/reports")}
+                className="text-[#0E82FD]"
+              >
+                View
+              </button>
             </div>
           </div>
         </div>
@@ -221,11 +232,11 @@ export default function PatientProfileModal({ onClose }: Props) {
             </button>
           </div>
         )}
-                {openPrescription && (
-  <CreatePrescriptionsModal
-    onClose={() => setOpenPrescription(false)}
-  />
-)}
+        {openPrescription && (
+          <CreatePrescriptionsModal
+            onClose={() => setOpenPrescription(false)}
+          />
+        )}
       </div>
     </div>
   );
