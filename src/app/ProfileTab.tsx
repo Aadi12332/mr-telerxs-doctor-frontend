@@ -41,7 +41,7 @@ export function ProfileTab() {
         <Input label="Full Name" value="Dr. John Smith" />
         <Input label="Gender" value="Male" />
         <div>
-          <label className="text-[20px] text-[#012047] mb-3 block">DOB</label>
+          <label className="text-[20px] text-[#012047] mb-3 block leading-[24px]">DOB</label>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               value={dob}
@@ -62,6 +62,9 @@ export function ProfileTab() {
                       fontSize: "20px",
                       padding: "0 16px",
                       border: "1px solid #00000033",
+                      "@media(max-width:1024px)": {
+                       borderRadius: "8px ",
+                      },
                       "& fieldset": {
                         border: "none",
                       },
@@ -90,8 +93,8 @@ export function ProfileTab() {
           placeholder="ALL"
           openDirection="bottom"
           width="w-full"
-          className="rounded-[20px] !text-[20px] !border-[#00000033]"
-          labelclassName="!mb-4 !text-[20px] !font-normal"
+          className="lg:!rounded-[20px] !rounded-lg !text-[20px] !border-[#00000033]"
+          labelclassName="!mb-3 !text-[20px] !font-normal leading-[24px]"
         />
         <Input label="Years of Experience" value="10" />
         <Input label="Hospital Affiliation" value="412101" />
@@ -102,28 +105,28 @@ export function ProfileTab() {
         <label className="block mb-3 text-[20px]">Professional Bio</label>
         <textarea
           placeholder="Tell patients about your experience.."
-          className="w-full border rounded-[20px] border-[#00000033] text-[20px] placeholder:text-[#00000080] px-4 py-3 h-28 outline-none"
+          className="w-full border lg:rounded-[20px] rounded-lg border-[#00000033] text-[20px] placeholder:text-[#00000080] px-4 py-3 h-28 outline-none"
         />
       </div>
 
-      <div className="border rounded-[20px] border-[#00000033] p-6">
+      <div className="border lg:rounded-[20px] rounded-lg border-[#00000033] lg:p-6 p-3">
         <p className="text-[20px] mb-6">Medical License Number</p>
 
-        <div className="bg-[#D9D9D966] px-5 py-3 rounded-[20px] flex items-center justify-between bg-gray-50">
+        <div className="bg-[#D9D9D966] px-5 py-3 rounded-[20px] flex md:flex-row flex-col gap-5 md:items-center justify-between bg-gray-50">
           <div className="flex gap-5 items-center">
             <img src={ConfirmUpload} alt="" />
             <div>
-              <p className="text-[20px] mb-5">File Name</p>
+              <p className="text-[20px] md:mb-5 mb-1">File Name</p>
               <p className="text-[18px] text-[#00000080]">
                 Verified on Nov 15, 2024
               </p>
             </div>
           </div>
-          <div className="flex gap-5 items-center">
+          <div className="flex gap-5 items-center justify-between md:justify-end">
             <button className="text-[#00598D] text-[18px]">
               Replace/Upload
             </button>
-            <button onClick={() => setOpen(true)} className="border border-[#0000004D] px-6 py-2.5 rounded-[10px] text-[18px] bg-white">
+            <button onClick={() => setOpen(true)} className="border border-[#0000004D] px-6 md:py-2.5 py-1.5 rounded-[10px] text-[18px] bg-white">
               View
             </button>
             {open && (
@@ -137,7 +140,7 @@ export function ProfileTab() {
       </div>
 
       <div className="flex justify-end">
-        <button className="bg-[#00598D] text-white px-6 py-2 rounded-[10px] text-[16px] font-medium">
+        <button className="bg-[#00598D] text-white px-6 py-2 lg:rounded-[10px] rounded-lg text-[16px] font-medium">
           Save changes
         </button>
       </div>

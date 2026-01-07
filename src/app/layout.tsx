@@ -23,7 +23,7 @@ export default function Layout() {
 
         <main
           className={`overflow-auto scroll-hide bg-white ${
-            hideHeader ? "h-screen" : "h-[calc(100vh-159px)]"
+            hideHeader ? "h-screen" : "lg:h-[calc(100vh-159px)] h-[calc(100vh-70px)]"
           }`}
         >
           <Outlet />

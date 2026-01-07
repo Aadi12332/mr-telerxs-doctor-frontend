@@ -46,7 +46,7 @@ export default function PaymentSuccess() {
               </p>
 
               <div className="flex justify-between gap-5">
-              <button className="border border-[#0000004D] h-[50px] text-[20px] px-10 flex items-center justify-center rounded-[10px] max-w-[398px] w-full">
+              <button onClick={()=>navigate("/payment-history")} className="border border-[#0000004D] h-[50px] text-[20px] px-10 flex items-center justify-center rounded-[10px] max-w-[398px] w-full">
                 View Payment History
               </button>
                 <button onClick={()=>navigate("/dashboard")} className="bg-[#00598D] text-[20px] text-white px-20 flex items-center justify-center rounded-[10px] max-w-[577px] w-full h-[50px]">

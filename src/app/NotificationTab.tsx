@@ -26,15 +26,15 @@ export function NotificationTab() {
   };
 
   return (
-    <div className="border border-[#00000033] rounded-[20px] p-6">
-      <h3 className="text-[24px] font-medium mb-[30px]">Notification Preferences</h3>
+    <div className="border border-[#00000033] lg:rounded-[20px] rounded-lg lg:p-6 p-3">
+      <h3 className="text-[24px] font-medium lg:mb-[30px] mb-5">Notification Preferences</h3>
     <div className="space-y-3">
       {NOTIFICATION_SETTINGS.map((item) => (
         <div
           key={item.id}
-          className="flex items-center justify-between bg-[#F2F2F2] rounded-2xl p-10"
+          className="flex items-center justify-between bg-[#F2F2F2] lg:rounded-[20px] rounded-lg lg:p-10 p-4"
         >
-          <p className="text-[22px] text-[#000]">
+          <p className="lg:text-[22px] text-lg text-[#000]">
             {item.label}
           </p>
 

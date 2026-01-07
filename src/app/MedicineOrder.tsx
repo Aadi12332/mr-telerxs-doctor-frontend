@@ -73,7 +73,7 @@ const orders = [
 
 export default function MedicineOrder() {
   const [open, setOpen] = useState(false);
-const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 
   return (
     <>
@@ -87,7 +87,7 @@ const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 sm:gap-6 gap-3 mb-8">
           {STATUS_CARDS.map((item) => (
             <div
               key={item.title}
@@ -112,10 +112,10 @@ const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
           {orders.map((item) => (
             <div
               key={item.id}
-              className="bg-[#EFF1F4] rounded-[28px] px-11 py-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+              className="bg-[#EFF1F4] lg:rounded-[28px] rounded-lg md:px-11 px-3 md:py-8 py-3 flex flex-col sm:flex-row md:items-center md:justify-between gap-4"
             >
               <div className="flex-1">
-                <div className="flex items-center gap-4 mb-1 lg:w-[400px] justify-between">
+                <div className="flex items-center gap-4 mb-1 sm:w-[400px] justify-between">
                   <h3 className="text-lg font-semibold text-black">
                     {item.id}
                   </h3>
@@ -139,17 +139,17 @@ const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
                 <p className="text-gray-500">{item.medicine}</p>
               </div>
 
-              <div className="flex flex-col items-end">
-                <div className="text-right">
+              <div className="flex flex-col sm:items-end">
+                <div className="sm:text-right">
                   <p className="text-gray-400 text-sm mb-3">{item.dateLabel}</p>
                   <p className="text-black font-medium mb-5">{item.date}</p>
                 </div>
 
                 <button
-                    onClick={() => {
-    setSelectedStatus(item.status);
-    setOpen(true);
-  }}
+                  onClick={() => {
+                    setSelectedStatus(item.status);
+                    setOpen(true);
+                  }}
                   className="bg-white px-6 py-2 rounded-xl shadow-sm font-medium"
                 >
                   View
@@ -157,12 +157,13 @@ const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
               </div>
             </div>
           ))}
-{open && (
-  <OrderTrackingModal
-    status={selectedStatus}
-    onClose={() => setOpen(false)}
-  />
-)}        </div>
+          {open && (
+            <OrderTrackingModal
+              status={selectedStatus}
+              onClose={() => setOpen(false)}
+            />
+          )}{" "}
+        </div>
       </div>
       <div className="bg-[#E5F8FC] p-3 text-center">
         <span className="text-[16px] text-[#b0b0b0] font-medium">

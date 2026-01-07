@@ -23,7 +23,7 @@ const TABS = [
 export default function Setting() {
   const [activeTab, setActiveTab] = useState("profile");
   return (
-    <div className="min-h-[calc(100vh-160px)] overflow-auto scroll-hide flex flex-col justify-between">
+    <div className="lg:min-h-[calc(100vh-160px)] min-h-[calc(100vh-70px)] overflow-auto scroll-hide flex flex-col justify-between">
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
         <div className="mb-8">
           <h2 className="text-[28px] font-medium text-[#000]">
@@ -35,12 +35,12 @@ export default function Setting() {
         </div>
 
         <div className="w-full mb-8">
-          <div className="flex gap-6 mb-10 justify-between">
+          <div className="flex xl:gap-6 gap-3 mb-10 md:justify-between flex-wrap">
             {TABS.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`flex items-center gap-10 px-6 py-4 rounded-2xl min-w-[220px] min-h-[98px] transition
+                className={`flex items-center xl:gap-10 gap-3 lg:px-6 px-3 lg:py-4 py-2 lg:rounded-[20px] rounded-lg xl:min-w-[220px] lg:min-h-[98px] min-h-[50px] transition
               ${
                 activeTab === tab.key
                   ? "bg-[#0B2A4A] text-white"
@@ -51,9 +51,9 @@ export default function Setting() {
                     <img
                       src={activeTab === tab.key ? tab.activeIcon : tab.icon}
                       alt=""
-                      className="w-10 h-10"
+                      className="lg:w-10 lg:h-10 w-6"
                     />
-                <span className="text-[22px]">{tab.label}</span>
+                <span className="lg:text-[22px] text-[18px]">{tab.label}</span>
               </button>
             ))}
           </div>

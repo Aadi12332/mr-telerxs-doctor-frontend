@@ -7,6 +7,7 @@ import sendicon from "../assets/sendicon.svg";
 import deleteicon from "../assets/deleteicon.svg";
 import linkicon from "../assets/linkattachicon.svg";
 import AlertIcon from "../assets/AlertIcon";
+import backarrowicon from "../assets/backlongarrowicon.svg";
 
 type Message = {
   from: "patient" | "doctor";
@@ -116,6 +117,7 @@ export default function MedicineOrder() {
   console.log({ chatList });
   const [openProfile, setOpenProfile] = useState(false);
   const [activeChat, setActiveChat] = useState<Conversation | null>(null);
+  const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
   const handleDeleteChat = () => {
     if (!activeChat) return;
 
@@ -140,7 +142,7 @@ export default function MedicineOrder() {
           </p>
         </div>
 
-        <div className="bg-[#BAD7FFCC] backdrop-blur-[38.4px] rounded-[20px] py-6 px-[30px] mb-8">
+        <div className="bg-[#BAD7FFCC] backdrop-blur-[38.4px] lg:rounded-[20px] rounded-lg py-6 lg:px-[30px] px-3 mb-8">
           <div className="flex items-center gap-3 mb-6">
             <img src={notificationicon} className="w-6 h-6" />
             <h2 className="text-[22px] font-semibold">Notifications</h2>
@@ -148,57 +150,62 @@ export default function MedicineOrder() {
 
           <div className="grid md:grid-cols-3 gap-6">
             {notifications.map((item, i) => (
-              <div key={i} className="bg-white rounded-[20px] p-6">
-                <h3 className="text-[22px] mb-7">{item.title}</h3>
-                <p className="text-[20px] text-[#00000080]">
+              <div key={i} className="bg-white lg:rounded-[20px] rounded-lg md:p-6 p-3">
+                <h3 className="lg:text-[22px] text-[18px] mb-7">{item.title}</h3>
+                <p className="lg:text-[20px] text-base text-[#00000080]">
                   {item.description}
                 </p>
-                <p className="text-right mt-2 text-[#00000080]">{item.date}</p>
+                <p className="text-right mt-2 text-sm lg:text-base text-[#00000080]">{item.date}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border overflow-hidden mb-8">
-          <div className="flex items-center justify-between px-8 py-8 border-b">
-            <h2 className="text-[28px] font-semibold text-[#0E82FD]">
+        <div className="bg-white lg:rounded-[20px] rounded-lg border overflow-hidden mb-8">
+          <div className="flex items-center justify-between lg:px-8 px-3 lg:py-8 py-4 border-b">
+            <h2 className="lg:text-[28px] text-[22px] font-semibold text-[#0E82FD]">
               Patient Messages
             </h2>
 
-            <div className="flex items-center gap-3 h-[48px] rounded-[20px] w-[360px] border px-4">
+            <div className="flex items-center gap-3 h-[48px] lg:rounded-[20px] rounded-lg border lg:px-4 px-2">
               <input
                 placeholder="Search conversations..."
-                className="flex-1 outline-none"
+                className="flex-1 outline-none lg:w-[360px] w-[150px]"
               />
               <img src={searchicon} />
             </div>
           </div>
 
           <div className="flex h-[700px]">
-            <div className="w-[544px] border-r overflow-auto scroll-hide">
+            <div   className={`xl:w-[544px] md:w-[350px] w-full border-r overflow-auto scroll-hide
+    ${isMobileChatOpen ? "hidden md:block" : "block"}
+  `}>
               {conversations.map((item) => {
                 const last = item.messages[item.messages.length - 1];
 
                 return (
                   <div
                     key={item.id}
-                    onClick={() => setActiveChat(item)}
-                    className={`flex items-center gap-4 px-5 py-4 border-b cursor-pointer ${
+                    onClick={() => {
+                      setActiveChat(item);
+                      setIsMobileChatOpen(true);
+                    }}
+                    className={`flex items-center xl:gap-4 gap-2 xl:px-5 px-3 lg:py-4 py-2 border-b cursor-pointer ${
                       activeChat?.id === item.id
                         ? "bg-blue-50"
                         : "hover:bg-gray-50"
                     }`}
                   >
-                    <img src={item.image} className="w-20 h-20 rounded-full" />
+                    <img src={item.image} className="xl:w-20 xl:h-20 w-16 h-16 rounded-full" />
 
                     <div className="flex-1">
-                      <div className="flex justify-between">
-                        <p className="text-[22px]">{item.name}</p>
+                      <div className="flex justify-between items-center gap-2">
+                        <p className="lg:text-[22px] text-[18px]">{item.name}</p>
                         <p className="text-sm text-[#00000080]">{last?.time}</p>
                       </div>
 
                       <div className="flex justify-between">
-                        <p className="w-[250px] truncate text-[#00000080]">
+                        <p className="xl:w-[250px] w-[150px] text-[14px] lg:text-base truncate text-[#00000080]">
                           {last?.text}
                         </p>
 
@@ -214,51 +221,60 @@ export default function MedicineOrder() {
               })}
             </div>
 
-            <div className="flex-1 flex flex-col">
+            <div   className={`flex-1 flex flex-col
+    ${!isMobileChatOpen ? "hidden md:flex" : "flex"}
+  `}>
               {!activeChat ? (
-                <div className="flex-1 flex items-center justify-center text-[#00000080] text-[26px]">
+                <div className="flex-1 flex items-center justify-center text-[#00000080] lg:text-[26px] text-[18px]">
                   Select a conversation to start messaging
                 </div>
               ) : (
                 <>
-                  <div className="px-6 py-2 border-b flex justify-between items-center">
-                    <div className="flex items-center gap-3">
+                  <div className="lg:px-6 px-3 py-2 border-b flex justify-between items-center">
+                    <div className="flex items-center lg:gap-3 gap-2">
+                      {isMobileChatOpen && (
+  <img
+    src={backarrowicon}
+    className="md:hidden w-6 cursor-pointer invert"
+    onClick={() => setIsMobileChatOpen(false)}
+  />
+)}
                       <img
                         src={activeChat.image}
                         alt=""
-                        className="w-20 h-20 rounded-full"
+                        className="xl:w-20 xl:h-20 w-16 h-16 rounded-full"
                       />
                       <div className="">
-                        <p className="font-medium text-[22px] mb-1">
+                        <p className="font-medium lg:text-[22px] text-[18px] mb-1">
                           {activeChat.name}
                         </p>
-                        <p className="text-[20px] text-[#00000080]">
+                        <p className="lg:text-[20px] text-[14px] text-[#00000080]">
                           {activeChat.role} • {activeChat.lastSeen}
                         </p>
                       </div>
                     </div>
-                    <div className="flex gap-5 items-center">
+                    <div className="flex lg:gap-5 gap-3 items-center">
                       <div
                         onClick={() => setOpenProfile(true)}
-                        className="border-[0.32px] border-[#00000066] text-[14px] font-medium px-4 py-2 rounded-lg cursor-pointer"
+                        className="border-[0.32px] border-[#00000066] text-[14px] font-medium lg:px-4 px-2 lg:py-2 py-1.5 rounded-lg cursor-pointer"
                       >
                         View Profile
                       </div>
                       <img
                         src={deleteicon}
                         alt=""
-                        className="cursor-pointer"
+                        className="cursor-pointer lg:w-10 w-6"
                         onClick={handleDeleteChat}
                       />
                     </div>
                   </div>
-                  <div className="bg-[#B3DEF5] text-[#0E5C86] text-[18px] text-center flex items-center gap-2 py-3 justify-center">
+                  <div className="bg-[#B3DEF5] text-[#0E5C86] lg:text-[18px] text-sm text-center flex items-center gap-2 py-3 px-2 justify-center">
                     <img src={lockimg} alt="" />
                     This conversation is end-to-end encrypted and HIPAA
                     compliant
                   </div>
 
-                  <div className="flex-1 p-6 space-y-4 overflow-auto scroll-hide">
+                  <div className="flex-1 lg:p-6 p-3 space-y-4 overflow-auto scroll-hide">
                     {activeChat.messages.map((msg, i) => (
                       <div
                         key={i}
@@ -274,13 +290,13 @@ export default function MedicineOrder() {
                     ))}
                   </div>
 
-                  <div className="border-t px-6 py-4 flex gap-4">
+                  <div className="border-t lg:px-6 px-3 lg:py-4 py-2 flex lg:gap-4 gap-2">
                     <img src={linkicon} alt="" />
                     <input
                       placeholder="Type a HIPAA-compliant message..."
                       className="flex-1 bg-gray-100 rounded-xl px-4 py-3 outline-none"
                     />
-                    <button className="bg-[#2F6EA3] text-white px-6 rounded-xl flex gap-2 items-center">
+                    <button className="bg-[#2F6EA3] text-white lg:px-6 px-2 rounded-xl flex gap-2 items-center">
                       <img src={sendicon} alt="" />
                       Send
                     </button>
@@ -295,7 +311,7 @@ export default function MedicineOrder() {
           <PatientProfileModal onClose={() => setOpenProfile(false)} />
         )}
 
-        <div className="bg-[#F6D6D6] rounded-2xl px-6 py-5 flex justify-between mb-8">
+        <div className="bg-[#F6D6D6] rounded-2xl px-6 py-5 flex sm:flex-row flex-col gap-5 items-start sm:items-center justify-between mb-8">
           <div className="flex gap-4 items-center">
             <AlertIcon />
             <div>

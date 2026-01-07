@@ -11,6 +11,9 @@ import mailicon from "../assets/emailicon.svg";
 import inprogressicon from "../assets/inprogressicon.svg";
 import createicon from "../assets/createfileicon.svg";
 import CustomSelect from "../components/common/customSelect";
+import CreatePrescriptionsModal from "./CreatePrescriptionModal";
+import IntakeFormModal from "./IntakeFormModal";
+import NoteModal from "./NoteModal";
 const SPECIALIZATIONS = [
   "Cardiology",
   "Dermatology",
@@ -60,7 +63,9 @@ const consultations = [
 
 export default function Consultation() {
   const [specialization, setSpecialization] = useState("");
-
+  const [openPrescription, setOpenPrescription] = useState(false);
+  const [openIntakeForm, setOpenIntakeForm] = useState(false);
+const [openNote, setOpenNote] = useState(false);
   return (
     <>
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
@@ -74,7 +79,7 @@ export default function Consultation() {
         </div>
 
         <div className="flex justify-between items-center lg:gap-[150px] gap-5 w-full mb-8">
-          <div className="flex-1 flex gap-2 items-center pr-5 pl-2 py-3 border border-[#D1D5DB] rounded-[8px] h-[48px] lg:min-w-[486px] sm:w-[170px] w-[120px]">
+          <div className="flex gap-2 items-center pr-5 pl-2 py-3 border border-[#D1D5DB] rounded-[8px] h-[48px] lg:min-w-[486px] sm:w-[170px] flex-1">
             <img src={SearchIcon} alt="" />
             <input
               type="text"
@@ -82,7 +87,7 @@ export default function Consultation() {
               className="outline-none w-full placeholder:text-[#9F9F9F] text-[16px]"
             />
           </div>
-          <div className="lg:w-[180px] w-[120px]">
+          <div className="lg:w-[180px] sm:w-[120px] flex-1">
             <CustomSelect
               data={SPECIALIZATIONS}
               value={specialization}
@@ -90,7 +95,7 @@ export default function Consultation() {
               placeholder="ALL"
               openDirection="bottom"
               width="w-full"
-              className="lg:w-[180px] w-[120px] !h-[48px]"
+              className="lg:w-[180px] sm:w-[120px] flex-1 !h-[48px]"
             />
           </div>
         </div>
@@ -99,9 +104,9 @@ export default function Consultation() {
           {consultations.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-[20px] bg-[#D9D9D933] p-6 flex flex-col gap-5"
+              className="rounded-lg md:rounded-[20px] bg-[#D9D9D933] md:p-6 p-3 flex flex-col gap-5"
             >
-              <div className="flex justify-between items-start">
+              <div className="flex justify-between items-start gap-5 md:flex-row flex-col">
                 <div className="flex gap-4 items-center">
                   <img
                     src={item.image}
@@ -123,7 +128,7 @@ export default function Consultation() {
                     </span>
                   )}
 
-                  <span className="flex items-center gap-2 px-4 py-1 rounded-full bg-sky-100 text-sky-700 text-sm">
+                  <span onClick={() => setOpenNote(true)} className="flex items-center gap-2 px-4 py-1 rounded-full bg-sky-100 text-sky-700 text-sm">
                     <img src={noteicon} className="w-4" /> Note
                   </span>
 
@@ -168,13 +173,23 @@ export default function Consultation() {
                 </div>
               </div>
 
-              <div className="flex flex-col md:flex-row gap-4">
-                <button className="flex-1 h-[48px] rounded-full flex items-center justify-center gap-2 text-white bg-[linear-gradient(90deg,#25AEED_0%,#0A70A7_100%)]">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={() => {
+                    setOpenIntakeForm(true);
+                  }}
+                  className="flex-1 h-[48px] py-2 rounded-full flex items-center justify-center gap-2 text-white bg-[linear-gradient(90deg,#25AEED_0%,#0A70A7_100%)]"
+                >
                   <img src={viewicon} className="w-5" />
                   View Intake Form
                 </button>
 
-                <button className="flex-1 h-[48px] rounded-full flex items-center justify-center gap-2 text-white bg-[linear-gradient(270deg,#308D32_0%,#86C987_100%)]">
+                <button
+                  onClick={() => {
+                    setOpenPrescription(true);
+                  }}
+                  className="flex-1 h-[48px] py-2 rounded-full flex items-center justify-center gap-2 text-white bg-[linear-gradient(270deg,#308D32_0%,#86C987_100%)]"
+                >
                   <img src={createicon} className="w-5" />
                   Create Prescription
                 </button>
@@ -183,6 +198,16 @@ export default function Consultation() {
           ))}
         </div>
       </div>
+
+      {openNote && 
+        <NoteModal onClose={() => setOpenNote(false)} />
+      }
+      {openPrescription && (
+        <CreatePrescriptionsModal onClose={() => setOpenPrescription(false)} />
+      )}
+      {openIntakeForm && (
+        <IntakeFormModal onClose={() => setOpenIntakeForm(false)} />
+      )}
       <div className="bg-[#E5F8FC] p-3 text-center">
         <span className="text-[16px] text-[#b0b0b0] font-medium">
           CompanyName2025 © All Rights Reserved
