@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import locationicon from "../../assets/locationicon.svg";
-import backarrowicon from "../../assets/backlongarrow.svg";
+import downarroricon from "../../assets/downarrowicon.svg";
 import SearchIcon from "../../assets/searchIcon.svg";
 import Logo from "../../assets/logo.svg";
 
@@ -21,6 +22,7 @@ const TABS = [
 
 export default function Header() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [locationList, setLocationList] = useState("Pune");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -50,7 +52,7 @@ export default function Header() {
       <div className="bg-white">
         <header className="lg:h-[103px] h-[70px] flex items-center justify-between max-w-[1440px] mx-auto w-full lg:px-6 px-3 shadow-sm">
           <div className="flex gap-3 items-center">
-            <img src={Logo} alt="" className="lg:w-[108px] w-[80px]" />
+            <img src={Logo} alt="" className="lg:w-[108px] w-[80px]" onClick={()=>navigate("/dashboard")}/>
             <div className="relative w-full max-w-[520px] hidden lg:block">
               <div
                 onClick={() => setOpen(!open)}
@@ -74,11 +76,13 @@ export default function Header() {
                   </span>
                 </div>
 
-                <img
-                  src={backarrowicon}
-                  alt="Dropdown"
-                  className={`w-5 ml-4 transition invert -rotate-90`}
-                />
+                  <img
+                    src={downarroricon}
+                    alt="Dropdown"
+                    className={`lg:w-4 w-3 ml-4 transition-transform duration-300 ease-in-out ${
+                      open ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
               </div>
 
               {open && (
@@ -100,16 +104,16 @@ export default function Header() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex gap-2 items-center pl-5 pr-2 py-3 border border-[#D1D5DB] rounded-[8px] h-[48px]">
+            <div className="flex gap-2 items-center lg:pl-5 pl-2 pr-2 py-3 border border-[#D1D5DB] rounded-[8px] lg:h-[48px] h-10">
               <input
                 type="text"
                 placeholder="Search for Medicine, orders, or names…"
-                className="outline-none lg:min-w-[486px] sm:w-[170px] w-[120px] placeholder:text-[#9F9F9F] text-[16px]"
+                className="outline-none lg:min-w-[486px] sm:w-[170px] w-[120px] placeholder:text-[#9F9F9F] lg:text-[16px] text-sm"
               />
-              <img src={SearchIcon} alt="" />
+              <img src={SearchIcon} alt="" className="w-5 lg:w-6" />
             </div>
             <div
-              className="lg:hidden cursor-pointer text-[#1F5A8F]"
+              className="lg:hidden cursor-pointer text-[#000]"
               onClick={() => setIsSidebarOpen(true)}
             >
               <svg
@@ -187,9 +191,9 @@ export default function Header() {
             <div className="flex flex-col gap-6">
               <img src={Logo} alt="" className="lg:w-[108px] w-[80px] mb-5" />
               <div className="relative w-full max-w-[520px]">
-              <div
-                onClick={() => setOpen(!open)}
-                className="
+                <div
+                  onClick={() => setOpen(!open)}
+                  className="
                   flex items-center justify-between
                   bg-[#88888824]
                   rounded-[12px]
@@ -198,41 +202,43 @@ export default function Header() {
                   cursor-pointer
                   shadow-sm
                 "
-              >
-                <div className="flex items-center gap-1">
-                  <img src={locationicon} alt="Location" className="w-6" />
-                  <span className="text-[#1F5A8F] text-[16px] font-semibold">
-                    Delivering to:
-                  </span>
-                  <span className="text-[#4F4F4F] text-[16px] font-semibold">
-                    {locationList}
-                  </span>
+                >
+                  <div className="flex items-center gap-1">
+                    <img src={locationicon} alt="Location" className="w-6" />
+                    <span className="text-[#1F5A8F] text-[16px] font-semibold">
+                      Delivering to:
+                    </span>
+                    <span className="text-[#4F4F4F] text-[16px] font-semibold">
+                      {locationList}
+                    </span>
+                  </div>
+
+                  <img
+                    src={downarroricon}
+                    alt="Dropdown"
+                    className={`lg:w-5 w-3 ml-4 transition-transform duration-300 ease-in-out ${
+                      open ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
                 </div>
 
-                <img
-                  src={backarrowicon}
-                  alt="Dropdown"
-                  className={`w-5 ml-4 transition invert -rotate-90`}
-                />
+                {open && (
+                  <div className="absolute left-0 right-0 mt-3 bg-white rounded-xl shadow-lg overflow-hidden z-[11]">
+                    {LOCATIONS.map((item) => (
+                      <div
+                        key={item}
+                        onClick={() => {
+                          setLocationList(item);
+                          setOpen(false);
+                        }}
+                        className="px-6 py-3 text-[16px] hover:bg-gray-100 cursor-pointer"
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-
-              {open && (
-                <div className="absolute left-0 right-0 mt-3 bg-white rounded-xl shadow-lg overflow-hidden z-[11]">
-                  {LOCATIONS.map((item) => (
-                    <div
-                      key={item}
-                      onClick={() => {
-                        setLocationList(item);
-                        setOpen(false);
-                      }}
-                      className="px-6 py-3 text-[16px] hover:bg-gray-100 cursor-pointer"
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
               {TABS.map((tab) => {
                 const isActive = tab.activePaths
                   ? tab.activePaths.some((p) => location.pathname.startsWith(p))
@@ -244,14 +250,15 @@ export default function Header() {
                     to={tab.path}
                     onClick={() => setIsSidebarOpen(false)}
                     className={`text-[18px] font-semibold border rounded-lg px-3 py-2 ${
-                      isActive ? "bg-[#1F5A8F] text-white border-[#1F5A8F]" : "text-[#4F4F4F] border-[#4F4F4F]"
+                      isActive
+                        ? "bg-[#1F5A8F] text-white border-[#1F5A8F]"
+                        : "text-[#4F4F4F] border-[#4F4F4F]"
                     }`}
                   >
                     {tab.label}
                   </NavLink>
                 );
               })}
-              
             </div>
           </div>
         </div>

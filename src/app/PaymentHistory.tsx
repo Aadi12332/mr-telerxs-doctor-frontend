@@ -25,10 +25,10 @@ export default function PaymentHistory() {
             />
           </div>
           <div>
-            <h2 className="text-[28px] font-medium text-[#000]">
+            <h2 className="lg:text-[28px] text-[24px] font-medium text-[#000]">
               Payment History
             </h2>
-            <p className="text-[20px] text-[#00000080]">
+            <p className="text-base lg:text-[20px] text-[#00000080]">
               View all your transactions and payment details
             </p>
           </div>

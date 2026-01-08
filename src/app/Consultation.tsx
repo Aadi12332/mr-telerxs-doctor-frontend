@@ -65,34 +65,36 @@ export default function Consultation() {
   const [specialization, setSpecialization] = useState("");
   const [openPrescription, setOpenPrescription] = useState(false);
   const [openIntakeForm, setOpenIntakeForm] = useState(false);
-const [openNote, setOpenNote] = useState(false);
+  const [openNote, setOpenNote] = useState(false);
+  const [selectedConsultation, setSelectedConsultation] = useState<any>(null);
+
   return (
     <>
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
         <div className="mb-8">
-          <h2 className="text-[28px] font-medium text-[#000]">
+          <h2 className="lg:text-[28px] text-[24px] font-medium text-[#000]">
             Patient Consultations
           </h2>
-          <p className="text-[20px] text-[#00000080]">
+          <p className="text-base lg:text-[20px] text-[#00000080]">
             Manage and review patient consultation requests
           </p>
         </div>
 
         <div className="flex justify-between items-center lg:gap-[150px] gap-5 w-full mb-8">
           <div className="flex gap-2 items-center pr-5 pl-2 py-3 border border-[#D1D5DB] rounded-[8px] h-[48px] lg:min-w-[486px] sm:w-[170px] flex-1">
-            <img src={SearchIcon} alt="" />
+            <img src={SearchIcon} alt="" className="lg:w-7 w-5" />
             <input
               type="text"
-              placeholder="Search for Medicine, orders, or names…"
+              placeholder="Search by patient name or condition..."
               className="outline-none w-full placeholder:text-[#9F9F9F] text-[16px]"
             />
           </div>
-          <div className="lg:w-[180px] sm:w-[120px] flex-1">
+          <div className="lg:w-[180px] sm:w-[120px]">
             <CustomSelect
               data={SPECIALIZATIONS}
               value={specialization}
               onChange={setSpecialization}
-              placeholder="ALL"
+              placeholder="All Status"
               openDirection="bottom"
               width="w-full"
               className="lg:w-[180px] sm:w-[120px] flex-1 !h-[48px]"
@@ -128,7 +130,10 @@ const [openNote, setOpenNote] = useState(false);
                     </span>
                   )}
 
-                  <span onClick={() => setOpenNote(true)} className="flex items-center gap-2 px-4 py-1 rounded-full bg-sky-100 text-sky-700 text-sm">
+                  <span
+                    onClick={() => setOpenNote(true)}
+                    className="flex items-center gap-2 px-4 py-1 rounded-full cursor-pointer bg-sky-100 text-sky-700 text-sm"
+                  >
                     <img src={noteicon} className="w-4" /> Note
                   </span>
 
@@ -176,6 +181,7 @@ const [openNote, setOpenNote] = useState(false);
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={() => {
+                    setSelectedConsultation(item);
                     setOpenIntakeForm(true);
                   }}
                   className="flex-1 h-[48px] py-2 rounded-full flex items-center justify-center gap-2 text-white bg-[linear-gradient(90deg,#25AEED_0%,#0A70A7_100%)]"
@@ -199,15 +205,19 @@ const [openNote, setOpenNote] = useState(false);
         </div>
       </div>
 
-      {openNote && 
-        <NoteModal onClose={() => setOpenNote(false)} />
-      }
+      {openNote && <NoteModal onClose={() => setOpenNote(false)} />}
+
       {openPrescription && (
         <CreatePrescriptionsModal onClose={() => setOpenPrescription(false)} />
       )}
-      {openIntakeForm && (
-        <IntakeFormModal onClose={() => setOpenIntakeForm(false)} />
+      
+      {openIntakeForm && selectedConsultation && (
+        <IntakeFormModal
+          onClose={() => setOpenIntakeForm(false)}
+          refill={selectedConsultation.actions.includes("refill")}
+        />
       )}
+
       <div className="bg-[#E5F8FC] p-3 text-center">
         <span className="text-[16px] text-[#b0b0b0] font-medium">
           CompanyName2025 © All Rights Reserved

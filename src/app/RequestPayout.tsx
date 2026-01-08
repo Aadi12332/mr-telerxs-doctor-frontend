@@ -18,10 +18,10 @@ export default function RequestPayout() {
             onClick={() => navigate("/payout-setting")}
           />
           <div>
-            <h2 className="text-[28px] font-medium text-[#000]">
+            <h2 className="lg:text-[28px] text-[24px] font-medium text-[#000]">
               Request Payout
             </h2>
-            <p className="text-[20px] text-[#00000080]">
+            <p className="text-base lg:text-[20px] text-[#00000080]">
               Transfer your earnings to your bank account
             </p>
           </div>
@@ -34,10 +34,10 @@ export default function RequestPayout() {
                 Account Holder Name
               </label>
               <input
-                className="w-full border border-[#0000004D] text-[20px] rounded-[20px] h-[65px] px-4 py-3"
+                className="w-full border border-[#0000004D] text-base lg:text-[20px] rounded-[20px] h-[65px] px-4 py-3"
                 placeholder="John"
               />
-              <p className="text-[#00000080] text-[20px] mt-3">Minimum: $50</p>
+              <p className="text-[#00000080] text-base lg:text-[20px] mt-3">Minimum: $50</p>
             </div>
             <div>
               <label className="block mb-3 text-[22px]">
@@ -64,11 +64,11 @@ export default function RequestPayout() {
               </div>
             </div>
             <div className="flex justify-between gap-3 items-center mt-[51px]">
-              <button className="border border-[#0000004D] h-[50px] text-[20px] px-10 flex items-center justify-center rounded-[10px] max-w-[398px] w-full">
+              <button className="border border-[#0000004D] h-[50px] text-base lg:text-[20px] px-10 flex items-center justify-center rounded-[10px] max-w-[398px] w-full">
                 Cancel
               </button>
 
-              <button onClick={() => setOpen(true)} className="bg-[#00598D] text-white text-[20px] px-10 rounded-[10px] flex items-center justify-center max-w-[577px] w-full h-[50px]">
+              <button onClick={() => setOpen(true)} className="bg-[#00598D] text-white text-base lg:text-[20px] px-10 rounded-[10px] flex items-center justify-center max-w-[577px] w-full h-[50px]">
                 Proceed
               </button>
 

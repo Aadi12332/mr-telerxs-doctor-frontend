@@ -2,7 +2,7 @@ import TransitIcon from "../assets/transfericon.svg";
 import DeliveredIcon from "../assets/deliveredicon.svg";
 import ProcessingIcon from "../assets/processingicon.svg";
 import CancelledIcon from "../assets/closeordericon.svg";
-import OrderTrackingModal from "./OrderTrackingModal";
+import OrderTrackingModal, { type OrderStatus } from "./OrderTrackingModal";
 import { useState } from "react";
 
 const STATUS_CARDS = [
@@ -73,16 +73,16 @@ const orders = [
 
 export default function MedicineOrder() {
   const [open, setOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<OrderStatus|string>("Cancelled");
 
   return (
     <>
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
         <div className="mb-8">
-          <h2 className="text-[28px] font-medium text-[#000]">
+          <h2 className="lg:text-[28px] text-[24px] font-medium text-[#000]">
             Medicine Order Tracking
           </h2>
-          <p className="text-[20px] text-[#00000080]">
+          <p className="text-base lg:text-[20px] text-[#00000080]">
             Monitor prescription fulfillment and delivery status
           </p>
         </div>
@@ -91,7 +91,7 @@ export default function MedicineOrder() {
           {STATUS_CARDS.map((item) => (
             <div
               key={item.title}
-              className={`${item.bg} rounded-2xl px-6 py-8 flex flex-col items-center justify-center`}
+              className={`${item.bg} lg:rounded-[20px] rounded-lg px-6 py-8 flex flex-col items-center justify-center`}
             >
               <div className={`text-3xl mb-4 ${item.text}`}>
                 <img src={item.icon} alt="" />

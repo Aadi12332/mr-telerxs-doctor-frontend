@@ -41,7 +41,7 @@ export function ProfileTab() {
         <Input label="Full Name" value="Dr. John Smith" />
         <Input label="Gender" value="Male" />
         <div>
-          <label className="text-[20px] text-[#012047] mb-3 block leading-[24px]">DOB</label>
+          <label className="lg:text-[20px] text-base text-[#012047] lg:mb-3 mb-1 block leading-[24px]">DOB</label>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               value={dob}
@@ -64,6 +64,8 @@ export function ProfileTab() {
                       border: "1px solid #00000033",
                       "@media(max-width:1024px)": {
                        borderRadius: "8px ",
+                       fontSize: "16px",
+                       height: "40px",
                       },
                       "& fieldset": {
                         border: "none",
@@ -76,7 +78,7 @@ export function ProfileTab() {
                       },
                     },
                     className:
-                      "w-full text-[20px] placeholder:text-[#00000080] outline-none bg-white",
+                      "w-full lg:text-[20px] text-base placeholder:text-[#00000080] outline-none bg-white",
                   },
                 },
               }}
@@ -93,8 +95,8 @@ export function ProfileTab() {
           placeholder="ALL"
           openDirection="bottom"
           width="w-full"
-          className="lg:!rounded-[20px] !rounded-lg !text-[20px] !border-[#00000033]"
-          labelclassName="!mb-3 !text-[20px] !font-normal leading-[24px]"
+          className="lg:!rounded-[20px] !rounded-lg !text-[16px] lg:!text-[20px] !border-[#00000033] !h-[40px] lg:h-[56px]"
+          labelclassName="lg:!mb-3 !mb-1 !text-[16px] lg:!text-[20px] !font-normal leading-[24px]"
         />
         <Input label="Years of Experience" value="10" />
         <Input label="Hospital Affiliation" value="412101" />
@@ -102,31 +104,31 @@ export function ProfileTab() {
       </div>
 
       <div>
-        <label className="block mb-3 text-[20px]">Professional Bio</label>
+        <label className="block lg:mb-3 mb-1 text-base lg:text-[20px]">Professional Bio</label>
         <textarea
           placeholder="Tell patients about your experience.."
-          className="w-full border lg:rounded-[20px] rounded-lg border-[#00000033] text-[20px] placeholder:text-[#00000080] px-4 py-3 h-28 outline-none"
+          className="w-full border lg:rounded-[20px] rounded-lg border-[#00000033] text-base lg:text-[20px] placeholder:text-[#00000080] px-4 py-3 h-28 outline-none"
         />
       </div>
 
       <div className="border lg:rounded-[20px] rounded-lg border-[#00000033] lg:p-6 p-3">
         <p className="text-[20px] mb-6">Medical License Number</p>
 
-        <div className="bg-[#D9D9D966] px-5 py-3 rounded-[20px] flex md:flex-row flex-col gap-5 md:items-center justify-between bg-gray-50">
-          <div className="flex gap-5 items-center">
+        <div className="bg-[#D9D9D966] lg:px-5 px-3 py-3 lg:rounded-[20px] rounded-lg flex md:flex-row flex-col gap-5 md:items-center justify-between bg-gray-50">
+          <div className="flex sm:gap-5 gap-3 items-center">
             <img src={ConfirmUpload} alt="" />
             <div>
-              <p className="text-[20px] md:mb-5 mb-1">File Name</p>
-              <p className="text-[18px] text-[#00000080]">
+              <p className="text-base lg:text-[20px] md:mb-5 sm:mb-1">File Name</p>
+              <p className="text-sm lg:text-[18px] text-[#00000080]">
                 Verified on Nov 15, 2024
               </p>
             </div>
           </div>
           <div className="flex gap-5 items-center justify-between md:justify-end">
-            <button className="text-[#00598D] text-[18px]">
+            <button className="text-[#00598D] text-sm lg:text-[18px]">
               Replace/Upload
             </button>
-            <button onClick={() => setOpen(true)} className="border border-[#0000004D] px-6 md:py-2.5 py-1.5 rounded-[10px] text-[18px] bg-white">
+            <button onClick={() => setOpen(true)} className="border border-[#0000004D] px-6 md:py-2.5 py-1.5 rounded-lg lg:rounded-[10px] text-sm lg:text-[18px] bg-white">
               View
             </button>
             {open && (

@@ -12,10 +12,10 @@ export default function PaymentSuccess() {
             <img src={successicon} alt="" className="mb-5 cursor-pointer" />
           </div>
           <div>
-            <h2 className="text-[28px] font-medium text-[#000]">
+            <h2 className="lg:text-[28px] text-[24px] font-medium text-[#000]">
               Payout Request Successful!
             </h2>
-            <p className="text-[20px] text-[#00000080]">
+            <p className="text-base lg:text-[20px] text-[#00000080]">
               Your payout request has been submitted and is being processed.
             </p>
           </div>

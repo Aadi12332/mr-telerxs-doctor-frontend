@@ -72,7 +72,7 @@ export default function CustomSelect({
 
       {open && (
         <div
-          className={`absolute z-20 ${
+          className={`absolute z-20 overflow-hidden ${
             openDirection === "top" ? "bottom-[64px]" : "top-[64px]"
           } w-full bg-white border border-[#D9D9D9] rounded-lg shadow-md`}
         >

@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import backarrow from "../assets/backlongarrowicon.svg";
+import walleticon from "../assets/walleticon.svg";
+
 const DATA = [
   { label: "Minimum Payout Amount", value: "$50.00" },
   { label: "Maximum Payout Amount", value: "$10,000.00" },
@@ -20,10 +22,10 @@ export default function PayoutSetting() {
             onClick={() => navigate("/add-bank", { state: { step: 4 } })}
           />
           <div>
-            <h2 className="text-[28px] font-medium text-[#000]">
+            <h2 className="lg:text-[28px] text-[24px] font-medium text-[#000]">
               Payout Settings
             </h2>
-            <p className="text-[20px] text-[#00000080]">
+            <p className="text-base lg:text-[20px] text-[#00000080]">
               Manage your payout preferences and bank accounts
             </p>
           </div>
@@ -37,28 +39,28 @@ export default function PayoutSetting() {
             <div onClick={()=>navigate("/request-payout")} className="bg-[#0E82FD] rounded-[20px] p-6 text-white cursor-pointer">
               <div className="flex-1">
                 <div className="mt-1 mb-6 flex justify-between items-center">
-                  <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/20">
-                    <span className="text-xl">💳</span>
+                  <div className="">
+                    <img src={walleticon} alt="" />
                   </div>
-                  <div className="text-[20px] text-white/90">
+                  <div className="text-base lg:text-[20px] text-white/90">
                     Primary Account
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-[20px] text-white/80 mb-1">
+                  <p className="text-base lg:text-[20px] text-white/80 mb-1">
                     Account Holder
                   </p>
                   <p className="text-[26px] font-medium mb-6">John Anderson</p>
 
                   <div className="flex gap-16">
                     <div>
-                      <p className="text-[20px] text-white/80">Bank Name</p>
+                      <p className="text-base lg:text-[20px] text-white/80">Bank Name</p>
                       <p className="text-[24px] font-medium">Chase Bank</p>
                     </div>
 
                     <div>
-                      <p className="text-[20px] text-white/80">
+                      <p className="text-base lg:text-[20px] text-white/80">
                         Account Number
                       </p>
                       <p className="text-[24px] font-medium">
@@ -72,7 +74,7 @@ export default function PayoutSetting() {
             <div className="flex justify-center mt-[51px]">
               <button
                 onClick={() => navigate("/add-bank")}
-                className="border border-[#0000004D] text-[20px] h-[50px] px-10 flex items-center justify-center rounded-[10px] max-w-[398px] w-full"
+                className="border border-[#0000004D] text-base lg:text-[20px] h-[50px] px-10 flex items-center justify-center rounded-[10px] max-w-[398px] w-full"
               >
                 Change Bank Account
               </button>
@@ -88,8 +90,8 @@ export default function PayoutSetting() {
                   key={item.label}
                   className="bg-white rounded-[20px] px-8 py-6 flex justify-between items-center"
                 >
-                  <p className="text-[20px] text-[#00000080]">{item.label}</p>
-                  <p className="text-[20px] text-[#000]">{item.value}</p>
+                  <p className="text-base lg:text-[20px] text-[#00000080]">{item.label}</p>
+                  <p className="text-base lg:text-[20px] text-[#000]">{item.value}</p>
                 </div>
               ))}
             </div>

@@ -84,27 +84,27 @@ export default function PrescriptionManagement() {
   return (
     <>
       <div className="max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10 mb-8">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between lg:items-center mb-8 lg:flex-row flex-col gap-4">
           <div>
-            <h2 className="text-[28px] font-medium text-black">
+            <h2 className=" text-[24px] lg:text-[28px] font-medium text-black">
               Prescription Management
             </h2>
-            <p className="text-[20px] text-[#00000080]">
+            <p className="text-base lg:text-[20px] text-[#00000080]">
               Issue and manage patient prescriptions
             </p>
           </div>
 
           <button
             onClick={() => {setOpenPrescription(true);}}
-            className="h-[56px] px-8 rounded-[16px] flex items-center gap-3 text-white text-[20px] font-medium bg-[linear-gradient(90deg,#25AEED_0%,#0A70A7_100%)]"
+            className="h-[56px] w-fit lg:px-8 px-3 rounded-lg lg:rounded-[16px] flex items-center gap-3 text-white text-base lg:text-[20px] font-medium bg-[linear-gradient(90deg,#25AEED_0%,#0A70A7_100%)]"
           >
             <img src={createicon} className="w-6" />
             Create Prescription
           </button>
         </div>
 
-        <div className="bg-[#D9D9D933] rounded-[20px] p-6 mb-8">
-          <h3 className="text-[22px] font-medium mb-4">
+        <div className="bg-[#D9D9D933] rounded-lg lg:rounded-[20px] lg:p-6 p-3 mb-8">
+          <h3 className="text-lg lg:text-[22px] font-medium mb-4">
             Approved Medicine Database
           </h3>
 
@@ -116,9 +116,9 @@ export default function PrescriptionManagement() {
             />
           </div>
 
-          <div className="grid grid-cols-5 gap-10">
+          <div className="grid xl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 lg:gap-10 gap-3">
             {approvedMedicines.map((m, i) => (
-              <div key={i} className="bg-[#fff] rounded-[20px] p-4">
+              <div key={i} className="bg-[#fff] rounded-lg lg:rounded-[20px] p-4">
                 <p className="font-medium text-black">{m.name}</p>
                 <p className="text-[#0E82FD] text-[14px] mt-1">{m.type}</p>
                 <p className="text-[#00000080] text-[14px] mt-1">{m.desc}</p>
@@ -127,16 +127,16 @@ export default function PrescriptionManagement() {
           </div>
         </div>
 
-        <div className="bg-[#E6F4FB] rounded-[20px] p-6">
-          <h3 className="text-[22px] font-medium mb-6">Recent Prescriptions</h3>
+        <div className="bg-[#E6F4FB] rounded-lg lg:rounded-[20px] lg:p-6 p-3">
+          <h3 className="text-lg lg:text-[22px] font-medium mb-6">Recent Prescriptions</h3>
 
           <div className="space-y-6">
             {recentPrescriptions.map((p, i) => (
-              <div key={i} className="bg-white rounded-[20px] p-6">
+              <div key={i} className="bg-white rounded-lg lg:rounded-[20px] lg:p-6 p-3">
                 <div className="flex justify-between items-center mb-4">
                   <div>
-                    <p className="text-[20px] font-medium">{p.patient}</p>
-                    <p className="text-[#0E82FD]">{p.medicine}</p>
+                    <p className="text-base lg:text-[20px] font-medium">{p.patient}</p>
+                    <p className="text-[#0E82FD] text-[13px] lg:text-[16px]">{p.medicine}</p>
                   </div>
 
                   <span
@@ -155,18 +155,18 @@ export default function PrescriptionManagement() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-3 gap-6 text-[16px]">
+                <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 lg:gap-6 gap-3 text-[16px]">
                   <div>
-                    <p className="text-[#00000080]">Dosage</p>
-                    <p>{p.dosage}</p>
+                    <p className="text-sm lg:text-base text-[#00000080]">Dosage</p>
+                    <p className="text-sm lg:text-base ">{p.dosage}</p>
                   </div>
                   <div>
-                    <p className="text-[#00000080]">Frequency</p>
-                    <p>{p.frequency}</p>
+                    <p className="text-sm lg:text-base text-[#00000080]">Frequency</p>
+                    <p className="text-sm lg:text-base ">{p.frequency}</p>
                   </div>
                   <div>
-                    <p className="text-[#00000080]">Issued</p>
-                    <p>{p.issued}</p>
+                    <p className="text-sm lg:text-base text-[#00000080]">Issued</p>
+                    <p className="text-sm lg:text-base ">{p.issued}</p>
                   </div>
                 </div>
 

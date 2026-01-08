@@ -13,29 +13,29 @@ export default function ConfirmPayoutModal({ onClose, onConfirm }: Props) {
 
         <div className="bg-white rounded-[16px] p-6 mb-6">
           <div className="flex justify-between mb-4">
-            <p className="text-[20px] text-[#00000080]">Amount</p>
-            <p className="text-[20px] text-[#000]">$300</p>
+            <p className="text-base lg:text-[20px] text-[#00000080]">Amount</p>
+            <p className="text-base lg:text-[20px] text-[#000]">$300</p>
           </div>
 
           <div className="flex justify-between mb-4">
-            <p className="text-[20px] text-[#00000080]">
+            <p className="text-base lg:text-[20px] text-[#00000080]">
               Processing Fee (2.9%)
             </p>
-            <p className="text-[20px] text-[#000]">-$8.70</p>
+            <p className="text-base lg:text-[20px] text-[#000]">-$8.70</p>
           </div>
 
           <div className="border-t border-[#0000004D] my-4" />
 
           <div className="flex justify-between mb-4">
-            <p className="text-[20px] text-[#00000080]">
+            <p className="text-base lg:text-[20px] text-[#00000080]">
               You will receive
             </p>
-            <p className="text-[20px] text-[#000]">$291.30</p>
+            <p className="text-base lg:text-[20px] text-[#000]">$291.30</p>
           </div>
 
           <div className="flex justify-between">
-            <p className="text-[20px] text-[#00000080]">Bank Account</p>
-            <p className="text-[20px] text-[#000]">**** 4892</p>
+            <p className="text-base lg:text-[20px] text-[#00000080]">Bank Account</p>
+            <p className="text-base lg:text-[20px] text-[#000]">**** 4892</p>
           </div>
         </div>
 
@@ -46,14 +46,14 @@ export default function ConfirmPayoutModal({ onClose, onConfirm }: Props) {
 
         <div className="flex justify-between gap-6">
           <button
-            className="border border-[#0000004D] text-[20px] px-10 rounded-[10px] h-[50px] w-full"
+            className="border border-[#0000004D] text-base lg:text-[20px] px-10 rounded-[10px] h-[50px] w-full"
             onClick={onClose}
           >
             Cancel
           </button>
 
           <button
-            className="bg-[#00598D] text-white text-[20px] px-10 rounded-[10px] h-[50px] w-full"
+            className="bg-[#00598D] text-white text-base lg:text-[20px] px-10 rounded-[10px] h-[50px] w-full"
             onClick={onConfirm}
           >
             Confirm Payout

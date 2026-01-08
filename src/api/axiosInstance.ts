@@ -24,7 +24,7 @@ axiosInstance.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response?.status === 401) {
       sessionStorage.removeItem(TOKEN_KEY);
-      window.location.href = "/login";
+      // window.location.href = "/login";
     }
     return Promise.reject(error);
   }

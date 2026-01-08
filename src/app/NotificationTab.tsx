@@ -32,15 +32,15 @@ export function NotificationTab() {
       {NOTIFICATION_SETTINGS.map((item) => (
         <div
           key={item.id}
-          className="flex items-center justify-between bg-[#F2F2F2] lg:rounded-[20px] rounded-lg lg:p-10 p-4"
+          className="flex items-center justify-between bg-[#F2F2F2] lg:rounded-[20px] rounded-lg lg:p-10 p-3"
         >
-          <p className="lg:text-[22px] text-lg text-[#000]">
+          <p className="lg:text-[22px] sm:text-lg text-base text-[#000]">
             {item.label}
           </p>
 
           <button
             onClick={() => handleToggle(item.id)}
-            className={`w-[52px] h-[28px] rounded-full relative transition ${
+            className={`w-[52px] min-w-[52px] h-[28px] rounded-full relative transition ${
               toggles[item.id]
                 ? "bg-[#042F4D]"
                 : "bg-white border border-[#888888]"

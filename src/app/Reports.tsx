@@ -52,10 +52,10 @@ export default function Reports() {
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
         <div className="flex items-center justify-between lg:mb-8 mb-4">
           <div>
-            <h2 className="text-[28px] font-medium text-[#000]">
+            <h2 className="lg:text-[28px] text-[24px] font-medium text-[#000]">
               Reports & Analytics
             </h2>
-            <p className="text-[20px] text-[#00000080]">
+            <p className="text-base lg:text-[20px] text-[#00000080]">
               Track performance and analyze your practice data
             </p>
           </div>
@@ -154,7 +154,7 @@ export default function Reports() {
                       className="w-[56px] h-[56px] rounded-full object-cover"
                     />
                     <div>
-                      <p className="text-[20px] font-medium">{p.name}</p>
+                      <p className="text-base lg:text-[20px] font-medium">{p.name}</p>
                       <p className="text-[16px] text-[#00000080]">
                         Last visit: {p.lastVisit}
                       </p>
@@ -172,7 +172,7 @@ export default function Reports() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div className="bg-[#E9FFDF] rounded-[28px] p-8 flex flex-col gap-6">
             <div className="flex justify-between items-center">
-              <p className="text-[28px] font-medium text-[#000]">
+              <p className="lg:text-[28px] text-[24px] font-medium text-[#000]">
                 Generate Custom Report
               </p>
 
@@ -183,7 +183,7 @@ export default function Reports() {
             </div>
 
             <div className="max-w-[520px]">
-              <p className="text-[20px] text-[#000] mb-2">Report Type</p>
+              <p className="text-base lg:text-[20px] text-[#000] mb-2">Report Type</p>
 
               <CustomSelect
                 data={REPORT_TYPES}

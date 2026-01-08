@@ -13,15 +13,15 @@ export function BankAccountTab() {
         <div className="flex gap-4 items-center">
           <AlertIcon color="#217B30" />
           <div>
-            <h3 className="text-[22px] lg:mb-3 mb-1">Account Verified</h3>
-            <p className="text-[#00000080] text-[18px]">
+            <h3 className="text-[18px] lg:text-[22px] lg:mb-3 mb-1">Account Verified</h3>
+            <p className="text-[#00000080] text-sm lg:text-[18px]">
               All credentials have been verified and approved.
             </p>
           </div>
         </div>
       </div>
       <div className="flex justify-center">
-        <button onClick={() => navigate("/add-bank")} className="bg-[#00598D] text-white px-6 py-2 rounded-[10px] text-[16px] h-[56px] font-medium flex items-center gap-2">
+        <button onClick={() => navigate("/add-bank")} className="bg-[#00598D] text-white px-6 py-2 lg:rounded-[10px] rounded-lg text-[16px] lg:h-[56px] h-10 font-medium flex items-center gap-2">
           <span className="inline-block lg:text-[30px] text-xl">+</span> 
           <span className="lg:text-[24px] text-lg font-medium">Add Bank Account</span>
         </button>

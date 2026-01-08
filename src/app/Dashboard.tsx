@@ -31,10 +31,10 @@ export default function Dashboard() {
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
         <div className="flex md:items-center justify-between md:flex-row flex-col lg:mb-8 mb-4 gap-5">
           <div>
-            <h2 className="text-[28px] font-medium text-[#000]">
+            <h2 className="lg:text-[28px] text-[24px] font-medium text-[#000]">
               Dashboard Overview
             </h2>
-            <p className="text-[20px] text-[#00000080]">
+            <p className="text-base lg:text-[20px] text-[#00000080]">
               Welcome back, here's your daily summary
             </p>
           </div>
@@ -62,7 +62,7 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 md:gap-5 gap-4 lg:mb-8 mb-4">
-          <div className="bg-[#E8F0FF] md:rounded-[20px] rounded-lg p-6 relative flex flex-col gap-7 items-center">
+          <div className="bg-[#E8F0FF] md:rounded-[20px] rounded-lg p-6 relative flex flex-col md:gap-7 gap-3 items-center">
             <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
               +12%
             </span>
@@ -71,7 +71,7 @@ export default function Dashboard() {
             <h3 className="text-[30px] font-medium text-[#084EAF]">248</h3>
           </div>
 
-          <div className="bg-[#F3EDF9] md:rounded-[20px] rounded-lg p-6 relative flex flex-col gap-7 items-center">
+          <div className="bg-[#F3EDF9] md:rounded-[20px] rounded-lg p-6 relative flex flex-col md:gap-7 gap-3 items-center">
             <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
               +8%
             </span>
@@ -80,7 +80,7 @@ export default function Dashboard() {
             <h3 className="text-[30px] font-medium text-[#A239F9]">189</h3>
           </div>
 
-          <div className="bg-[#F7FFCC] md:rounded-[20px] rounded-lg p-6 relative flex flex-col gap-7 items-center">
+          <div className="bg-[#F7FFCC] md:rounded-[20px] rounded-lg p-6 relative flex flex-col md:gap-7 gap-3 items-center">
             <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
               +0.2
             </span>

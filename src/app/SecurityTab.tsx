@@ -11,7 +11,7 @@ export function SecurityTab() {
         <Input label="Confirm New Password" value="" />
       </div>
       <div className="flex justify-end">
-        <button className="bg-[#00598D] text-white px-6 py-2 rounded-[10px] text-[16px] font-medium">
+        <button className="bg-[#00598D] text-white px-6 py-2 rounded-lg lg:rounded-[10px] text-[16px] font-medium">
           Update Password
         </button>
       </div>

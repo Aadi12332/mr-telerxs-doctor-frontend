@@ -134,10 +134,10 @@ export default function MedicineOrder() {
     <>
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
         <div className="mb-8">
-          <h2 className="text-[28px] font-medium text-[#000]">
+          <h2 className="lg:text-[28px] text-[24px] font-medium text-[#000]">
             Communication Center
           </h2>
-          <p className="text-[20px] text-[#00000080]">
+          <p className="text-base lg:text-[20px] text-[#00000080]">
             Secure messaging with patients and platform notifications
           </p>
         </div>
@@ -150,36 +150,45 @@ export default function MedicineOrder() {
 
           <div className="grid md:grid-cols-3 gap-6">
             {notifications.map((item, i) => (
-              <div key={i} className="bg-white lg:rounded-[20px] rounded-lg md:p-6 p-3">
-                <h3 className="lg:text-[22px] text-[18px] mb-7">{item.title}</h3>
+              <div
+                key={i}
+                className="bg-white lg:rounded-[20px] rounded-lg md:p-6 p-3"
+              >
+                <h3 className="lg:text-[22px] text-[18px] mb-7">
+                  {item.title}
+                </h3>
                 <p className="lg:text-[20px] text-base text-[#00000080]">
                   {item.description}
                 </p>
-                <p className="text-right mt-2 text-sm lg:text-base text-[#00000080]">{item.date}</p>
+                <p className="text-right mt-2 text-sm lg:text-base text-[#00000080]">
+                  {item.date}
+                </p>
               </div>
             ))}
           </div>
         </div>
 
         <div className="bg-white lg:rounded-[20px] rounded-lg border overflow-hidden mb-8">
-          <div className="flex items-center justify-between lg:px-8 px-3 lg:py-8 py-4 border-b">
+          <div className="flex sm:flex-row flex-col sm:items-center gap-3 justify-between lg:px-8 px-3 lg:py-8 py-4 border-b">
             <h2 className="lg:text-[28px] text-[22px] font-semibold text-[#0E82FD]">
               Patient Messages
             </h2>
 
-            <div className="flex items-center gap-3 h-[48px] lg:rounded-[20px] rounded-lg border lg:px-4 px-2">
+            <div className="flex items-center sm:gap-3 gap-1 sm:h-[48px] h-[40px] lg:rounded-[20px] rounded-lg border lg:px-4 px-2 min-w-[175px]">
               <input
                 placeholder="Search conversations..."
-                className="flex-1 outline-none lg:w-[360px] w-[150px]"
+                className="flex-1 outline-none lg:w-[360px] sm:w-[150px] w-[120px]"
               />
               <img src={searchicon} />
             </div>
           </div>
 
-          <div className="flex h-[700px]">
-            <div   className={`xl:w-[544px] md:w-[350px] w-full border-r overflow-auto scroll-hide
+          <div className="flex sm:h-[700px] h-[600px]">
+            <div
+              className={`xl:w-[544px] md:w-[350px] w-full border-r overflow-auto scroll-hide
     ${isMobileChatOpen ? "hidden md:block" : "block"}
-  `}>
+  `}
+            >
               {conversations.map((item) => {
                 const last = item.messages[item.messages.length - 1];
 
@@ -190,17 +199,22 @@ export default function MedicineOrder() {
                       setActiveChat(item);
                       setIsMobileChatOpen(true);
                     }}
-                    className={`flex items-center xl:gap-4 gap-2 xl:px-5 px-3 lg:py-4 py-2 border-b cursor-pointer ${
+                    className={`flex items-center xl:gap-4 gap-2 xl:px-5 px-2 lg:py-4 py-2 border-b cursor-pointer ${
                       activeChat?.id === item.id
                         ? "bg-blue-50"
                         : "hover:bg-gray-50"
                     }`}
                   >
-                    <img src={item.image} className="xl:w-20 xl:h-20 w-16 h-16 rounded-full" />
+                    <img
+                      src={item.image}
+                      className="xl:w-20 xl:h-20 w-16 h-16 rounded-full"
+                    />
 
                     <div className="flex-1">
                       <div className="flex justify-between items-center gap-2">
-                        <p className="lg:text-[22px] text-[18px]">{item.name}</p>
+                        <p className="lg:text-[22px] text-[18px]">
+                          {item.name}
+                        </p>
                         <p className="text-sm text-[#00000080]">{last?.time}</p>
                       </div>
 
@@ -221,42 +235,44 @@ export default function MedicineOrder() {
               })}
             </div>
 
-            <div   className={`flex-1 flex flex-col
+            <div
+              className={`flex-1 flex flex-col
     ${!isMobileChatOpen ? "hidden md:flex" : "flex"}
-  `}>
+  `}
+            >
               {!activeChat ? (
                 <div className="flex-1 flex items-center justify-center text-[#00000080] lg:text-[26px] text-[18px]">
                   Select a conversation to start messaging
                 </div>
               ) : (
                 <>
-                  <div className="lg:px-6 px-3 py-2 border-b flex justify-between items-center">
-                    <div className="flex items-center lg:gap-3 gap-2">
+                  <div className="lg:px-6 px-2 py-2 border-b flex justify-between items-center">
+                    <div className="flex items-center lg:gap-3 gap-1">
                       {isMobileChatOpen && (
-  <img
-    src={backarrowicon}
-    className="md:hidden w-6 cursor-pointer invert"
-    onClick={() => setIsMobileChatOpen(false)}
-  />
-)}
+                        <img
+                          src={backarrowicon}
+                          className="md:hidden w-6 cursor-pointer invert"
+                          onClick={() => setIsMobileChatOpen(false)}
+                        />
+                      )}
                       <img
                         src={activeChat.image}
                         alt=""
-                        className="xl:w-20 xl:h-20 w-16 h-16 rounded-full"
+                        className="xl:w-20 xl:h-20 sm:w-16 w-10 sm:h-16 h-10 rounded-full"
                       />
                       <div className="">
-                        <p className="font-medium lg:text-[22px] text-[18px] mb-1">
+                        <p className="font-medium lg:text-[22px] text-[16px] sm:mb-1">
                           {activeChat.name}
                         </p>
-                        <p className="lg:text-[20px] text-[14px] text-[#00000080]">
+                        <p className="lg:text-[20px] text-[13px] text-[#00000080]">
                           {activeChat.role} • {activeChat.lastSeen}
                         </p>
                       </div>
                     </div>
-                    <div className="flex lg:gap-5 gap-3 items-center">
+                    <div className="flex lg:gap-5 gap-2 items-center">
                       <div
                         onClick={() => setOpenProfile(true)}
-                        className="border-[0.32px] border-[#00000066] text-[14px] font-medium lg:px-4 px-2 lg:py-2 py-1.5 rounded-lg cursor-pointer"
+                        className="border-[0.32px] border-[#00000066] sm:text-[14px] text-xs font-medium lg:px-4 px-2 lg:py-2 py-1.5 rounded-lg cursor-pointer"
                       >
                         View Profile
                       </div>
@@ -278,26 +294,26 @@ export default function MedicineOrder() {
                     {activeChat.messages.map((msg, i) => (
                       <div
                         key={i}
-                        className={`max-w-[70%] p-4 rounded-xl ${
+                        className={`max-w-[70%] lg:p-4 p-2 rounded-lg lg:rounded-[10px] ${
                           msg.from === "doctor"
                             ? "ml-auto bg-[#2F6EA3] text-white"
                             : "border"
                         }`}
                       >
                         <p>{msg.text}</p>
-                        <p className="text-xs text-right">{msg.time}</p>
+                        <p className="text-xs text-right mt-1">{msg.time}</p>
                       </div>
                     ))}
                   </div>
 
                   <div className="border-t lg:px-6 px-3 lg:py-4 py-2 flex lg:gap-4 gap-2">
-                    <img src={linkicon} alt="" />
+                    <img src={linkicon} alt="" className="sm:w-[34px] w-6" />
                     <input
                       placeholder="Type a HIPAA-compliant message..."
-                      className="flex-1 bg-gray-100 rounded-xl px-4 py-3 outline-none"
+                      className="flex-1 bg-gray-100 rounded-lg lg:rounded-[10px] sm:px-4 px-2 sm:py-3 py-2 outline-none"
                     />
-                    <button className="bg-[#2F6EA3] text-white lg:px-6 px-2 rounded-xl flex gap-2 items-center">
-                      <img src={sendicon} alt="" />
+                    <button className="bg-[#2F6EA3] text-white lg:px-6 px-2 rounded-lg lg:rounded-[10px] text-sm lg:text-base flex gap-2 items-center">
+                      <img src={sendicon} alt="" className="lg:w-5 w-4" />
                       Send
                     </button>
                   </div>
@@ -311,18 +327,18 @@ export default function MedicineOrder() {
           <PatientProfileModal onClose={() => setOpenProfile(false)} />
         )}
 
-        <div className="bg-[#F6D6D6] rounded-2xl px-6 py-5 flex sm:flex-row flex-col gap-5 items-start sm:items-center justify-between mb-8">
-          <div className="flex gap-4 items-center">
+        <div className="bg-[#F6D6D6] lg:rounded-[20px] rounded-lg lg:px-6 px-2 py-5 flex sm:flex-row flex-col gap-5 items-start sm:items-center justify-between mb-8">
+          <div className="flex sm:gap-4 gap-2 items-center">
             <AlertIcon />
             <div>
-              <h3 className="text-[22px] mb-2">Report Concerns</h3>
-              <p className="text-[#00000099]">
+              <h3 className="text-lg lg:text-[22px] sm:mb-2">Report Concerns</h3>
+              <p className="text-[#00000099] text-sm lg:text-[16px]">
                 Report medical or ethical concerns directly
               </p>
             </div>
           </div>
 
-          <button className="bg-[#C41313] text-white px-5 py-3 rounded-[15px]">
+          <button className="bg-[#C41313] text-white px-5 py-3 lg:rounded-[15px] rounded-lg">
             Report to Compliance
           </button>
         </div>

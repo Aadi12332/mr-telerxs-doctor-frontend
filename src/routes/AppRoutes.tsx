@@ -17,6 +17,7 @@ import PaymentSuccess from "../app/PaymentSuccess";
 import PrescriptionManagement from "../app/PrescriptionManagement";
 import PaymentHistory from "../app/PaymentHistory";
 import Reports from "../app/Reports";
+import AutoTransfer from "../app/AutoTransfer";
 
 export default function AppRoutes() {
   return (
@@ -34,6 +35,7 @@ export default function AppRoutes() {
           <Route path="/messages" element={<Message />} />
           <Route path="/add-bank" element={<AddBank />} />
           <Route path="/payout-setting" element={<PayoutSetting />} />
+          <Route path="/auto-transfer" element={<AutoTransfer />} />
           <Route path="/request-payout" element={<RequestPayout />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/prescription-management" element={<PrescriptionManagement />} />
