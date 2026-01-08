@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { authLoginApi } from "../api/auth.api";
+import { authLoginApi, loginOtpApi } from "../api/auth.api";
 import loginsideimg from "../assets/loginimg.jpg";
 import closeicon from "../assets/closeicon.svg";
 import closeeyeicon from "../assets/closeeyeicon.svg";
@@ -27,7 +27,7 @@ export default function Login() {
     handleSubmit,
     watch,
     formState: { errors },
-    setValue
+    setValue,
   } = useForm<LoginForm>({
     defaultValues: { rememberMe: false },
   });
@@ -50,9 +50,11 @@ export default function Login() {
       setApiError(err?.response?.data?.message || "Something went wrong");
     }
   };
-useEffect(() => {
+
+  useEffect(() => {
     setValue("rememberMe", rememberMe);
   }, [rememberMe]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#E1E9ED] xl:px-12 lg:px-8 px-3 lg:py-16 py-3">
       <div className="w-full max-w-[1440px] mx-auto flex gap-7 items-center">
@@ -158,7 +160,6 @@ useEffect(() => {
                 className="flex items-center gap-2 cursor-pointer"
                 onClick={() => setRememberMe(!rememberMe)}
               >
-                
                 {rememberMe ? (
                   <img src={checkedicon} alt="" className="w-5" />
                 ) : (
@@ -172,14 +173,28 @@ useEffect(() => {
 
               <span
                 className="flex items-center gap-2 text-[#012047] text-[14px] font-medium cursor-pointer"
-                onClick={() => {
+                onClick={async () => {
                   setOtpError("");
+
                   if (!isPhone(identifierValue || "")) {
                     setOtpError("Mobile number required for OTP login");
                     return;
                   }
-                  setOtpChecked(true);
-                  navigate("/otp");
+
+                  try {
+                    await loginOtpApi({
+                      identifier: identifierValue,
+                    });
+
+                    setOtpChecked(true);
+                    navigate("/otp", {
+                      state: { identifier: identifierValue },
+                    });
+                  } catch (err: any) {
+                    setOtpError(
+                      err?.response?.data?.message || "Failed to send OTP"
+                    );
+                  }
                 }}
               >
                 {otpChecked ? (

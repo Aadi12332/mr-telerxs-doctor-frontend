@@ -1,14 +1,20 @@
 import { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { verifyOtpApi } from "../api/auth.api";
 import closeicon from "../assets/closeicon.svg";
 import logo from "../assets/logo.svg";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const location = useLocation();
+
+  const identifier = location.state?.identifier;
+
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [error, setError] = useState("");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-    useEffect(() => {
+  useEffect(() => {
     inputRefs.current[0]?.focus();
   }, []);
 
@@ -19,7 +25,7 @@ export default function Login() {
     newOtp[index] = value;
     setOtp(newOtp);
 
-    if (value && index < 3) {
+    if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
@@ -33,11 +39,38 @@ export default function Login() {
     }
   };
 
+  const handleSubmit = async () => {
+    setError("");
+
+    const otpValue = otp.join("");
+
+    if (otpValue.length !== 6) {
+      setError("Please enter 6 digit OTP");
+      return;
+    }
+
+    try {
+      const res = await verifyOtpApi({
+        identifier,
+        otp: otpValue,
+      });
+
+      if (res?.data?.success) {
+        navigate("/dashboard");
+      }
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Invalid OTP");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#E1E9ED] lg:px-12 px-3 lg:py-16 py-3">
       <div className="w-full max-w-[861px] mx-auto flex gap-7 items-center">
         <div className="flex-1 relative pt-7 pb-16 sm:px-16 px-3 bg-white rounded-3xl">
-          <button className="absolute top-5 right-5" onClick={() => navigate("/login")}>
+          <button
+            className="absolute top-5 right-5"
+            onClick={() => navigate("/login")}
+          >
             <img src={closeicon} alt="Close" className="w-6 h-6" />
           </button>
 
@@ -45,22 +78,25 @@ export default function Login() {
             <img src={logo} alt="Logo" className="lg:w-[184px]" />
           </div>
 
-          <h2 className="text-[32px] font-bold text-[#00598D] leading-[1.5] mb-2">
+          <h2 className="text-[32px] font-bold text-[#00598D] mb-2">
             Verification
           </h2>
-          <p className="text-[#465D7C] text-[20px] leading-[24px] mb-10">
+          <p className="text-[#465D7C] text-[20px] mb-10">
             We have sent you an OTP on your Email ID & Phone number
           </p>
 
           <div className="mb-4">
-            <label className="text-sm font-medium text-[#012047] leading-[24px] mb-1 inline-block">
+            <label className="text-sm font-medium text-[#012047] mb-1 inline-block">
               Enter OTP
             </label>
+
             <div className="flex gap-3">
               {otp.map((digit, index) => (
                 <input
                   key={index}
-                  ref={(el) => { inputRefs.current[index] = el;}}
+                  ref={(el) => {
+                    inputRefs.current[index] = el;
+                  }}
                   type="text"
                   inputMode="numeric"
                   maxLength={1}
@@ -71,13 +107,20 @@ export default function Login() {
                 />
               ))}
             </div>
+
+            {error && (
+              <p className="text-red-500 text-sm mt-2">{error}</p>
+            )}
           </div>
 
-          <button onClick={() => navigate("/dashboard")} className="w-full h-[55px] flex items-center justify-center bg-[linear-gradient(133.68deg,#2CBEFF_1.1%,#00598D_98.9%)] text-white py-3 rounded-[14px] text-[20px] font-medium hover:opacity-90 transition">
+          <button
+            onClick={handleSubmit}
+            className="w-full h-[55px] bg-[linear-gradient(133.68deg,#2CBEFF_1.1%,#00598D_98.9%)] text-white rounded-[14px] text-[20px] font-medium"
+          >
             Submit
           </button>
 
-          <p className="text-center text-base text-[#465D7C] mt-4 py-2.5">
+          <p className="text-center text-base text-[#465D7C] mt-4 py-2.5 cursor-pointer">
             Resend OTP
           </p>
         </div>

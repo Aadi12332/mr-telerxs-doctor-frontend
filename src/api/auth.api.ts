@@ -26,3 +26,16 @@ export const authLoginApi = (payload: {
 }) => {
   return axiosInstance.post("/api/v1/auth/login", payload);
 };
+
+export const loginOtpApi = (payload: {
+  identifier: string;
+}) => {
+  return axiosInstance.post("/api/v1/auth/login-otp", payload);
+};
+
+export const verifyOtpApi = (payload: {
+  identifier: string;
+  otp: string;
+}) => {
+  return axiosInstance.post("/api/v1/auth/login-otp", payload);
+};
