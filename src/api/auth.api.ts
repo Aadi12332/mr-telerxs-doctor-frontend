@@ -43,7 +43,7 @@ export const forgotPasswordApi = (payload: {
           countryCode: "+91",
         }
       : {
-          email: payload.identifier,
+          identifier: payload.identifier,
         }
   );
 };
