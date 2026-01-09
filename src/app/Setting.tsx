@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ProfileTab } from "./ProfileTab";
 import ProfileTabIcon from "../assets/inactiveprofiletab.svg";
 import BankTabIcon from "../assets/banktabicon.svg";
@@ -19,9 +20,20 @@ const TABS = [
   { key: "security", label: "Security", icon: SecurityTabIcon, activeIcon: ActiveSecurityTabIcon },
 ];
 
-
 export default function Setting() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("profile");
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab) setActiveTab(tab);
+  }, []);
+
+  const handleTabChange = (key: string) => {
+    setActiveTab(key);
+    setSearchParams({ tab: key });
+  };
+
   return (
     <div className="lg:min-h-[calc(100vh-160px)] min-h-[calc(100vh-70px)] overflow-auto scroll-hide flex flex-col justify-between">
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
@@ -39,21 +51,23 @@ export default function Setting() {
             {TABS.map((tab) => (
               <button
                 key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
+                onClick={() => handleTabChange(tab.key)}
                 className={`flex items-center xl:gap-10 gap-3 lg:px-6 px-3 lg:py-4 py-2 lg:rounded-[20px] rounded-lg xl:min-w-[220px] lg:min-h-[98px] min-h-[50px] transition
-              ${
-                activeTab === tab.key
-                  ? "bg-[#0B2A4A] text-white"
-                  : "border border-gray-300 text-[#00000066]"
-              }
-            `}
+                  ${
+                    activeTab === tab.key
+                      ? "bg-[#0B2A4A] text-white"
+                      : "border border-gray-300 text-[#00000066]"
+                  }
+                `}
               >
-                    <img
-                      src={activeTab === tab.key ? tab.activeIcon : tab.icon}
-                      alt=""
-                      className="lg:w-10 lg:h-10 w-6"
-                    />
-                <span className="lg:text-[22px] text-[18px]">{tab.label}</span>
+                <img
+                  src={activeTab === tab.key ? tab.activeIcon : tab.icon}
+                  alt=""
+                  className="lg:w-10 lg:h-10 sm:w-6 w-5"
+                />
+                <span className="lg:text-[22px] sm:text-[18px] text-base">
+                  {tab.label}
+                </span>
               </button>
             ))}
           </div>
@@ -64,9 +78,10 @@ export default function Setting() {
           {activeTab === "security" && <SecurityTab />}
         </div>
       </div>
+
       <div className="bg-[#E5F8FC] p-3 text-center">
         <span className="text-[16px] text-[#b0b0b0] font-medium">
-          CompanyName2025 © All Rights Reserved
+          CompanyName2025 © All Rights Reserved
         </span>
       </div>
     </div>

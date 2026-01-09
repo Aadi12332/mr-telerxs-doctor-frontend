@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import locationicon from "../../assets/locationicon.svg";
 import downarroricon from "../../assets/downarrowicon.svg";
 import SearchIcon from "../../assets/searchIcon.svg";
+import profileicon from "../../assets/profiletabicon.svg";
+// import settingicon from "../../assets/settingicon.svg";
+import logouticon from "../../assets/logouticon.svg";
 import Logo from "../../assets/logo.svg";
 
 const LOCATIONS = ["Pune", "Mumbai", "Delhi", "Bangalore"];
@@ -27,7 +30,14 @@ export default function Header() {
   const [locationList, setLocationList] = useState("Pune");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
+  const [openProfile, setOpenProfile] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    navigate("/login");
+  };
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -52,7 +62,12 @@ export default function Header() {
       <div className="bg-white">
         <header className="lg:h-[103px] h-[70px] flex items-center justify-between max-w-[1440px] mx-auto w-full lg:px-6 px-3 shadow-sm">
           <div className="flex gap-3 items-center">
-            <img src={Logo} alt="" className="lg:w-[108px] w-[80px]" onClick={()=>navigate("/dashboard")}/>
+            <img
+              src={Logo}
+              alt=""
+              className="lg:w-[108px] w-[80px]"
+              onClick={() => navigate("/dashboard")}
+            />
             <div className="relative w-full max-w-[520px] hidden lg:block">
               <div
                 onClick={() => setOpen(!open)}
@@ -76,13 +91,13 @@ export default function Header() {
                   </span>
                 </div>
 
-                  <img
-                    src={downarroricon}
-                    alt="Dropdown"
-                    className={`lg:w-4 w-3 ml-4 transition-transform duration-300 ease-in-out ${
-                      open ? "rotate-180" : "rotate-0"
-                    }`}
-                  />
+                <img
+                  src={downarroricon}
+                  alt="Dropdown"
+                  className={`lg:w-4 w-3 ml-4 transition-transform duration-300 ease-in-out ${
+                    open ? "rotate-180" : "rotate-0"
+                  }`}
+                />
               </div>
 
               {open && (
@@ -111,6 +126,48 @@ export default function Header() {
                 className="outline-none lg:min-w-[486px] sm:w-[170px] w-[120px] placeholder:text-[#9F9F9F] lg:text-[16px] text-sm"
               />
               <img src={SearchIcon} alt="" className="w-5 lg:w-6" />
+            </div>
+            <div ref={dropdownRef} className="relative hidden lg:block">
+              <div
+                onClick={() => setOpenProfile((prev) => !prev)}
+                className="lg:min-w-8 w-8 h-8 lg:w-12 lg:h-12 bg-gray-400 rounded-full flex justify-center items-center text-lg font-bold text-white cursor-pointer"
+              >
+                A
+              </div>
+
+              {openProfile && (
+                <ul className="absolute right-0 lg:top-12 top-9 z-[99] border border-gray-200 bg-white rounded-lg shadow-md min-w-[180px] overflow-hidden">
+                  <li
+                    onClick={() => {
+                      setOpenProfile(false)
+                      navigate("/settings");
+                    }}
+                    className="px-3 py-3 hover:bg-gray-200 cursor-pointer flex gap-2 items-center text-lg text-black font-medium"
+                  >
+                    <img src={profileicon} alt="" className="invert w-6" />
+                    Profile
+                  </li>
+
+                  {/* <li
+                    onClick={() => {
+                      setOpen(false);
+                      navigate("/settings?tab=security");
+                    }}
+                    className="px-3 py-3 hover:bg-gray-200 cursor-pointer flex gap-2 items-center text-lg text-black font-medium"
+                  >
+                    <img src={settingicon} alt="" className="w-6" />
+                    Setting
+                  </li> */}
+
+                  <li
+                    onClick={handleLogout}
+                    className="px-3 py-3 hover:bg-gray-200 cursor-pointer flex gap-2 items-center text-lg text-red-500 font-medium border-t border-gray-200"
+                  >
+                    <img src={logouticon} alt="" className="w-6" />
+                    Logout
+                  </li>
+                </ul>
+              )}
             </div>
             <div
               className="lg:hidden cursor-pointer text-[#000]"
@@ -196,8 +253,8 @@ export default function Header() {
                   className="
                   flex items-center justify-between
                   bg-[#88888824]
-                  rounded-[12px]
-                  px-3
+                  rounded-[8px]
+                  px-2
                   py-2.5
                   cursor-pointer
                   shadow-sm
@@ -216,14 +273,14 @@ export default function Header() {
                   <img
                     src={downarroricon}
                     alt="Dropdown"
-                    className={`lg:w-5 w-3 ml-4 transition-transform duration-300 ease-in-out ${
+                    className={`lg:w-5 w-3 ml-2 transition-transform duration-300 ease-in-out ${
                       open ? "rotate-180" : "rotate-0"
                     }`}
                   />
                 </div>
 
                 {open && (
-                  <div className="absolute left-0 right-0 mt-3 bg-white rounded-xl shadow-lg overflow-hidden z-[11]">
+                  <div className="absolute left-0 right-0 mt-3 bg-white rounded-lg border border-gray-200 shadow-lg overflow-hidden z-[11]">
                     {LOCATIONS.map((item) => (
                       <div
                         key={item}
@@ -259,6 +316,15 @@ export default function Header() {
                   </NavLink>
                 );
               })}
+               <NavLink
+                    to={"/login"}
+                    onClick={() => setIsSidebarOpen(false)}
+                    className={`text-[18px] font-semibold border rounded-lg px-3 py-2
+                        bg-[#fff] text-[#4F4F4F] border-[#4F4F4F]
+                    }`}
+                  >
+                    Lagout
+                  </NavLink>
             </div>
           </div>
         </div>
