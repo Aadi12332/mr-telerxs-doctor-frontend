@@ -2,7 +2,7 @@ import axios from "axios";
 import type { AxiosError } from "axios";
 
 const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
-const TOKEN_KEY = "authToken";
+const TOKEN_KEY = "accessToken";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,

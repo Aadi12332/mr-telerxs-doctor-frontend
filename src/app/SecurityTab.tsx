@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Input } from "../components/common/Input";
 import { changePasswordApi } from "../api/auth.api";
+import { useNavigate } from "react-router-dom";
 
 export function SecurityTab() {
+  const router=useNavigate()
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -47,11 +49,13 @@ export function SecurityTab() {
 
     try {
       setLoading(true);
-      await changePasswordApi({
+     const res= await changePasswordApi({
         oldPassword: currentPassword,
         newPassword: newPassword,
       });
-
+      if(res.status===200){
+        router("/login")
+      }
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");

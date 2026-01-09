@@ -50,6 +50,9 @@ export default function Login() {
       setLoginLoading(true);
       const res = await authLoginApi(data);
       if (res?.data?.success) {
+        localStorage.setItem("accessToken",res?.data?.data?.tokens?.accessToken);
+        localStorage.setItem("refreshToken",res?.data?.data?.tokens?.refreshToken);
+
         navigate("/dashboard");
       } else {
         setApiError("Invalid email/phone or password");
