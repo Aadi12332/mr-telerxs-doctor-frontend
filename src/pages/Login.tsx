@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { authLoginApi } from "../api/auth.api";
+// import { authLoginApi } from "../api/auth.api";
 import loginsideimg from "../assets/loginimg.jpg";
 import closeicon from "../assets/closeicon.svg";
 import closeeyeicon from "../assets/closeeyeicon.svg";
@@ -19,37 +19,38 @@ export default function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [apiError, setApiError] = useState("");
-  const [otpError, setOtpError] = useState("");
+  // const [otpError, setOtpError] = useState("");
   const [otpChecked, setOtpChecked] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const {
     register,
-    handleSubmit,
-    watch,
+    // handleSubmit,
+    // watch,
     formState: { errors },
     setValue
   } = useForm<LoginForm>({
     defaultValues: { rememberMe: false },
   });
+  console.log(setOtpChecked,setApiError,apiError,errors)
 
-  const identifierValue = watch("identifier");
+  // const identifierValue = watch("identifier");
 
   const isPhone = (v: string) => /^\d{10}$/.test(v);
   const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-  const onSubmit = async (data: LoginForm) => {
-    setApiError("");
-    try {
-      const res = await authLoginApi(data);
-      if (res?.data?.success) {
-        navigate("/dashboard");
-      } else {
-        setApiError("Invalid email/phone or password");
-      }
-    } catch (err: any) {
-      setApiError(err?.response?.data?.message || "Something went wrong");
-    }
-  };
+  // const onSubmit = async (data: LoginForm) => {
+  //   setApiError("");
+  //   try {
+  //     const res = await authLoginApi(data);
+  //     if (res?.data?.success) {
+  //       navigate("/dashboard");
+  //     } else {
+  //       setApiError("Invalid email/phone or password");
+  //     }
+  //   } catch (err: any) {
+  //     setApiError(err?.response?.data?.message || "Something went wrong");
+  //   }
+  // };
 useEffect(() => {
     setValue("rememberMe", rememberMe);
   }, [rememberMe]);
@@ -85,11 +86,11 @@ useEffect(() => {
             </span>
           </p>
 
-          {apiError && <p className="text-red-500 text-sm mb-4">{apiError}</p>}
+          {/* {apiError && <p className="text-red-500 text-sm mb-4">{apiError}</p>}
+          {otpError && <p className="text-red-500 text-sm mb-4">{otpError}</p>} */}
 
-          {otpError && <p className="text-red-500 text-sm mb-4">{otpError}</p>}
-
-          <form onSubmit={handleSubmit(onSubmit)}>
+          {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+          <form>
             <div className="mb-4">
               <label className="text-sm font-medium text-[#012047] mb-1 inline-block">
                 Email/Phone
@@ -105,11 +106,11 @@ useEffect(() => {
                 type="text"
                 className="w-full border border-[#E6E8EE] rounded-[5px] px-4 py-2 outline-none"
               />
-              {errors.identifier && (
+              {/* {errors.identifier && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.identifier.message}
                 </p>
-              )}
+              )} */}
             </div>
 
             <div className="mb-4">
@@ -146,11 +147,11 @@ useEffect(() => {
                 </button>
               </div>
 
-              {errors.password && (
+              {/* {errors.password && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.password.message}
                 </p>
-              )}
+              )} */}
             </div>
 
             <div className="flex items-center justify-between text-sm mb-[56px]">
@@ -173,12 +174,12 @@ useEffect(() => {
               <span
                 className="flex items-center gap-2 text-[#012047] text-[14px] font-medium cursor-pointer"
                 onClick={() => {
-                  setOtpError("");
-                  if (!isPhone(identifierValue || "")) {
-                    setOtpError("Mobile number required for OTP login");
-                    return;
-                  }
-                  setOtpChecked(true);
+                  // setOtpError("");
+                  // if (!isPhone(identifierValue || "")) {
+                  //   setOtpError("Mobile number required for OTP login");
+                  //   return;
+                  // }
+                  // setOtpChecked(true);
                   navigate("/otp");
                 }}
               >
@@ -193,6 +194,7 @@ useEffect(() => {
 
             <button
               type="submit"
+              onClick={()=>navigate("/dashboard")}
               className="w-full h-[55px] bg-[linear-gradient(133.68deg,#2CBEFF_1.1%,#00598D_98.9%)] text-white rounded-[14px] text-[20px] font-medium"
             >
               Sign in

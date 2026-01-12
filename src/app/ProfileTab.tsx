@@ -20,6 +20,13 @@ export function ProfileTab() {
   const [dob, setDob] = useState<any>(null);
   const [open, setOpen] = useState(false);
   const status = "In Transit";
+  const [fullName, setFullName] = useState("Dr. John Smith");
+  const [gender, setGender] = useState("Male");
+  const [mobile, setMobile] = useState("+1 (555) 000-0000");
+  const [email, setEmail] = useState("doctor@example.com");
+  const [experience, setExperience] = useState("10");
+  const [hospital, setHospital] = useState("412101");
+  const [language, setLanguage] = useState("English");
 
   return (
     <div className="space-y-[30px]">
@@ -38,10 +45,12 @@ export function ProfileTab() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Input label="Full Name" value="Dr. John Smith" />
-        <Input label="Gender" value="Male" />
+        <Input label="Full Name" value={fullName} onChange={setFullName} />
+        <Input label="Gender" value={gender} onChange={setGender} />
         <div>
-          <label className="lg:text-[20px] text-base text-[#012047] lg:mb-3 mb-1 block leading-[24px]">DOB</label>
+          <label className="lg:text-[20px] text-base text-[#012047] lg:mb-3 mb-1 block leading-[24px]">
+            DOB
+          </label>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               value={dob}
@@ -63,9 +72,9 @@ export function ProfileTab() {
                       padding: "0 16px",
                       border: "1px solid #00000033",
                       "@media(max-width:1024px)": {
-                       borderRadius: "8px ",
-                       fontSize: "16px",
-                       height: "40px",
+                        borderRadius: "8px ",
+                        fontSize: "16px",
+                        height: "40px",
                       },
                       "& fieldset": {
                         border: "none",
@@ -85,8 +94,9 @@ export function ProfileTab() {
             />
           </LocalizationProvider>
         </div>
-        <Input label="Mobile Number" value="+1 (555) 000-0000" />
-        <Input label="Email" value="doctor@example.com" />
+        <Input label="Mobile Number" value={mobile} onChange={setMobile} />
+
+        <Input label="Email" value={email} onChange={setEmail} />
         <CustomSelect
           title="Specialization"
           data={SPECIALIZATIONS}
@@ -95,16 +105,32 @@ export function ProfileTab() {
           placeholder="ALL"
           openDirection="bottom"
           width="w-full"
-          className="lg:!rounded-[20px] !rounded-lg !text-[16px] lg:!text-[20px] !border-[#00000033] !h-[40px] lg:h-[56px]"
+          className="lg:!rounded-[20px] !rounded-lg !text-[16px] lg:!text-[20px] !border-[#00000033] h-[40px] lg:h-[56px]"
           labelclassName="lg:!mb-3 !mb-1 !text-[16px] lg:!text-[20px] !font-normal leading-[24px]"
         />
-        <Input label="Years of Experience" value="10" />
-        <Input label="Hospital Affiliation" value="412101" />
-        <Input label="Language Spoken" value="English" />
+        <Input
+          label="Years of Experience"
+          value={experience}
+          onChange={setExperience}
+        />
+
+        <Input
+          label="Hospital Affiliation"
+          value={hospital}
+          onChange={setHospital}
+        />
+
+        <Input
+          label="Language Spoken"
+          value={language}
+          onChange={setLanguage}
+        />
       </div>
 
       <div>
-        <label className="block lg:mb-3 mb-1 text-base lg:text-[20px]">Professional Bio</label>
+        <label className="block lg:mb-3 mb-1 text-base lg:text-[20px]">
+          Professional Bio
+        </label>
         <textarea
           placeholder="Tell patients about your experience.."
           className="w-full border lg:rounded-[20px] rounded-lg border-[#00000033] text-base lg:text-[20px] placeholder:text-[#00000080] px-4 py-3 h-28 outline-none"
@@ -118,7 +144,9 @@ export function ProfileTab() {
           <div className="flex sm:gap-5 gap-3 items-center">
             <img src={ConfirmUpload} alt="" />
             <div>
-              <p className="text-base lg:text-[20px] md:mb-5 sm:mb-1">File Name</p>
+              <p className="text-base lg:text-[20px] md:mb-5 sm:mb-1">
+                File Name
+              </p>
               <p className="text-sm lg:text-[18px] text-[#00000080]">
                 Verified on Nov 15, 2024
               </p>
@@ -128,7 +156,10 @@ export function ProfileTab() {
             <button className="text-[#00598D] text-sm lg:text-[18px]">
               Replace/Upload
             </button>
-            <button onClick={() => setOpen(true)} className="border border-[#0000004D] px-6 md:py-2.5 py-1.5 rounded-lg lg:rounded-[10px] text-sm lg:text-[18px] bg-white">
+            <button
+              onClick={() => setOpen(true)}
+              className="border border-[#0000004D] px-6 md:py-2.5 py-1.5 rounded-lg lg:rounded-[10px] text-sm lg:text-[18px] bg-white"
+            >
               View
             </button>
             {open && (
@@ -136,7 +167,7 @@ export function ProfileTab() {
                 status={status}
                 onClose={() => setOpen(false)}
               />
-            )}  
+            )}
           </div>
         </div>
       </div>
