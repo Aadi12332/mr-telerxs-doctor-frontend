@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomSelect from "../components/common/customSelect";
 import Consultation from "../assets/consultationicon.svg";
@@ -7,24 +7,54 @@ import Rating from "../assets/patientratingicon.svg";
 import Urgent from "../assets/urgenticon.svg";
 import Completed from "../assets/completeicon.svg";
 import Pending from "../assets/pendingicon.svg";
+import {
+  getDoctorDashboardOverviewApi,
+  getDoctorTodaysScheduleApi,
+  getDoctorRecentConsultationsApi,
+} from "../api/auth.api";
+import { useAuth } from "../routes/AuthContext";
 
 const SPECIALIZATIONS = [
   "Total Consultations",
   "Prescriptions Issued",
   "Total Earnings",
-  "Patient Rating"
+  "Patient Rating",
 ];
 
-const reporttype = [
-  "Daily",
-  "Weekly",
-  "Monthly",
-];
+const reporttype = ["Daily", "Weekly", "Monthly"];
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [specialization, setSpecialization] = useState("");
   const [specialization2, setSpecialization2] = useState("");
+  const { auth } = useAuth();
+  const user = auth?.user;
+  console.log(user)
+  // const getDoctorId = user._id;
+
+  const [overview, setOverview] = useState<any>(null);
+  const [schedule, setSchedule] = useState<any[]>([]);
+  const [consultations, setConsultations] = useState<any[]>([]);
+
+  const doctorId = "6961068ebb2871297b25e798";
+
+  useEffect(() => {
+    if (!doctorId) return;
+
+    getDoctorDashboardOverviewApi(doctorId).then((res) =>
+      setOverview(res.data.data)
+    );
+
+    getDoctorTodaysScheduleApi(doctorId).then((res) =>
+      setSchedule(res.data.data.schedule)
+    );
+
+    getDoctorRecentConsultationsApi(doctorId).then((res) =>
+      setConsultations(res.data.data.consultations)
+    );
+  }, [doctorId]);
+
+  console.log({overview, schedule, consultations})
 
   return (
     <>
@@ -92,7 +122,9 @@ export default function Dashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <div className="bg-white border border-[#D9D9D9] md:rounded-[20px] rounded-lg md:p-6 p-3">
-            <h3 className="text-[26px] font-medium mb-7">Recent Consultations</h3>
+            <h3 className="text-[26px] font-medium mb-7">
+              Recent Consultations
+            </h3>
 
             {[
               {
@@ -100,28 +132,28 @@ export default function Dashboard() {
                 issue: "Chest pain, shortness of breath",
                 time: "10:30 AM",
                 status: "Urgent",
-                icon: Urgent
+                icon: Urgent,
               },
               {
                 name: "Michael Chen",
                 issue: "Skin Allergy",
                 time: "11:00 AM",
                 status: "Completed",
-                icon: Completed
+                icon: Completed,
               },
               {
                 name: "Sarah Johnson",
                 issue: "Respiratory Issues",
                 time: "10:30 AM",
                 status: "Pending",
-                icon: Pending
+                icon: Pending,
               },
               {
                 name: "Emma Wilson",
                 issue: "Follow-up consultation",
                 time: "12:30 PM",
                 status: "Pending",
-                icon: Pending
+                icon: Pending,
               },
             ].map((item, i) => (
               <div
@@ -129,11 +161,17 @@ export default function Dashboard() {
                 className="flex justify-between items-center bg-[#D9D9D926] rounded-[20px] py-4 md:px-7 px-3 mb-4 last:mb-0"
               >
                 <div>
-                  <p className="md:text-[22px] text-[18px] font-medium mb-4">{item.name}</p>
-                  <p className="md:text-[20px] text-[16px] text-[#00000080]">{item.issue}</p>
+                  <p className="md:text-[22px] text-[18px] font-medium mb-4">
+                    {item.name}
+                  </p>
+                  <p className="md:text-[20px] text-[16px] text-[#00000080]">
+                    {item.issue}
+                  </p>
                 </div>
                 <div className="text-right">
-                  <p className="md:text-[22px] text-[18px] font-medium mb-3">{item.time}</p>
+                  <p className="md:text-[22px] text-[18px] font-medium mb-3">
+                    {item.time}
+                  </p>
                   <span
                     className={`mt-1 px-3 py-1 h-[36px] justify-center rounded-full md:text-base text-[14px] flex gap-1 items-center ${
                       item.status === "Urgent"
@@ -143,7 +181,11 @@ export default function Dashboard() {
                         : "bg-[#EDBC4A80] text-[#624F25]"
                     }`}
                   >
-                    <img src={item.icon} alt={item.status} className="md:w-5 w-4" />
+                    <img
+                      src={item.icon}
+                      alt={item.status}
+                      className="md:w-5 w-4"
+                    />
                     {item.status}
                   </span>
                 </div>
@@ -151,7 +193,10 @@ export default function Dashboard() {
             ))}
 
             <div className="flex justify-center mt-8">
-              <button onClick={() => navigate("/consultations")} className=" bg-[linear-gradient(133.68deg,#2CBEFF_1.1%,#00598D_98.9%)] text-white px-10 py-3 rounded-full md:text-[22px] text-[18px] font-medium">
+              <button
+                onClick={() => navigate("/consultations")}
+                className=" bg-[linear-gradient(133.68deg,#2CBEFF_1.1%,#00598D_98.9%)] text-white px-10 py-3 rounded-full md:text-[22px] text-[18px] font-medium"
+              >
                 View All Consultations
               </button>
             </div>
@@ -184,8 +229,12 @@ export default function Dashboard() {
                 className="flex justify-between items-center bg-[#D9D9D926] rounded-[20px] py-4 md:px-7 px-3 p-4 mb-4 last:mb-0"
               >
                 <div>
-                  <p className="md:text-[22px] text-[18px] font-medium mb-4">{item.name}</p>
-                  <p className="md:text-[22px] text-[16px] text-[#00000080]">{item.type}</p>
+                  <p className="md:text-[22px] text-[18px] font-medium mb-4">
+                    {item.name}
+                  </p>
+                  <p className="md:text-[22px] text-[16px] text-[#00000080]">
+                    {item.type}
+                  </p>
                 </div>
                 <span
                   className={`px-4 py-2 rounded-[16px] md:text-[20px] text-[16px] font-medium ${
@@ -196,7 +245,6 @@ export default function Dashboard() {
                 >
                   {item.time}
                 </span>
-
               </div>
             ))}
           </div>

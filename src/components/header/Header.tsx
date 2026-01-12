@@ -8,6 +8,7 @@ import profileicon from "../../assets/profiletabicon.svg";
 // import settingicon from "../../assets/settingicon.svg";
 import logouticon from "../../assets/logouticon.svg";
 import Logo from "../../assets/logo.svg";
+import { useAuth } from "../../routes/AuthContext";
 
 const LOCATIONS = ["Pune", "Mumbai", "Delhi", "Bangalore"];
 
@@ -26,6 +27,9 @@ const TABS = [
 export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { auth } = useAuth();
+  const user = auth?.user;
+  const initials = `${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`.toUpperCase();
   const [open, setOpen] = useState(false);
   const [locationList, setLocationList] = useState("Pune");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -130,16 +134,17 @@ export default function Header() {
             <div ref={dropdownRef} className="relative hidden lg:block">
               <div
                 onClick={() => setOpenProfile((prev) => !prev)}
-                className="lg:min-w-8 w-8 h-8 lg:w-12 lg:h-12 bg-gray-400 rounded-full flex justify-center items-center text-lg font-bold text-white cursor-pointer"
+                className="lg:min-w-8 w-8 h-8 lg:w-12 lg:h-12 bg-[#00598D] rounded-full flex justify-center items-center text-lg font-bold text-white cursor-pointer"
               >
-                A
+                {initials ? initials : <img src={profileicon} alt="" className="w-8" />
+                }
               </div>
 
               {openProfile && (
                 <ul className="absolute right-0 lg:top-12 top-9 z-[99] border border-gray-200 bg-white rounded-lg shadow-md min-w-[180px] overflow-hidden">
                   <li
                     onClick={() => {
-                      setOpenProfile(false)
+                      setOpenProfile(false);
                       navigate("/settings");
                     }}
                     className="px-3 py-3 hover:bg-gray-200 cursor-pointer flex gap-2 items-center text-lg text-black font-medium"
@@ -316,15 +321,15 @@ export default function Header() {
                   </NavLink>
                 );
               })}
-               <NavLink
-                    to={"/login"}
-                    onClick={() => setIsSidebarOpen(false)}
-                    className={`text-[18px] font-semibold border rounded-lg px-3 py-2
+              <NavLink
+                to={"/login"}
+                onClick={() => setIsSidebarOpen(false)}
+                className={`text-[18px] font-semibold border rounded-lg px-3 py-2
                         bg-[#fff] text-[#4F4F4F] border-[#4F4F4F]
                     }`}
-                  >
-                    Lagout
-                  </NavLink>
+              >
+                Lagout
+              </NavLink>
             </div>
           </div>
         </div>

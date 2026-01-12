@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../components/common/Input";
 import CameraIcon from "../assets/cameraicon.svg";
 import ConfirmUpload from "../assets/confirmuploadicon.svg";
@@ -8,6 +8,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import OrderTrackingModal from "./OrderTrackingModal";
+import { updateDoctorApi } from "../api/auth.api";
 
 const SPECIALIZATIONS = [
   "Cardiology",
@@ -17,7 +18,7 @@ const SPECIALIZATIONS = [
   "Pediatrics",
 ];
 
-export function ProfileTab() {
+export function ProfileTab({ user, doctor }: any) {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [fullName, setFullName] = useState("");
   const [gender, setGender] = useState("");
@@ -33,6 +34,57 @@ export function ProfileTab() {
   const [open, setOpen] = useState(false);
   const status = "In Transit";
 
+  useEffect(() => {
+    if (user || doctor) {
+      const name =
+        user?.firstName || user?.lastName
+          ? `${user?.firstName || ""} ${user?.lastName || ""}`.trim()
+          : "";
+
+      setFullName(name);
+      setMobile(user?.phoneNumber || "");
+      setEmail(user?.email || "");
+      setSpecialization(doctor?.specialty || "");
+      setExperience(
+        doctor?.experience !== undefined ? String(doctor.experience) : ""
+      );
+      setHospital(doctor?.address?.clinicName || "");
+      setLanguage(doctor?.languages?.[0] || "");
+      setBio(doctor?.bio || "");
+
+      localStorage.setItem(
+        "profileFormData",
+        JSON.stringify({
+          fullName,
+          mobile,
+          email,
+          specialization,
+          experience,
+          hospital,
+          language,
+          bio,
+        })
+      );
+    }
+  }, [user, doctor]);
+
+  useEffect(() => {
+    if (!user && !doctor) {
+      const stored = localStorage.getItem("profileFormData");
+      if (stored) {
+        const data = JSON.parse(stored);
+        setFullName(data.fullName || "");
+        setMobile(data.mobile || "");
+        setEmail(data.email || "");
+        setSpecialization(data.specialization || "");
+        setExperience(data.experience || "");
+        setHospital(data.hospital || "");
+        setLanguage(data.language || "");
+        setBio(data.bio || "");
+      }
+    }
+  }, []);
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -43,23 +95,87 @@ export function ProfileTab() {
 
   const validate = () => {
     const newErrors: any = {};
-    if (!fullName) newErrors.fullName = "Full name is required";
-    if (!gender) newErrors.gender = "Gender is required";
-    if (!dob) newErrors.dob = "DOB is required";
-    if (!/^\d{10}$/.test(mobile)) newErrors.mobile = "Enter valid mobile number";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+
+    if (mobile && !/^\d{10}$/.test(mobile))
+      newErrors.mobile = "Enter valid mobile number";
+
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       newErrors.email = "Enter valid email";
-    if (!specialization) newErrors.specialization = "Required";
-    if (!experience) newErrors.experience = "Required";
-    if (!hospital) newErrors.hospital = "Required";
-    if (!language) newErrors.language = "Required";
-    if (!bio) newErrors.bio = "Required";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validate()) return;
+
+    const doctorId = doctor?._id;
+    if (!doctorId) {
+      console.error("Doctor ID missing");
+      return;
+    }
+
+    const payload: any = {};
+
+    if (fullName) {
+      const [firstName, ...rest] = fullName.trim().split(" ");
+      payload.firstName = firstName;
+      payload.lastName = rest.join(" ");
+    }
+
+    if (email) payload.email = email;
+    if (mobile) {
+      payload.phoneNumber = mobile;
+      payload.countryCode = user?.countryCode || "+91";
+    }
+
+    if (specialization) payload.specialty = specialization;
+    if (experience) payload.experience = Number(experience);
+    if (bio) payload.bio = bio;
+    if (language) payload.languages = [language];
+
+    if (hospital) {
+      payload.address = {
+        clinicName: hospital,
+        city: doctor?.address?.city || "",
+        state: doctor?.address?.state || "",
+        country: doctor?.address?.country || "",
+        pincode: doctor?.address?.pincode || "",
+      };
+    }
+
+    if (doctor?.licenseNumber) payload.licenseNumber = doctor.licenseNumber;
+    if (doctor?.licenseVerified !== undefined)
+      payload.licenseVerified = doctor.licenseVerified;
+    if (doctor?.consultationFee !== undefined)
+      payload.consultationFee = doctor.consultationFee;
+    if (doctor?.status) payload.status = doctor.status;
+    if (doctor?.isActive !== undefined) payload.isActive = doctor.isActive;
+    if (doctor?.profileImage) payload.profileImage = doctor.profileImage;
+    if (doctor?.medicalLicense) payload.medicalLicense = doctor.medicalLicense;
+    if (doctor?.education) payload.education = doctor.education;
+    if (doctor?.certifications) payload.certifications = doctor.certifications;
+    if (doctor?.availability) payload.availability = doctor.availability;
+    if (doctor?.bankAccount) payload.bankAccount = doctor.bankAccount;
+
+    try {
+      const res = await updateDoctorApi(doctorId, payload);
+
+      const updatedDoctor = res?.data?.data?.doctor;
+      if (!updatedDoctor) return;
+
+      setSpecialization(updatedDoctor.specialty || "");
+      setExperience(
+        updatedDoctor.experience !== undefined
+          ? String(updatedDoctor.experience)
+          : ""
+      );
+      setHospital(updatedDoctor.address?.clinicName || "");
+      setLanguage(updatedDoctor.languages?.[0] || "");
+      setBio(updatedDoctor.bio || "");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -75,7 +191,12 @@ export function ProfileTab() {
         <div>
           <label className="bg-[#C8DFFF] text-[#0E1E38] px-4 py-2 rounded-[10px] text-base font-medium cursor-pointer">
             Change Photo
-            <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
           </label>
           <p className="text-sm text-[#00000080] mt-4">
             JPG, PNG. Max size 5MB
@@ -85,23 +206,29 @@ export function ProfileTab() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
-          <Input label="Full Name" value={fullName} onChange={(e) => setFullName(e)} />
-          {errors.fullName && <p className="text-red-500 text-xs">{errors.fullName}</p>}
+          <Input
+            label="Full Name"
+            value={fullName}
+            onChange={(e) => setFullName(e)}
+          />
         </div>
 
         <div>
           <Input label="Gender" value={gender} onChange={(e) => setGender(e)} />
-          {errors.gender && <p className="text-red-500 text-xs">{errors.gender}</p>}
         </div>
 
         <div>
-          <label className="lg:text-[20px] text-base text-[#012047] lg:mb-3 mb-1 block leading-[24px]">DOB</label>
+          <label className="lg:text-[20px] text-base text-[#012047] lg:mb-3 mb-1 block leading-[24px]">
+            DOB
+          </label>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               value={dob}
               onChange={(newValue) => setDob(newValue)}
               slots={{
-                openPickerIcon: () => <img src={calendaricon} className="w-5 h-5" />,
+                openPickerIcon: () => (
+                  <img src={calendaricon} className="w-5 h-5" />
+                ),
               }}
               slotProps={{
                 textField: {
@@ -126,17 +253,24 @@ export function ProfileTab() {
               }}
             />
           </LocalizationProvider>
-          {errors.dob && <p className="text-red-500 text-xs">{errors.dob}</p>}
         </div>
 
         <div>
-          <Input label="Mobile Number" value={mobile} onChange={(e) => setMobile(e)} />
-          {errors.mobile && <p className="text-red-500 text-xs">{errors.mobile}</p>}
+          <Input
+            label="Mobile Number"
+            value={mobile}
+            onChange={(e) => setMobile(e)}
+          />
+          {errors.mobile && (
+            <p className="text-red-500 text-xs">{errors.mobile}</p>
+          )}
         </div>
 
         <div>
           <Input label="Email" value={email} onChange={(e) => setEmail(e)} />
-          {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
+          {errors.email && (
+            <p className="text-red-500 text-xs">{errors.email}</p>
+          )}
         </div>
 
         <div>
@@ -151,34 +285,43 @@ export function ProfileTab() {
             className="lg:!rounded-[20px] !rounded-lg !text-[16px] lg:!text-[20px] !border-[#00000033] h-[40px] lg:h-[56px]"
             labelclassName="lg:!mb-3 !mb-1 !text-[16px] lg:!text-[20px] !font-normal leading-[24px]"
           />
-          {errors.specialization && <p className="text-red-500 text-xs">{errors.specialization}</p>}
         </div>
 
         <div>
-          <Input label="Years of Experience" value={experience} onChange={(e) => setExperience(e)} />
-          {errors.experience && <p className="text-red-500 text-xs">{errors.experience}</p>}
+          <Input
+            label="Years of Experience"
+            value={experience}
+            onChange={(e) => setExperience(e)}
+          />
         </div>
 
         <div>
-          <Input label="Hospital Affiliation" value={hospital} onChange={(e) => setHospital(e)} />
-          {errors.hospital && <p className="text-red-500 text-xs">{errors.hospital}</p>}
+          <Input
+            label="Hospital Affiliation"
+            value={hospital}
+            onChange={(e) => setHospital(e)}
+          />
         </div>
 
         <div>
-          <Input label="Language Spoken" value={language} onChange={(e) => setLanguage(e)} />
-          {errors.language && <p className="text-red-500 text-xs">{errors.language}</p>}
+          <Input
+            label="Language Spoken"
+            value={language}
+            onChange={(e) => setLanguage(e)}
+          />
         </div>
       </div>
 
       <div>
-        <label className="block lg:mb-3 mb-1 text-base lg:text-[20px]">Professional Bio</label>
+        <label className="block lg:mb-3 mb-1 text-base lg:text-[20px]">
+          Professional Bio
+        </label>
         <textarea
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           placeholder="Tell patients about your experience.."
           className="w-full border lg:rounded-[20px] rounded-lg border-[#00000033] text-base lg:text-[20px] placeholder:text-[#00000080] px-4 py-3 h-28 outline-none"
         />
-        {errors.bio && <p className="text-red-500 text-xs">{errors.bio}</p>}
       </div>
 
       <div className="border lg:rounded-[20px] rounded-lg border-[#00000033] lg:p-6 p-3">
@@ -188,7 +331,9 @@ export function ProfileTab() {
           <div className="flex sm:gap-5 gap-3 items-center">
             <img src={ConfirmUpload} />
             <div>
-              <p className="text-base lg:text-[20px] md:mb-5 sm:mb-1">File Name</p>
+              <p className="text-base lg:text-[20px] md:mb-5 sm:mb-1">
+                File Name
+              </p>
               <p className="text-sm lg:text-[18px] text-[#00000080]">
                 Verified on Nov 15, 2024
               </p>
@@ -205,7 +350,10 @@ export function ProfileTab() {
               View
             </button>
             {open && (
-              <OrderTrackingModal status={status} onClose={() => setOpen(false)} />
+              <OrderTrackingModal
+                status={status}
+                onClose={() => setOpen(false)}
+              />
             )}
           </div>
         </div>

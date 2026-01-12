@@ -90,4 +90,112 @@ export const resetPasswordApi = (payload: {
   return axiosInstance.post("/api/v1/auth/reset-password", payload);
 };
 
+export const updateDoctorApi = (
+  doctorId: string,
+  payload: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    countryCode: string;
+    specialty: string;
+    licenseNumber: string;
+    licenseVerified: boolean;
+    consultationFee: number;
+    status: string;
+    experience: number;
+    isActive: boolean;
+    bio: string;
+    profilePicture?: string;
+    profileImage?: {
+      url: string;
+      verified: boolean;
+    };
+    medicalLicense?: {
+      licenseNumber: string;
+      documentUrl: string;
+      verified: boolean;
+    };
+    education?: {
+      degree: string;
+      institution: string;
+      year: number;
+    }[];
+    certifications?: {
+      name: string;
+      issuingOrganization?: string;
+      issuedBy: string;
+      year: number;
+    }[];
+    languages?: string[];
+    availability?: {
+      days: string[];
+      timeSlots: {
+        from: string;
+        to: string;
+      }[];
+    };
+    address?: {
+      clinicName: string;
+      city: string;
+      state: string;
+      country: string;
+      pincode: string;
+    };
+    bankAccount?: {
+      accountHolderName: string;
+      bankName: string;
+      accountNumber: string;
+      routingNumber?: string;
+      accountType: string;
+      ifscCode: string;
+      swiftCode?: string;
+      verified: boolean;
+    };
+  }
+) => {
+  return axiosInstance.put(
+    `/api/v1/admin/doctors/${doctorId}`,
+    payload
+  );
+};
+
+export const getDoctorDashboardOverviewApi = (doctorId: string) => {
+  return axiosInstance.get(
+    "/api/v1/doctor/dashboard/overview",
+    {
+      params: { doctorId },
+    }
+  );
+};
+
+export const getDoctorTodaysScheduleApi = (doctorId: string) => {
+  return axiosInstance.get(
+    "/api/v1/doctor/dashboard/todays-schedule",
+    {
+      params: { doctorId },
+    }
+  );
+};
+
+export const getDoctorRecentConsultationsApi = (doctorId: string) => {
+  return axiosInstance.get(
+    "/api/v1/doctor/dashboard/recent-consultations",
+    {
+      params: { doctorId },
+    }
+  );
+};
+
+export const getConsultationsApi = (doctorId: string) => {
+  return axiosInstance.get(
+    "/api/v1/doctor/dashboard/recent-consultations",
+    {
+      params: { doctorId },
+    }
+  );
+};
+
+
+
 

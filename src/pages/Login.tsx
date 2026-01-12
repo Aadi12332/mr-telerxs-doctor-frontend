@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+
 import { authLoginApi, loginOtpApi } from "../api/auth.api";
 import loginsideimg from "../assets/loginimg.jpg";
 // import closeicon from "../assets/closeicon.svg";
@@ -8,6 +9,7 @@ import closeeyeicon from "../assets/closeeyeicon.svg";
 import EyeIcon from "../assets/EyeIcon.svg";
 import logo from "../assets/logo.svg";
 import checkedicon from "../assets/checkedicon.svg";
+import { useAuth } from "../routes/AuthContext";
 
 type LoginForm = {
   identifier: string;
@@ -17,7 +19,7 @@ type LoginForm = {
 
 export default function Login() {
   const navigate = useNavigate();
-
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [apiError, setApiError] = useState("");
   const [otpError, setOtpError] = useState("");
@@ -41,8 +43,7 @@ export default function Login() {
   const identifierValue = watch("identifier");
 
   const isPhone = (v: string) => /^\d{10}$/.test(v);
-  const isEmail = (v: string) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
   const onSubmit = async (data: LoginForm) => {
     setApiError("");
@@ -50,9 +51,15 @@ export default function Login() {
       setLoginLoading(true);
       const res = await authLoginApi(data);
       if (res?.data?.success) {
-        localStorage.setItem("accessToken",res?.data?.data?.tokens?.accessToken);
-        localStorage.setItem("refreshToken",res?.data?.data?.tokens?.refreshToken);
-
+        localStorage.setItem(
+          "accessToken",
+          res?.data?.data?.tokens?.accessToken
+        );
+        localStorage.setItem(
+          "refreshToken",
+          res?.data?.data?.tokens?.refreshToken
+        );
+        login(res.data.data);
         navigate("/dashboard");
       } else {
         setApiError("Invalid email/phone or password");
@@ -143,8 +150,7 @@ export default function Login() {
                     setForgotError("");
                     if (
                       !identifierValue ||
-                      (!isEmail(identifierValue) &&
-                        !isPhone(identifierValue))
+                      (!isEmail(identifierValue) && !isPhone(identifierValue))
                     ) {
                       setForgotError(
                         "Please enter a valid email or phone number first"

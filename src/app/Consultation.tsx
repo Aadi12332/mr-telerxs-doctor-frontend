@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchIcon from "../assets/searchIcon.svg";
 import profileimg from "../assets/profileimg.svg";
 import viewicon from "../assets/viewicon.svg";
@@ -14,6 +14,8 @@ import CustomSelect from "../components/common/customSelect";
 import CreatePrescriptionsModal from "./CreatePrescriptionModal";
 import IntakeFormModal from "./IntakeFormModal";
 import NoteModal from "./NoteModal";
+import { getConsultationsApi } from "../api/auth.api";
+import { useAuth } from "../routes/AuthContext";
 const SPECIALIZATIONS = [
   "Cardiology",
   "Dermatology",
@@ -67,6 +69,24 @@ export default function Consultation() {
   const [openIntakeForm, setOpenIntakeForm] = useState(false);
   const [openNote, setOpenNote] = useState(false);
   const [selectedConsultation, setSelectedConsultation] = useState<any>(null);
+  const { auth } = useAuth();
+  const user = auth?.user;
+  console.log(user)
+  // const getDoctorId = user._id;
+
+  const [consultationsAPI, setConsultations] = useState<any[]>([]);
+
+  const doctorId = "6961068ebb2871297b25e798";
+
+  useEffect(() => {
+    if (!doctorId) return;
+
+    getConsultationsApi(doctorId).then((res) =>
+      setConsultations(res.data.data.consultations)
+    );
+  }, [doctorId]);
+
+  console.log({consultationsAPI})
 
   return (
     <>
@@ -210,7 +230,7 @@ export default function Consultation() {
       {openPrescription && (
         <CreatePrescriptionsModal onClose={() => setOpenPrescription(false)} />
       )}
-      
+
       {openIntakeForm && selectedConsultation && (
         <IntakeFormModal
           onClose={() => setOpenIntakeForm(false)}

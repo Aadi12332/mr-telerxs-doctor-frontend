@@ -12,6 +12,7 @@ import ActiveSecurityTabIcon from "../assets/activesecuritytab.svg";
 import { SecurityTab } from "./SecurityTab";
 import { NotificationTab } from "./NotificationTab";
 import { BankAccountTab } from "./BankAccountTab";
+import { useAuth } from "../routes/AuthContext";
 
 const TABS = [
   { key: "profile", label: "Profile", icon: ProfileTabIcon, activeIcon: ActiveProfileTabIcon },
@@ -23,6 +24,9 @@ const TABS = [
 export default function Setting() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("profile");
+  const { auth } = useAuth();
+  const user = auth?.user;
+  const doctor = auth?.doctor;
 
   useEffect(() => {
     const tab = searchParams.get("tab");
@@ -72,7 +76,7 @@ export default function Setting() {
             ))}
           </div>
 
-          {activeTab === "profile" && <ProfileTab />}
+          {activeTab === "profile" && <ProfileTab user={user} doctor={doctor} />}
           {activeTab === "bank" && <BankAccountTab />}
           {activeTab === "notification" && <NotificationTab />}
           {activeTab === "security" && <SecurityTab />}
