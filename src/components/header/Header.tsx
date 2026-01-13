@@ -328,7 +328,7 @@ export default function Header() {
                         bg-[#fff] text-[#4F4F4F] border-[#4F4F4F]
                     }`}
               >
-                Lagout
+                Logout
               </NavLink>
             </div>
           </div>

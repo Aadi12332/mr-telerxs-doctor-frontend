@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {  useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -12,6 +12,7 @@ import addnewicon from "../assets/addnewicon.svg";
 type Props = {
   onClose: () => void;
   refill?: boolean;
+  doctorId?:any
 };
 
 export default function IntakeFormModal({ onClose, refill }: Props) {
@@ -22,7 +23,7 @@ export default function IntakeFormModal({ onClose, refill }: Props) {
   ]);
   const [showInput, setShowInput] = useState(false);
   const [value, setValue] = useState("");
-
+ 
   const handleAdd = () => {
     if (!value.trim()) return;
     setItems([...items, value.trim()]);
@@ -60,7 +61,7 @@ export default function IntakeFormModal({ onClose, refill }: Props) {
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mb-5">
-              <Input label="First Name" defaultValue="John" />
+              <Input label="First Name" defaultValue={"John"}/>
               <Input label="Last Name" defaultValue="Doe" />
               <Input label="Middle Initial" defaultValue="-" />
             </div>

@@ -33,6 +33,7 @@ export function ProfileTab({ user, doctor }: any) {
   const [errors, setErrors] = useState<any>({});
   const [open, setOpen] = useState(false);
   const status = "In Transit";
+const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (user || doctor) {
@@ -108,12 +109,12 @@ export function ProfileTab({ user, doctor }: any) {
 
   const handleSubmit = async () => {
     if (!validate()) return;
-
     const doctorId = doctor?._id;
     if (!doctorId) {
       console.error("Doctor ID missing");
       return;
     }
+     setSaving(true);
 
     const payload: any = {};
 
@@ -157,13 +158,19 @@ export function ProfileTab({ user, doctor }: any) {
     if (doctor?.certifications) payload.certifications = doctor.certifications;
     if (doctor?.availability) payload.availability = doctor.availability;
     if (doctor?.bankAccount) payload.bankAccount = doctor.bankAccount;
+   
 
     try {
-      const res = await updateDoctorApi(doctorId, payload);
-
+      const res = await updateDoctorApi(doctorId, {...payload,});
+      let storeData={
+        user: res?.data?.data?.user,
+        doctor: res?.data?.data,
+        // tokens: res?.data?.data?.tokens,
+      }
+      localStorage.setItem("auth", JSON.stringify(storeData));
       const updatedDoctor = res?.data?.data?.doctor;
       if (!updatedDoctor) return;
-
+      console.log({res})
       setSpecialization(updatedDoctor.specialty || "");
       setExperience(
         updatedDoctor.experience !== undefined
@@ -175,6 +182,8 @@ export function ProfileTab({ user, doctor }: any) {
       setBio(updatedDoctor.bio || "");
     } catch (error) {
       console.error(error);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -282,7 +291,7 @@ export function ProfileTab({ user, doctor }: any) {
             placeholder="ALL"
             openDirection="bottom"
             width="w-full"
-            className="lg:!rounded-[20px] !rounded-lg !text-[16px] lg:!text-[20px] !border-[#00000033] h-[40px] lg:h-[56px]"
+            className="lg:!rounded-[20px] !rounded-lg !text-[16px] lg:!text-[20px] !border-[#00000033] !h-[40px] lg:!h-[56px]"
             labelclassName="lg:!mb-3 !mb-1 !text-[16px] lg:!text-[20px] !font-normal leading-[24px]"
           />
         </div>
@@ -329,13 +338,13 @@ export function ProfileTab({ user, doctor }: any) {
 
         <div className="bg-[#D9D9D966] lg:px-5 px-3 py-3 lg:rounded-[20px] rounded-lg flex md:flex-row flex-col gap-5 md:items-center justify-between bg-gray-50">
           <div className="flex sm:gap-5 gap-3 items-center">
-            <img src={ConfirmUpload} />
+          {doctor?.licenseVerified?  <img src={ConfirmUpload} />:""}
             <div>
               <p className="text-base lg:text-[20px] md:mb-5 sm:mb-1">
-                File Name
+                {doctor?.licenseNumber??""}
               </p>
               <p className="text-sm lg:text-[18px] text-[#00000080]">
-                Verified on Nov 15, 2024
+              {doctor?.licenseVerified?`Verified on ${doctor?.licenseVerifiedAt??""}`:"UnVerified"}  
               </p>
             </div>
           </div>
@@ -361,11 +370,18 @@ export function ProfileTab({ user, doctor }: any) {
 
       <div className="flex justify-end">
         <button
-          onClick={handleSubmit}
-          className="bg-[#00598D] text-white px-6 py-2.5 lg:rounded-[10px] rounded-lg text-[16px] font-medium mt-3"
-        >
-          Save changes
-        </button>
+  onClick={handleSubmit}
+  disabled={saving}
+  className={`bg-[#00598D] text-white px-6 py-2.5 lg:rounded-[10px] rounded-lg text-[16px] font-medium mt-3 flex items-center gap-2 ${
+    saving ? "opacity-70 cursor-not-allowed" : ""
+  }`}
+>
+  {saving && (
+    <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+  )}
+  Save changes
+</button>
+
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import SearchIcon from "../assets/searchIcon.svg";
-import profileimg from "../assets/profileimg.svg";
 import viewicon from "../assets/viewicon.svg";
 import pendingicon from "../assets/pendingicon.svg";
 import refillicon from "../assets/refillicon.svg";
@@ -14,79 +13,103 @@ import CustomSelect from "../components/common/customSelect";
 import CreatePrescriptionsModal from "./CreatePrescriptionModal";
 import IntakeFormModal from "./IntakeFormModal";
 import NoteModal from "./NoteModal";
-import { getConsultationsApi } from "../api/auth.api";
-import { useAuth } from "../routes/AuthContext";
-const SPECIALIZATIONS = [
-  "Cardiology",
-  "Dermatology",
-  "Neurology",
-  "Orthopedics",
-  "Pediatrics",
-];
+import {
+  getConsultationsFilterApi,
+} from "../api/auth.api";
+import useDebounce from "../hooks/useDebounce";
+import  {  useAuth } from "../routes/AuthContext";
 
-const consultations = [
-  {
-    id: 1,
-    name: "Sarah Johnson",
-    age: 34,
-    gender: "Female",
-    image: profileimg,
-    condition: "Respiratory Issues",
-    symptoms: "Persistent cough, shortness of breath",
-    submitted: "2025-12-08 09:30 AM",
-    status: "Pending",
-    actions: ["note"],
-  },
-  {
-    id: 2,
-    name: "Michael Chen",
-    age: 28,
-    gender: "Male",
-    image: profileimg,
-    condition: "Skin Allergy",
-    symptoms: "Rash on arms, itching",
-    submitted: "2025-12-08 10:15 AM",
-    status: "Completed",
-    actions: ["refill", "note"],
-  },
-  {
-    id: 3,
-    name: "Emily Davis",
-    age: 45,
-    gender: "Female",
-    image: profileimg,
-    condition: "Migraine",
-    symptoms: "Severe headache, sensitivity to light",
-    submitted: "2025-12-08 11:00 AM",
-    status: "InProgress",
-    actions: ["note"],
-  },
+
+// const ConsultationSkeleton = () => (
+//   <div className="rounded-lg md:rounded-[20px] bg-[#D9D9D933] md:p-6 p-3 flex flex-col gap-5 animate-pulse">
+//     <div className="flex justify-between items-start gap-5 md:flex-row flex-col">
+//       <div className="flex gap-4 items-center">
+//         <div className="w-[80px] h-[80px] rounded-full bg-gray-300" />
+//         <div>
+//           <div className="h-5 w-40 bg-gray-300 rounded mb-2" />
+//           <div className="h-4 w-24 bg-gray-200 rounded" />
+//         </div>
+//       </div>
+
+//       <div className="flex gap-3">
+//         <div className="h-8 w-20 bg-gray-200 rounded-full" />
+//         <div className="h-8 w-20 bg-gray-200 rounded-full" />
+//       </div>
+//     </div>
+
+//     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//       <div>
+//         <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
+//         <div className="h-5 w-40 bg-gray-300 rounded mb-4" />
+
+//         <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
+//         <div className="h-5 w-32 bg-gray-300 rounded" />
+//       </div>
+
+//       <div>
+//         <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
+//         <div className="h-5 w-full bg-gray-300 rounded mb-4" />
+
+//         <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
+//         <div className="flex gap-3">
+//           <div className="w-5 h-5 bg-gray-300 rounded-full" />
+//           <div className="w-5 h-5 bg-gray-300 rounded-full" />
+//         </div>
+//       </div>
+//     </div>
+
+//     <div className="flex flex-col sm:flex-row gap-4">
+//       <div className="flex-1 h-[48px] bg-gray-300 rounded-full" />
+//       <div className="flex-1 h-[48px] bg-gray-300 rounded-full" />
+//     </div>
+//   </div>
+// );
+
+const STATUS_OPTIONS = [
+  { label: "All Status", value: "" },
+  { label: "Pending", value: "pending" },
+  { label: "Submitted", value: "submitted" },
+  { label: "Reviewed", value: "reviewed" },
+  { label: "Draft", value: "draft" },
 ];
 
 export default function Consultation() {
+  const { auth } = useAuth();
+
   const [specialization, setSpecialization] = useState("");
   const [openPrescription, setOpenPrescription] = useState(false);
   const [openIntakeForm, setOpenIntakeForm] = useState(false);
   const [openNote, setOpenNote] = useState(false);
   const [selectedConsultation, setSelectedConsultation] = useState<any>(null);
-  const { auth } = useAuth();
-  const user = auth?.user;
-  console.log(user)
-  // const getDoctorId = user._id;
-
   const [consultationsAPI, setConsultations] = useState<any[]>([]);
-
-  const doctorId = "6961068ebb2871297b25e798";
-
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const debouncedSearch = useDebounce(search, 500);
+  const doctorId =auth?.doctor?._id;
+  console.log({loading})
+    const LIMIT = 10;
+  const fetchConsultations = async () => {
+    setLoading(true);
+    try {
+      const res = await getConsultationsFilterApi({
+        doctorId,
+        status: STATUS_OPTIONS.find((i) => specialization === i.label)?.value,
+        search: debouncedSearch,
+        page,
+        limit: LIMIT,
+      });
+      setConsultations(res.data.data.consultations || []);
+      setTotalPages(res.data.data.pagination.total || 1);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     if (!doctorId) return;
-
-    getConsultationsApi(doctorId).then((res) =>
-      setConsultations(res.data.data.consultations)
-    );
-  }, [doctorId]);
-
-  console.log({consultationsAPI})
+    fetchConsultations();
+  }, [doctorId, specialization, debouncedSearch, page]);
 
   return (
     <>
@@ -105,13 +128,15 @@ export default function Consultation() {
             <img src={SearchIcon} alt="" className="lg:w-7 w-5" />
             <input
               type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by patient name or condition..."
               className="outline-none w-full placeholder:text-[#9F9F9F] text-[16px]"
             />
           </div>
           <div className="lg:w-[180px] sm:w-[120px]">
             <CustomSelect
-              data={SPECIALIZATIONS}
+              data={STATUS_OPTIONS.map((i) => i.label)}
               value={specialization}
               onChange={setSpecialization}
               placeholder="All Status"
@@ -123,7 +148,7 @@ export default function Consultation() {
         </div>
 
         <div className="space-y-6 mb-8">
-          {consultations.map((item) => (
+          {(consultationsAPI ?? []).map((item) => (
             <div
               key={item.id}
               className="rounded-lg md:rounded-[20px] bg-[#D9D9D933] md:p-6 p-3 flex flex-col gap-5"
@@ -131,20 +156,22 @@ export default function Consultation() {
               <div className="flex justify-between items-start gap-5 md:flex-row flex-col">
                 <div className="flex gap-4 items-center">
                   <img
-                    src={item.image}
+                    src={item?.patient?.profilePicture ?? ""}
                     alt=""
                     className="w-[80px] h-[80px] rounded-full object-cover"
                   />
                   <div>
-                    <h3 className="text-lg font-semibold">{item.name}</h3>
+                    <h3 className="text-lg font-semibold">
+                      {item?.patient?.name ?? ""}
+                    </h3>
                     <p className="text-sm text-gray-500">
-                      {item.age} years • {item.gender}
+                      {item?.patient?.age ?? ""} years • {item?.patient?.gender}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  {item.actions.includes("refill") && (
+                  {(item?.actions ?? []).includes("refill") && (
                     <span className="flex items-center gap-2 px-4 py-1 rounded-full bg-purple-100 text-purple-700 text-sm">
                       <img src={refillicon} className="w-4" /> Refill
                     </span>
@@ -157,19 +184,19 @@ export default function Consultation() {
                     <img src={noteicon} className="w-4" /> Note
                   </span>
 
-                  {item.status === "Pending" && (
+                  {item?.status?.toLowerCase() === "pending" && (
                     <span className="flex items-center gap-2 px-4 py-1 rounded-full bg-yellow-100 text-yellow-700 text-sm">
                       <img src={pendingicon} className="w-4" /> Pending
                     </span>
                   )}
 
-                  {item.status === "Completed" && (
+                  {item?.status?.toLowerCase() === "completed" && (
                     <span className="flex items-center gap-2 px-4 py-1 rounded-full bg-green-100 text-green-700 text-sm">
                       <img src={completeicon} className="w-4" /> Completed
                     </span>
                   )}
 
-                  {item.status === "InProgress" && (
+                  {item?.status?.toLowerCase() === "InProgress" && (
                     <span className="flex items-center gap-2 px-4 py-1 rounded-full bg-blue-100 text-blue-700 text-sm">
                       <img src={inprogressicon} className="w-4" /> In progress
                     </span>
@@ -183,12 +210,12 @@ export default function Consultation() {
                   <p className="font-medium">{item.condition}</p>
 
                   <p className="text-sm text-gray-400 mt-4">Submitted</p>
-                  <p className="font-medium">{item.submitted}</p>
+                  <p className="font-medium">{item.submittedAt}</p>
                 </div>
 
                 <div>
                   <p className="text-sm text-gray-400">Symptoms</p>
-                  <p className="font-medium">{item.symptoms}</p>
+                  <p className="font-medium">{item?.symptoms ?? ""}</p>
 
                   <p className="text-sm text-gray-400 mt-4">Contact</p>
                   <div className="flex gap-3 mt-1">
@@ -228,15 +255,41 @@ export default function Consultation() {
       {openNote && <NoteModal onClose={() => setOpenNote(false)} />}
 
       {openPrescription && (
-        <CreatePrescriptionsModal onClose={() => setOpenPrescription(false)} />
+        <CreatePrescriptionsModal
+          selectedConsultation={selectedConsultation}
+          onClose={() => setOpenPrescription(false)}
+          doctorId={doctorId}
+        />
       )}
 
       {openIntakeForm && selectedConsultation && (
         <IntakeFormModal
+          doctorId={doctorId}
           onClose={() => setOpenIntakeForm(false)}
-          refill={selectedConsultation.actions.includes("refill")}
+          refill={false}
         />
       )}
+      <div className="flex justify-center items-center gap-4 mt-6">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
+          className="px-4 py-2 rounded-full border disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        <span className="text-sm">
+          Page {page} of {totalPages}
+        </span>
+
+        <button
+          disabled={page === totalPages}
+          onClick={() => setPage((p) => p + 1)}
+          className="px-4 py-2 rounded-full border disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
 
       <div className="bg-[#E5F8FC] p-3 text-center">
         <span className="text-[16px] text-[#b0b0b0] font-medium">

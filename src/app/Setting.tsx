@@ -13,6 +13,7 @@ import { SecurityTab } from "./SecurityTab";
 import { NotificationTab } from "./NotificationTab";
 import { BankAccountTab } from "./BankAccountTab";
 import { useAuth } from "../routes/AuthContext";
+import { getProfileApi } from "../api/auth.api";
 
 const TABS = [
   { key: "profile", label: "Profile", icon: ProfileTabIcon, activeIcon: ActiveProfileTabIcon },
@@ -27,12 +28,27 @@ export default function Setting() {
   const { auth } = useAuth();
   const user = auth?.user;
   const doctor = auth?.doctor;
-
+  const [loading,setLoading]=useState(false)
+  console.log(loading)
   useEffect(() => {
     const tab = searchParams.get("tab");
     if (tab) setActiveTab(tab);
   }, []);
-
+  const fetchProfile = async () => {
+    setLoading(true);
+    try {
+      const res = await getProfileApi({
+        doctorId:doctor?._id
+      });
+      console.log({res})
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(()=>{
+    if(user?._id)
+    fetchProfile()
+  },[user?._id])
   const handleTabChange = (key: string) => {
     setActiveTab(key);
     setSearchParams({ tab: key });
@@ -77,7 +93,7 @@ export default function Setting() {
           </div>
 
           {activeTab === "profile" && <ProfileTab user={user} doctor={doctor} />}
-          {activeTab === "bank" && <BankAccountTab />}
+          {activeTab === "bank" && <BankAccountTab user={user} doctor={doctor}/>}
           {activeTab === "notification" && <NotificationTab />}
           {activeTab === "security" && <SecurityTab />}
         </div>

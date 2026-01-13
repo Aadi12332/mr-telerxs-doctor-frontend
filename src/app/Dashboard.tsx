@@ -4,7 +4,7 @@ import CustomSelect from "../components/common/customSelect";
 import Consultation from "../assets/consultationicon.svg";
 import Prescriptions from "../assets/prescriptionicon.svg";
 import Rating from "../assets/patientratingicon.svg";
-import Urgent from "../assets/urgenticon.svg";
+// import Urgent from "../assets/urgenticon.svg";
 import Completed from "../assets/completeicon.svg";
 import Pending from "../assets/pendingicon.svg";
 import {
@@ -21,40 +21,52 @@ const SPECIALIZATIONS = [
   "Patient Rating",
 ];
 
+const MetricSkeleton = () => (
+  <div className="bg-gray-100 md:rounded-[20px] h-[226px] rounded-lg p-6 flex flex-col items-center gap-8 animate-pulse">
+    <div className="w-10 h-10 bg-gray-300 rounded-full" />
+    <div className="h-5 w-40 bg-gray-300 rounded" />
+    <div className="h-8 w-24 bg-gray-300 rounded" />
+  </div>
+);
+
+const ListSkeleton = () => (
+  <div className="bg-[#D9D9D926] rounded-[20px] py-4 px-6 mb-4 animate-pulse">
+    <div className="h-5 w-40 bg-gray-300 rounded mb-3" />
+    <div className="h-4 w-60 bg-gray-200 rounded" />
+  </div>
+);
+
 const reporttype = ["Daily", "Weekly", "Monthly"];
 
 export default function Dashboard() {
+  const { auth } = useAuth();
+  console.log({auth:auth})
+
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [specialization, setSpecialization] = useState("");
   const [specialization2, setSpecialization2] = useState("");
-  const { auth } = useAuth();
-  const user = auth?.user;
-  console.log(user)
-  // const getDoctorId = user._id;
-
   const [overview, setOverview] = useState<any>(null);
   const [schedule, setSchedule] = useState<any[]>([]);
   const [consultations, setConsultations] = useState<any[]>([]);
-
-  const doctorId = "6961068ebb2871297b25e798";
-
+  const doctorId =auth?.doctor?._id;
   useEffect(() => {
     if (!doctorId) return;
 
-    getDoctorDashboardOverviewApi(doctorId).then((res) =>
-      setOverview(res.data.data)
-    );
+    setLoading(true);
 
-    getDoctorTodaysScheduleApi(doctorId).then((res) =>
-      setSchedule(res.data.data.schedule)
-    );
-
-    getDoctorRecentConsultationsApi(doctorId).then((res) =>
-      setConsultations(res.data.data.consultations)
-    );
+    Promise.all([
+      getDoctorDashboardOverviewApi(doctorId),
+      getDoctorTodaysScheduleApi(doctorId),
+      getDoctorRecentConsultationsApi(doctorId),
+    ])
+      .then(([overviewRes, scheduleRes, consultationsRes]) => {
+        setOverview(overviewRes.data.data);
+        setSchedule(scheduleRes.data.data.schedule);
+        setConsultations(consultationsRes.data.data.consultations);
+      })
+      .finally(() => setLoading(false));
   }, [doctorId]);
-
-  console.log({overview, schedule, consultations})
 
   return (
     <>
@@ -92,32 +104,62 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 md:gap-5 gap-4 lg:mb-8 mb-4">
-          <div className="bg-[#E8F0FF] md:rounded-[20px] rounded-lg p-6 relative flex flex-col md:gap-7 gap-3 items-center">
-            <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
-              +12%
-            </span>
-            <img src={Consultation} alt="" />
-            <p className="text-[#000000CC] text-[24px]">Total Consultations</p>
-            <h3 className="text-[30px] font-medium text-[#084EAF]">248</h3>
-          </div>
+          {loading ? (
+            <>
+              <MetricSkeleton />
+              <MetricSkeleton />
+              <MetricSkeleton />
+            </>
+          ) : (
+            <>
+              <div className="bg-[#E8F0FF] md:rounded-[20px] rounded-lg p-6 relative flex flex-col md:gap-7 gap-3 items-center">
+                <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
+                  {overview?.metrics?.totalConsultations?.trend === "up"
+                    ? `+ ${overview?.metrics?.totalConsultations?.change ?? 0}`
+                    : `- ${overview?.metrics?.totalConsultations?.change ?? 0}`}
+                </span>
+                <img src={Consultation} alt="" />
+                <p className="text-[#000000CC] text-[24px]">
+                  Total Consultations
+                </p>
+                <h3 className="text-[30px] font-medium text-[#084EAF]">
+                  {overview?.metrics?.totalConsultations?.value ?? 0}
+                </h3>
+              </div>
 
-          <div className="bg-[#F3EDF9] md:rounded-[20px] rounded-lg p-6 relative flex flex-col md:gap-7 gap-3 items-center">
-            <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
-              +8%
-            </span>
-            <img src={Prescriptions} alt="" />
-            <p className="text-[#000000CC] text-[24px]">Prescriptions Issued</p>
-            <h3 className="text-[30px] font-medium text-[#A239F9]">189</h3>
-          </div>
+              <div className="bg-[#F3EDF9] md:rounded-[20px] rounded-lg p-6 relative flex flex-col md:gap-7 gap-3 items-center">
+                <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
+                  {overview?.metrics?.prescriptionsIssued?.trend === "up"
+                    ? `+ ${overview?.metrics?.prescriptionsIssued?.change ?? 0}`
+                    : `- ${
+                        overview?.metrics?.prescriptionsIssued?.change ?? 0
+                      }`}
+                </span>
+                <img src={Prescriptions} alt="" />
+                <p className="text-[#000000CC] text-[24px]">
+                  Prescriptions Issued
+                </p>
+                <h3 className="text-[30px] font-medium text-[#A239F9]">
+                  {overview?.metrics?.prescriptionsIssued?.value ?? 0}
+                </h3>
+              </div>
 
-          <div className="bg-[#F7FFCC] md:rounded-[20px] rounded-lg p-6 relative flex flex-col md:gap-7 gap-3 items-center">
-            <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
-              +0.2
-            </span>
-            <img src={Rating} alt="" />
-            <p className="text-[#000000CC] text-[24px]">Patient Rating</p>
-            <h3 className="text-[30px] font-medium text-[#808C26]">4.8</h3>
-          </div>
+              <div className="bg-[#F7FFCC] md:rounded-[20px] rounded-lg p-6 relative flex flex-col md:gap-7 gap-3 items-center">
+                <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
+                  {overview?.metrics?.patientRating?.trend === "down"
+                    ? `- ${overview?.metrics?.patientRating?.totalRatings ?? 0}`
+                    : `+ ${
+                        overview?.metrics?.patientRating?.totalRatings ?? 0
+                      }`}
+                </span>
+                <img src={Rating} alt="" />
+                <p className="text-[#000000CC] text-[24px]">Patient Rating</p>
+                <h3 className="text-[30px] font-medium text-[#808C26]">
+                  {overview?.metrics?.patientRating?.value ?? 0}
+                </h3>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -126,71 +168,55 @@ export default function Dashboard() {
               Recent Consultations
             </h3>
 
-            {[
-              {
-                name: "Michael Chen",
-                issue: "Chest pain, shortness of breath",
-                time: "10:30 AM",
-                status: "Urgent",
-                icon: Urgent,
-              },
-              {
-                name: "Michael Chen",
-                issue: "Skin Allergy",
-                time: "11:00 AM",
-                status: "Completed",
-                icon: Completed,
-              },
-              {
-                name: "Sarah Johnson",
-                issue: "Respiratory Issues",
-                time: "10:30 AM",
-                status: "Pending",
-                icon: Pending,
-              },
-              {
-                name: "Emma Wilson",
-                issue: "Follow-up consultation",
-                time: "12:30 PM",
-                status: "Pending",
-                icon: Pending,
-              },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="flex justify-between items-center bg-[#D9D9D926] rounded-[20px] py-4 md:px-7 px-3 mb-4 last:mb-0"
-              >
-                <div>
-                  <p className="md:text-[22px] text-[18px] font-medium mb-4">
-                    {item.name}
-                  </p>
-                  <p className="md:text-[20px] text-[16px] text-[#00000080]">
-                    {item.issue}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="md:text-[22px] text-[18px] font-medium mb-3">
-                    {item.time}
-                  </p>
-                  <span
-                    className={`mt-1 px-3 py-1 h-[36px] justify-center rounded-full md:text-base text-[14px] flex gap-1 items-center ${
-                      item.status === "Urgent"
-                        ? "bg-[#FC9B7880] text-[#7D2C2C]"
-                        : item.status === "Completed"
-                        ? "bg-[#B1FEB280] text-[#138015]"
-                        : "bg-[#EDBC4A80] text-[#624F25]"
-                    }`}
-                  >
-                    <img
-                      src={item.icon}
-                      alt={item.status}
-                      className="md:w-5 w-4"
-                    />
-                    {item.status}
-                  </span>
-                </div>
-              </div>
-            ))}
+{loading ? (
+  Array.from({ length: 4 }).map((_, i) => (
+    <ListSkeleton key={i} />
+  ))
+) : consultations && consultations.length > 0 ? (
+  consultations.map((item, i) => (
+    <div
+      key={i}
+      className="flex justify-between items-center bg-[#D9D9D926] rounded-[20px] py-4 md:px-7 px-3 mb-4 last:mb-0"
+    >
+      <div>
+        <p className="md:text-[22px] text-[18px] font-medium mb-4">
+          {item.patientName}
+        </p>
+        <p className="md:text-[20px] text-[16px] text-[#00000080]">
+          {item.reason}
+        </p>
+      </div>
+
+      <div className="text-right">
+        <p className="md:text-[22px] text-[18px] font-medium mb-3">
+          {item.time}
+        </p>
+
+        <span
+          className={`mt-1 px-3 py-1 h-[36px] justify-center rounded-full md:text-base text-[14px] flex gap-1 items-center ${
+            item.status === "Urgent"
+              ? "bg-[#FC9B7880] text-[#7D2C2C]"
+              : item.status === "Completed"
+              ? "bg-[#B1FEB280] text-[#138015]"
+              : "bg-[#EDBC4A80] text-[#624F25]"
+          }`}
+        >
+          <img
+            src={item.statusType === "info" ? Pending : Completed}
+            alt={item.status}
+            className="md:w-5 w-4"
+          />
+          {item.status}
+        </span>
+      </div>
+    </div>
+  ))
+) : (
+  <p className="text-center text-gray-400 py-6 h-[150px] flex justify-center items-center">
+    No Schedule Found
+  </p>
+)}
+
 
             <div className="flex justify-center mt-8">
               <button
@@ -205,48 +231,39 @@ export default function Dashboard() {
           <div className="bg-white border border-[#D9D9D9] md:rounded-[20px] rounded-lg md:p-6 p-3">
             <h3 className="text-[26px] font-medium mb-7">Today's Schedule</h3>
 
-            {[
-              { name: "Robert Williams", type: "Follow-up", time: "3:00 PM" },
-              {
-                name: "Lisa Anderson",
-                type: "New Consultation",
-                time: "4:30 PM",
-              },
-              {
-                name: "David Martinez",
-                type: "Prescription Review",
-                time: "4:30 PM",
-              },
-              {
-                name: "Anna Thompson",
-                type: "Video Consultation",
-                time: "10:30 AM",
-              },
-              { name: "Lisa Anderson", type: "Follow-up", time: "09:00 AM" },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="flex justify-between items-center bg-[#D9D9D926] rounded-[20px] py-4 md:px-7 px-3 p-4 mb-4 last:mb-0"
-              >
-                <div>
-                  <p className="md:text-[22px] text-[18px] font-medium mb-4">
-                    {item.name}
-                  </p>
-                  <p className="md:text-[22px] text-[16px] text-[#00000080]">
-                    {item.type}
-                  </p>
-                </div>
-                <span
-                  className={`px-4 py-2 rounded-[16px] md:text-[20px] text-[16px] font-medium ${
-                    item.time.includes("AM")
-                      ? "bg-[#B6FFB7B2] text-[#096B0B]"
-                      : "bg-[#BAD7FF80] text-[#0B3977]"
-                  }`}
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => <ListSkeleton key={i} />)
+            ) : schedule && schedule.length > 0 ? (
+              schedule.map((item, i) => (
+                <div
+                  key={i}
+                  className="flex justify-between items-center bg-[#D9D9D926] rounded-[20px] py-4 md:px-7 px-3 mb-4 last:mb-0"
                 >
-                  {item.time}
-                </span>
-              </div>
-            ))}
+                  <div>
+                    <p className="md:text-[22px] text-[18px] font-medium mb-4">
+                      {item.patientName}
+                    </p>
+                    <p className="md:text-[22px] text-[16px] text-[#00000080]">
+                      {item.consultationType}
+                    </p>
+                  </div>
+
+                  <span
+                    className={`px-4 py-2 rounded-[16px] md:text-[20px] text-[16px] font-medium ${
+                      item.time?.includes("AM")
+                        ? "bg-[#B6FFB7B2] text-[#096B0B]"
+                        : "bg-[#BAD7FF80] text-[#0B3977]"
+                    }`}
+                  >
+                    {item.time}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-400 py-6 h-[150px] flex justify-center items-center">
+                No Schedule Found
+              </p>
+            )}
           </div>
         </div>
       </div>

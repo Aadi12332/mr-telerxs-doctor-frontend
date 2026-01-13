@@ -195,7 +195,43 @@ export const getConsultationsApi = (doctorId: string) => {
     }
   );
 };
-
-
+export const getConsultationsFilterApi = ({
+  doctorId,
+  status,
+  search,
+  page = 1,
+  limit = 10,
+}: {
+  doctorId: string;
+  status?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}) => {
+  return axiosInstance.get(
+    `/api/v1/doctor/consultations/doctor/${doctorId}`,
+    {
+      params: {
+        ...(status && { status }),
+        ...(search && { search }),
+        ...(page&&{page}),
+        ...(limit&&{limit}),
+      },
+    }
+  );
+};
+export const getProfileApi = ({
+  doctorId
+}: {
+  doctorId: string;
+  status?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}) => {
+  return axiosInstance.get(
+    `api/v1/admin/doctors/${doctorId}`
+  );
+};
 
 

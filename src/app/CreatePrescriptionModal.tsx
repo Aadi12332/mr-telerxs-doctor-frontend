@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import createfileicon from "../assets/whitecreatefileicon.svg";
 import sendparmacy from "../assets/sendparmacyicon.svg";
-import { useState } from "react";
+import {  useState } from "react";
 import CustomSelect from "../components/common/customSelect";
 
 type Props = {
   onClose: () => void;
+  selectedConsultation?:any;
+  doctorId?:string
 };
 
 const FREQUENCY_OPTIONS = [
@@ -21,11 +23,12 @@ const REFILL_OPTIONS = [
 ];
 
 
-export default function CreatePrescriptionsModal({ onClose }: Props) {
+export default function CreatePrescriptionsModal({ onClose,selectedConsultation }: Props) {
   const [frequency, setFrequency] = useState("");
   const [refill, setRefill] = useState("");
-
-const navigate = useNavigate();
+  const navigate = useNavigate();
+ 
+  
   return (
     <div className="fixed inset-0 z-50">
       <div className="bg-white w-full lg:p-8 p-3 relative h-svh overflow-auto scroll-hide !pt-20">
@@ -42,7 +45,7 @@ const navigate = useNavigate();
             <div>
               <p className="text-base lg:text-[20px] text-[#00000080] mb-2">Patient Name</p>
               <input
-                value="Sarah Johnson"
+                value={selectedConsultation?.patientName}
                 readOnly
                 className="w-full h-[56px] rounded-lg lg:rounded-[14px] px-4 text-base lg:text-[20px] outline-none"
               />
