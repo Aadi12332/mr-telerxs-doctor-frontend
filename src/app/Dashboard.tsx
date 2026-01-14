@@ -40,7 +40,7 @@ const reporttype = ["Daily", "Weekly", "Monthly"];
 
 export default function Dashboard() {
   const { auth } = useAuth();
-  console.log({auth:auth})
+  console.log({ auth: auth });
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -49,7 +49,7 @@ export default function Dashboard() {
   const [overview, setOverview] = useState<any>(null);
   const [schedule, setSchedule] = useState<any[]>([]);
   const [consultations, setConsultations] = useState<any[]>([]);
-  const doctorId =auth?.doctor?._id;
+  const doctorId = auth?.doctor?._id;
   useEffect(() => {
     if (!doctorId) return;
 
@@ -69,7 +69,7 @@ export default function Dashboard() {
   }, [doctorId]);
 
   return (
-    <>
+    <div className="lg:min-h-[calc(100vh-160px)] min-h-[calc(100vh-70px)] overflow-auto scroll-hide flex flex-col justify-between">
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
         <div className="flex md:items-center justify-between md:flex-row flex-col lg:mb-8 mb-4 gap-5">
           <div>
@@ -119,10 +119,10 @@ export default function Dashboard() {
                     : `- ${overview?.metrics?.totalConsultations?.change ?? 0}`}
                 </span>
                 <img src={Consultation} alt="" />
-                <p className="text-[#000000CC] text-[24px]">
+                <p className="text-[#000000CC] text-xl mt-4 sm:mt-0 sm:text-[24px]">
                   Total Consultations
                 </p>
-                <h3 className="text-[30px] font-medium text-[#084EAF]">
+                <h3 className="text-[30px] font-medium text-[#084EAF] leading-[1]">
                   {overview?.metrics?.totalConsultations?.value ?? 0}
                 </h3>
               </div>
@@ -136,10 +136,10 @@ export default function Dashboard() {
                       }`}
                 </span>
                 <img src={Prescriptions} alt="" />
-                <p className="text-[#000000CC] text-[24px]">
+                <p className="text-[#000000CC] text-xl mt-4 sm:mt-0 sm:text-[24px]">
                   Prescriptions Issued
                 </p>
-                <h3 className="text-[30px] font-medium text-[#A239F9]">
+                <h3 className="text-[30px] font-medium text-[#A239F9] leading-[1]">
                   {overview?.metrics?.prescriptionsIssued?.value ?? 0}
                 </h3>
               </div>
@@ -153,8 +153,10 @@ export default function Dashboard() {
                       }`}
                 </span>
                 <img src={Rating} alt="" />
-                <p className="text-[#000000CC] text-[24px]">Patient Rating</p>
-                <h3 className="text-[30px] font-medium text-[#808C26]">
+                <p className="text-[#000000CC] text-xl mt-4 sm:mt-0 sm:text-[24px]">
+                  Patient Rating
+                </p>
+                <h3 className="text-[30px] font-medium text-[#808C26] leading-[1]">
                   {overview?.metrics?.patientRating?.value ?? 0}
                 </h3>
               </div>
@@ -168,64 +170,65 @@ export default function Dashboard() {
               Recent Consultations
             </h3>
 
-{loading ? (
-  Array.from({ length: 4 }).map((_, i) => (
-    <ListSkeleton key={i} />
-  ))
-) : consultations && consultations.length > 0 ? (
-  consultations.map((item, i) => (
-    <div
-      key={i}
-      className="flex justify-between items-center bg-[#D9D9D926] rounded-[20px] py-4 md:px-7 px-3 mb-4 last:mb-0"
-    >
-      <div>
-        <p className="md:text-[22px] text-[18px] font-medium mb-4">
-          {item.patientName}
-        </p>
-        <p className="md:text-[20px] text-[16px] text-[#00000080]">
-          {item.reason}
-        </p>
-      </div>
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => <ListSkeleton key={i} />)
+            ) : consultations && consultations.length > 0 ? (
+              consultations.map((item, i) => (
+                <div
+                  key={i}
+                  className="flex justify-between items-center bg-[#D9D9D926] rounded-[20px] py-4 md:px-7 px-3 mb-4 last:mb-0"
+                >
+                  <div>
+                    <p className="md:text-[22px] text-[18px] font-medium mb-4">
+                      {item.patientName}
+                    </p>
+                    <p className="md:text-[20px] text-[16px] text-[#00000080]">
+                      {item.reason}
+                    </p>
+                  </div>
 
-      <div className="text-right">
-        <p className="md:text-[22px] text-[18px] font-medium mb-3">
-          {item.time}
-        </p>
+                  <div className="text-right">
+                    <p className="md:text-[22px] text-[18px] font-medium mb-3">
+                      {item.time}
+                    </p>
 
-        <span
-          className={`mt-1 px-3 py-1 h-[36px] justify-center rounded-full md:text-base text-[14px] flex gap-1 items-center ${
-            item.status === "Urgent"
-              ? "bg-[#FC9B7880] text-[#7D2C2C]"
-              : item.status === "Completed"
-              ? "bg-[#B1FEB280] text-[#138015]"
-              : "bg-[#EDBC4A80] text-[#624F25]"
-          }`}
-        >
-          <img
-            src={item.statusType === "info" ? Pending : Completed}
-            alt={item.status}
-            className="md:w-5 w-4"
-          />
-          {item.status}
-        </span>
-      </div>
-    </div>
-  ))
-) : (
-  <p className="text-center text-gray-400 py-6 h-[150px] flex justify-center items-center">
-    No Schedule Found
-  </p>
-)}
+                    <span
+                      className={`mt-1 px-3 py-1 h-[36px] justify-center rounded-full md:text-base text-[14px] flex gap-1 items-center ${
+                        item.status === "Urgent"
+                          ? "bg-[#FC9B7880] text-[#7D2C2C]"
+                          : item.status === "Completed"
+                          ? "bg-[#B1FEB280] text-[#138015]"
+                          : "bg-[#EDBC4A80] text-[#624F25]"
+                      }`}
+                    >
+                      <img
+                        src={item.statusType === "info" ? Pending : Completed}
+                        alt={item.status}
+                        className="md:w-5 w-4"
+                      />
+                      {item.status}
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-400 py-6 h-[150px] flex justify-center items-center">
+                No Schedule Found
+              </p>
+            )}
 
+            {
+              consultations && consultations.length > 0 &&
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={() => navigate("/consultations")}
+                  className=" bg-[linear-gradient(133.68deg,#2CBEFF_1.1%,#00598D_98.9%)] text-white px-10 py-3 rounded-full md:text-[22px] text-[18px] font-medium"
+                >
+                  View All Consultations
+                </button>
+              </div>
+            }
 
-            <div className="flex justify-center mt-8">
-              <button
-                onClick={() => navigate("/consultations")}
-                className=" bg-[linear-gradient(133.68deg,#2CBEFF_1.1%,#00598D_98.9%)] text-white px-10 py-3 rounded-full md:text-[22px] text-[18px] font-medium"
-              >
-                View All Consultations
-              </button>
-            </div>
           </div>
 
           <div className="bg-white border border-[#D9D9D9] md:rounded-[20px] rounded-lg md:p-6 p-3">
@@ -272,6 +275,6 @@ export default function Dashboard() {
           CompanyName2025 © All Rights Reserved
         </span>
       </div>
-    </>
+    </div>
   );
 }

@@ -7,8 +7,8 @@ import CustomSelect from "../components/common/customSelect";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import OrderTrackingModal from "./OrderTrackingModal";
 import { updateDoctorApi } from "../api/auth.api";
+import AlertIcon from "../assets/AlertIcon";
 
 const SPECIALIZATIONS = [
   "Cardiology",
@@ -20,7 +20,9 @@ const SPECIALIZATIONS = [
 
 export function ProfileTab({ user, doctor }: any) {
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [gender, setGender] = useState("");
   const [dob, setDob] = useState<any>(null);
   const [mobile, setMobile] = useState("");
@@ -28,21 +30,25 @@ export function ProfileTab({ user, doctor }: any) {
   const [specialization, setSpecialization] = useState("");
   const [experience, setExperience] = useState("");
   const [hospital, setHospital] = useState("");
-  const [language, setLanguage] = useState("");
+  const [consultationFee, setConsultationFee] = useState("");
+  const [licenseNumber, setLicenseNumber] = useState("");
+  const [licenseFile, setLicenseFile] = useState<File | null>(null);
+  console.log(licenseFile)
+  const [licenseFileName, setLicenseFileName] = useState("");
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [languageInput, setLanguageInput] = useState("");
   const [bio, setBio] = useState("");
   const [errors, setErrors] = useState<any>({});
-  const [open, setOpen] = useState(false);
-  const status = "In Transit";
-const [saving, setSaving] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+const [licensePreviewUrl, setLicensePreviewUrl] = useState<string | null>(null);
+
 
   useEffect(() => {
     if (user || doctor) {
-      const name =
-        user?.firstName || user?.lastName
-          ? `${user?.firstName || ""} ${user?.lastName || ""}`.trim()
-          : "";
-
-      setFullName(name);
+      setFirstName(user?.firstName || "");
+      setMiddleName(user?.middleName || "-");
+      setLastName(user?.lastName || "");
       setMobile(user?.phoneNumber || "");
       setEmail(user?.email || "");
       setSpecialization(doctor?.specialty || "");
@@ -50,41 +56,16 @@ const [saving, setSaving] = useState(false);
         doctor?.experience !== undefined ? String(doctor.experience) : ""
       );
       setHospital(doctor?.address?.clinicName || "");
-      setLanguage(doctor?.languages?.[0] || "");
+      setLanguages(doctor?.languages || []);
       setBio(doctor?.bio || "");
-
-      localStorage.setItem(
-        "profileFormData",
-        JSON.stringify({
-          fullName,
-          mobile,
-          email,
-          specialization,
-          experience,
-          hospital,
-          language,
-          bio,
-        })
+      setConsultationFee(
+        doctor?.consultationFee !== undefined
+          ? String(doctor.consultationFee)
+          : ""
       );
+      setLicenseNumber(doctor?.licenseNumber || "");
     }
   }, [user, doctor]);
-
-  useEffect(() => {
-    if (!user && !doctor) {
-      const stored = localStorage.getItem("profileFormData");
-      if (stored) {
-        const data = JSON.parse(stored);
-        setFullName(data.fullName || "");
-        setMobile(data.mobile || "");
-        setEmail(data.email || "");
-        setSpecialization(data.specialization || "");
-        setExperience(data.experience || "");
-        setHospital(data.hospital || "");
-        setLanguage(data.language || "");
-        setBio(data.bio || "");
-      }
-    }
-  }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -96,90 +77,81 @@ const [saving, setSaving] = useState(false);
 
   const validate = () => {
     const newErrors: any = {};
-
     if (mobile && !/^\d{10}$/.test(mobile))
       newErrors.mobile = "Enter valid mobile number";
-
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       newErrors.email = "Enter valid email";
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+const handleLicenseUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  setLicenseFile(file);
+  setLicenseFileName(file.name);
+  const url = URL.createObjectURL(file);
+  setLicensePreviewUrl(url);
+};
+
+const handleViewLicense = () => {
+  if (licensePreviewUrl) {
+    setPreviewOpen(true);
+    return;
+  }
+
+  if (doctor?.medicalLicense) {
+    setLicensePreviewUrl(doctor.medicalLicense);
+    setPreviewOpen(true);
+  }
+};
+
+
   const handleSubmit = async () => {
     if (!validate()) return;
     const doctorId = doctor?._id;
-    if (!doctorId) {
-      console.error("Doctor ID missing");
-      return;
-    }
-     setSaving(true);
+    if (!doctorId) return;
+    setSaving(true);
 
-    const payload: any = {};
-
-    if (fullName) {
-      const [firstName, ...rest] = fullName.trim().split(" ");
-      payload.firstName = firstName;
-      payload.lastName = rest.join(" ");
-    }
-
-    if (email) payload.email = email;
-    if (mobile) {
-      payload.phoneNumber = mobile;
-      payload.countryCode = user?.countryCode || "+91";
-    }
-
-    if (specialization) payload.specialty = specialization;
-    if (experience) payload.experience = Number(experience);
-    if (bio) payload.bio = bio;
-    if (language) payload.languages = [language];
-
-    if (hospital) {
-      payload.address = {
+    const payload: any = {
+      firstName,
+      middleName,
+      lastName,
+      email,
+      phoneNumber: mobile,
+      countryCode: user?.countryCode || "+91",
+      specialty: specialization,
+      experience: experience ? Number(experience) : undefined,
+      bio,
+      languages,
+      consultationFee: consultationFee ? Number(consultationFee) : undefined,
+      licenseNumber,
+      address: {
         clinicName: hospital,
         city: doctor?.address?.city || "",
         state: doctor?.address?.state || "",
         country: doctor?.address?.country || "",
         pincode: doctor?.address?.pincode || "",
-      };
-    }
-
-    if (doctor?.licenseNumber) payload.licenseNumber = doctor.licenseNumber;
-    if (doctor?.licenseVerified !== undefined)
-      payload.licenseVerified = doctor.licenseVerified;
-    if (doctor?.consultationFee !== undefined)
-      payload.consultationFee = doctor.consultationFee;
-    if (doctor?.status) payload.status = doctor.status;
-    if (doctor?.isActive !== undefined) payload.isActive = doctor.isActive;
-    if (doctor?.profileImage) payload.profileImage = doctor.profileImage;
-    if (doctor?.medicalLicense) payload.medicalLicense = doctor.medicalLicense;
-    if (doctor?.education) payload.education = doctor.education;
-    if (doctor?.certifications) payload.certifications = doctor.certifications;
-    if (doctor?.availability) payload.availability = doctor.availability;
-    if (doctor?.bankAccount) payload.bankAccount = doctor.bankAccount;
-   
+      },
+      licenseVerified: doctor?.licenseVerified,
+      status: doctor?.status,
+      isActive: doctor?.isActive,
+      medicalLicense: doctor?.medicalLicense,
+      education: doctor?.education,
+      certifications: doctor?.certifications,
+      availability: doctor?.availability,
+      bankAccount: doctor?.bankAccount,
+    };
 
     try {
-      const res = await updateDoctorApi(doctorId, {...payload,});
-      let storeData={
-        user: res?.data?.data?.user,
-        doctor: res?.data?.data,
-        // tokens: res?.data?.data?.tokens,
-      }
-      localStorage.setItem("auth", JSON.stringify(storeData));
-      const updatedDoctor = res?.data?.data?.doctor;
-      if (!updatedDoctor) return;
-      console.log({res})
-      setSpecialization(updatedDoctor.specialty || "");
-      setExperience(
-        updatedDoctor.experience !== undefined
-          ? String(updatedDoctor.experience)
-          : ""
+      const res = await updateDoctorApi(doctorId, payload);
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          user: res?.data?.data?.user,
+          doctor: res?.data?.data,
+        })
       );
-      setHospital(updatedDoctor.address?.clinicName || "");
-      setLanguage(updatedDoctor.languages?.[0] || "");
-      setBio(updatedDoctor.bio || "");
     } catch (error) {
       console.error(error);
     } finally {
@@ -214,17 +186,15 @@ const [saving, setSaving] = useState(false);
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div>
-          <Input
-            label="Full Name"
-            value={fullName}
-            onChange={(e) => setFullName(e)}
-          />
-        </div>
+        <Input label="First Name" value={firstName} onChange={setFirstName} />
+        <Input
+          label="Middle Name"
+          value={middleName}
+          onChange={setMiddleName}
+        />
+        <Input label="Last Name" value={lastName} onChange={setLastName} />
 
-        <div>
-          <Input label="Gender" value={gender} onChange={(e) => setGender(e)} />
-        </div>
+        <Input label="Gender" value={gender} onChange={setGender} />
 
         <div>
           <label className="lg:text-[20px] text-base text-[#012047] lg:mb-3 mb-1 block leading-[24px]">
@@ -265,60 +235,107 @@ const [saving, setSaving] = useState(false);
         </div>
 
         <div>
-          <Input
-            label="Mobile Number"
-            value={mobile}
-            onChange={(e) => setMobile(e)}
-          />
+          <Input label="Mobile Number" value={mobile} onChange={setMobile} />
           {errors.mobile && (
             <p className="text-red-500 text-xs">{errors.mobile}</p>
           )}
         </div>
 
         <div>
-          <Input label="Email" value={email} onChange={(e) => setEmail(e)} />
+          <Input label="Email" value={email} onChange={setEmail} />
           {errors.email && (
             <p className="text-red-500 text-xs">{errors.email}</p>
           )}
         </div>
 
-        <div>
-          <CustomSelect
-            title="Specialization"
-            data={SPECIALIZATIONS}
-            value={specialization}
-            onChange={setSpecialization}
-            placeholder="ALL"
-            openDirection="bottom"
-            width="w-full"
-            className="lg:!rounded-[20px] !rounded-lg !text-[16px] lg:!text-[20px] !border-[#00000033] !h-[40px] lg:!h-[56px]"
-            labelclassName="lg:!mb-3 !mb-1 !text-[16px] lg:!text-[20px] !font-normal leading-[24px]"
+        <CustomSelect
+          title="Specialization"
+          data={SPECIALIZATIONS}
+          value={specialization}
+          onChange={setSpecialization}
+          placeholder="ALL"
+          openDirection="bottom"
+          width="w-full"
+          className="lg:!rounded-[20px] !rounded-lg !text-[16px] lg:!text-[20px] !border-[#00000033] !h-[40px] lg:!h-[56px]"
+          labelclassName="lg:!mb-3 !mb-1 !text-[16px] lg:!text-[20px] !font-normal leading-[24px]"
+        />
+
+        <Input
+          label="Years of Experience"
+          value={experience}
+          onChange={setExperience}
+        />
+
+        <Input
+          label="Hospital Affiliation"
+          value={hospital}
+          onChange={setHospital}
+        />
+
+        <Input
+          label="Consultation Fee"
+          value={consultationFee}
+          onChange={setConsultationFee}
+        />
+
+        <Input
+          label="License Number"
+          value={licenseNumber}
+          onChange={setLicenseNumber}
+        />
+      </div>
+      <div>
+        <label className="block lg:mb-3 mb-1 font-medium lg:text-[20px] text-base">
+          Language Spoken
+        </label>
+
+        <div
+          className="w-full border bg-white lg:rounded-[20px] rounded-lg border-[#00000033]
+          flex flex-wrap items-center gap-2 px-3 py-2 min-h-[40px] lg:min-h-[56px]"
+        >
+          {languages.map((lang, index) => (
+            <span
+              key={index}
+              className="flex items-center gap-1 bg-[#E5F8FC] break-all text-[#00598D]
+              px-3 py-1 rounded-full text-sm lg:text-base"
+            >
+              {lang}
+              <button
+                type="button"
+                onClick={() =>
+                  setLanguages(languages.filter((_, i) => i !== index))
+                }
+                className="text-[#00598D] font-bold"
+              >
+                ×
+              </button>
+            </span>
+          ))}
+
+          <input
+            value={languageInput}
+            onChange={(e) => setLanguageInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && languageInput.trim()) {
+                e.preventDefault();
+                if (!languages.includes(languageInput.trim())) {
+                  setLanguages([...languages, languageInput.trim()]);
+                }
+                setLanguageInput("");
+              }
+              if (e.key === "Backspace" && !languageInput && languages.length) {
+                setLanguages(languages.slice(0, -1));
+              }
+            }}
+            placeholder={languages.length ? "" : "Add language"}
+            className="flex-1 outline-none border-none bg-transparent
+            lg:text-[20px] text-base placeholder:text-[#00000080]"
           />
         </div>
 
-        <div>
-          <Input
-            label="Years of Experience"
-            value={experience}
-            onChange={(e) => setExperience(e)}
-          />
-        </div>
-
-        <div>
-          <Input
-            label="Hospital Affiliation"
-            value={hospital}
-            onChange={(e) => setHospital(e)}
-          />
-        </div>
-
-        <div>
-          <Input
-            label="Language Spoken"
-            value={language}
-            onChange={(e) => setLanguage(e)}
-          />
-        </div>
+        {errors.language && (
+          <p className="text-red-500 text-xs">{errors.language}</p>
+        )}
       </div>
 
       <div>
@@ -335,53 +352,89 @@ const [saving, setSaving] = useState(false);
 
       <div className="border lg:rounded-[20px] rounded-lg border-[#00000033] lg:p-6 p-3">
         <p className="text-[20px] mb-6">Medical License Number</p>
-
-        <div className="bg-[#D9D9D966] lg:px-5 px-3 py-3 lg:rounded-[20px] rounded-lg flex md:flex-row flex-col gap-5 md:items-center justify-between bg-gray-50">
+        <div className="bg-[#D9D9D966] lg:px-5 px-3 py-3 lg:rounded-[20px] rounded-lg flex md:flex-row flex-col gap-5 md:items-center justify-between">
           <div className="flex sm:gap-5 gap-3 items-center">
-          {doctor?.licenseVerified?  <img src={ConfirmUpload} />:""}
+            {doctor?.licenseVerified ? (
+              <img src={ConfirmUpload} />
+            ) : (
+              <AlertIcon />
+            )}
             <div>
               <p className="text-base lg:text-[20px] md:mb-5 sm:mb-1">
-                {doctor?.licenseNumber??""}
+                {licenseFileName || doctor?.licenseNumber || ""}
               </p>
               <p className="text-sm lg:text-[18px] text-[#00000080]">
-              {doctor?.licenseVerified?`Verified on ${doctor?.licenseVerifiedAt??""}`:"UnVerified"}  
+                {doctor?.licenseVerified
+                  ? `Verified on ${doctor?.licenseVerifiedAt ?? ""}`
+                  : "UnVerified"}
               </p>
             </div>
           </div>
+
           <div className="flex gap-5 items-center justify-between md:justify-end">
-            <button className="text-[#00598D] text-sm lg:text-[18px]">
+            <label className="text-[#00598D] text-sm lg:text-[18px] cursor-pointer">
               Replace/Upload
-            </button>
+              <input
+                type="file"
+                hidden
+                accept=".pdf,.jpg,.jpeg,.png"
+                onChange={handleLicenseUpload}
+              />
+            </label>
+
             <button
-              onClick={() => setOpen(true)}
+              // onClick={() => setOpen(true)}
+              onClick={handleViewLicense}
               className="border border-[#0000004D] px-6 md:py-2.5 py-1.5 rounded-lg lg:rounded-[10px] text-sm lg:text-[18px] bg-white"
             >
               View
             </button>
-            {open && (
+
+            {/* {open && (
               <OrderTrackingModal
                 status={status}
                 onClose={() => setOpen(false)}
               />
-            )}
+            )} */}
+            {previewOpen && (
+  <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center">
+    <div className="relative w-full h-full flex items-center justify-center">
+      <button
+        onClick={() => setPreviewOpen(false)}
+        className="absolute top-6 right-6 text-white text-3xl"
+      >
+        ×
+      </button>
+
+      {licensePreviewUrl ? (
+        <img
+          src={licensePreviewUrl}
+          className="max-w-[90%] max-h-[90vh] object-contain bg-white rounded-lg min-h-[50vh] min-w-[50vw]"
+        />
+      ) : (
+        <p className="text-white text-lg">No preview available</p>
+      )}
+    </div>
+  </div>
+)}
+
           </div>
         </div>
       </div>
 
       <div className="flex justify-end">
         <button
-  onClick={handleSubmit}
-  disabled={saving}
-  className={`bg-[#00598D] text-white px-6 py-2.5 lg:rounded-[10px] rounded-lg text-[16px] font-medium mt-3 flex items-center gap-2 ${
-    saving ? "opacity-70 cursor-not-allowed" : ""
-  }`}
->
-  {saving && (
-    <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-  )}
-  Save changes
-</button>
-
+          onClick={handleSubmit}
+          disabled={saving}
+          className={`bg-[#00598D] text-white px-6 py-2.5 lg:rounded-[10px] rounded-lg text-[16px] font-medium mt-3 flex items-center gap-2 ${
+            saving ? "opacity-70 cursor-not-allowed" : ""
+          }`}
+        >
+          {saving && (
+            <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          )}
+          Save changes
+        </button>
       </div>
     </div>
   );

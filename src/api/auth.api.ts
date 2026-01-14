@@ -70,7 +70,7 @@ export const createDoctorApi = (payload: {
   hospitalAffiliation: string;
   languages: string[];
   bio: string;
-  consultationFee: number;
+  consultationFee?: number | string;
   password: string;
   agreeConfirmation: boolean;
   profilePicture?: string;

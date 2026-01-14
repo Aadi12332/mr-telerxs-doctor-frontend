@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
 import medicationcompany from "../assets/medicationcompanylogo.svg";
 import backarrowicon from "../assets/backlongarrow.svg";
 import profileimg from "../assets/profileimg.svg";
@@ -27,11 +26,12 @@ const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z0-9]).{6,}$/;
 
 export default function Signup() {
   const navigate = useNavigate();
-
   const [dob, setDob] = useState<any>(null);
   const [specialization, setSpecialization] = useState("");
   const [licenseFile, setLicenseFile] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [languageInput, setLanguageInput] = useState("");
 
   const [form, setForm] = useState({
     firstName: "",
@@ -40,6 +40,8 @@ export default function Signup() {
     gender: "",
     email: "",
     phoneNumber: "",
+    licenseNumber: "",
+    consultationFee: "",
     password: "",
     experience: "",
     hospital: "",
@@ -82,40 +84,39 @@ export default function Signup() {
     return Object.keys(e).length === 0;
   };
 
-const handleSubmit = async () => {
-  if (!validate()) return;
+  const handleSubmit = async () => {
+    if (!validate()) return;
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    await createDoctorApi({
-      firstName: form.firstName,
-      lastName: form.lastName,
-      middleInitial: form.middleName || undefined,
-      email: form.email,
-      phoneNumber: form.phoneNumber,
-      countryCode: "+91",
-      gender: form.gender as "male" | "female" | "other",
-      dateOfBirth: dob.format("YYYY-MM-DD"),
-      specialty: specialization,
-      licenseNumber: licenseFile?.name || "",
-      experience: Number(form.experience || 0),
-      hospitalAffiliation: form.hospital,
-      languages: [form.language],
-      bio: form.bio,
-      consultationFee: 150,
-      password: form.password,
-      agreeConfirmation: true,
-      profilePicture: profilePreview || undefined,
-      medicalLicense: licenseFile?.name || undefined,
-    });
+      await createDoctorApi({
+        firstName: form.firstName,
+        lastName: form.lastName,
+        middleInitial: form.middleName || undefined,
+        email: form.email,
+        phoneNumber: form.phoneNumber,
+        countryCode: "+91",
+        gender: form.gender as "male" | "female" | "other",
+        dateOfBirth: dob.format("YYYY-MM-DD"),
+        specialty: specialization,
+        licenseNumber: licenseFile?.name || "",
+        experience: Number(form.experience || 0),
+        hospitalAffiliation: form.hospital,
+        languages: languages,
+        bio: form.bio,
+        consultationFee: form.consultationFee,
+        password: form.password,
+        agreeConfirmation: true,
+        profilePicture: profilePreview || undefined,
+        medicalLicense: licenseFile?.name || undefined,
+      });
 
-    navigate("/login");
-  } finally {
-    setLoading(false);
-  }
-};
-
+      navigate("/login");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="bg-[#fff]">
@@ -158,22 +159,25 @@ const handleSubmit = async () => {
             </h3>
 
             <div className="grid md:grid-cols-3 gap-5 mb-5">
-              <Input labelClassName="!text-base !font-medium !mb-1"
+              <Input
+                labelClassName="!text-base !font-medium !mb-1"
                 className="!rounded-lg !text-base"
                 label="First Name"
                 value={form.firstName}
                 error={errors.firstName}
                 onChange={(v: string) => handleChange("firstName", v)}
               />
-      
-              <Input labelClassName="!text-base !font-medium !mb-1"
+
+              <Input
+                labelClassName="!text-base !font-medium !mb-1"
                 className="!rounded-lg !text-base"
                 label="Last Name"
                 value={form.lastName}
                 error={errors.lastName}
                 onChange={(v: string) => handleChange("lastName", v)}
               />
-              <Input labelClassName="!text-base !font-medium !mb-1"
+              <Input
+                labelClassName="!text-base !font-medium !mb-1"
                 className="!rounded-lg !text-base"
                 label="Middle Name"
                 value={form.middleName}
@@ -183,7 +187,8 @@ const handleSubmit = async () => {
             </div>
 
             <div className="grid md:grid-cols-2 gap-5">
-              <Input labelClassName="!text-base !font-medium !mb-1"
+              <Input
+                labelClassName="!text-base !font-medium !mb-1"
                 className="!rounded-lg !text-base"
                 label="Gender"
                 value={form.gender}
@@ -230,14 +235,17 @@ const handleSubmit = async () => {
                 )}
               </div>
 
-              <Input labelClassName="!text-base !font-medium !mb-1"
+              <Input
+                labelClassName="!text-base !font-medium !mb-1"
                 className="!rounded-lg !text-base"
                 label="Email"
                 value={form.email}
                 error={errors.email}
                 onChange={(v: string) => handleChange("email", v)}
               />
-              <Input labelClassName="!text-base !font-medium !mb-1"
+
+              <Input
+                labelClassName="!text-base !font-medium !mb-1"
                 className="!rounded-lg !text-base"
                 label="Mobile Number"
                 value={form.phoneNumber}
@@ -245,9 +253,17 @@ const handleSubmit = async () => {
                 onChange={(v: string) => handleChange("phoneNumber", v)}
               />
 
+              <Input
+                labelClassName="!text-base !font-medium !mb-1"
+                className="!rounded-lg !text-base"
+                label="Medical License Number"
+                value={form.licenseNumber}
+                error={errors.licenseNumber}
+                onChange={(v: string) => handleChange("licenseNumber", v)}
+              />
               <div>
                 <label className="text-base font-medium text-[#012047] mb-1 block">
-                  Upload Medical License Number
+                  Upload Medical License
                 </label>
                 <label className="w-full h-[56px] flex items-center justify-between border border-[#D9D9D9] rounded-lg px-4 cursor-pointer bg-white">
                   <span className="text-[14px] text-[#465D7C] truncate">
@@ -264,7 +280,13 @@ const handleSubmit = async () => {
                   <p className="text-red-500 text-xs mt-1">{errors.license}</p>
                 )}
               </div>
-
+              <Input
+                labelClassName="!text-base !font-medium !mb-1"
+                className="!rounded-lg !text-base"
+                label="Consultation Fee"
+                value={form.consultationFee}
+                onChange={(v: string) => handleChange("consultationFee", v)}
+              />
               <div>
                 <CustomSelect
                   title="Specialization"
@@ -281,25 +303,81 @@ const handleSubmit = async () => {
                 )}
               </div>
 
-              <Input labelClassName="!text-base !font-medium !mb-1"
+              <Input
+                labelClassName="!text-base !font-medium !mb-1"
                 className="!rounded-lg !text-base"
+                type="number"
                 label="Years of Experience"
                 value={form.experience}
                 onChange={(v: string) => handleChange("experience", v)}
               />
-              <Input labelClassName="!text-base !font-medium !mb-1"
+              <Input
+                labelClassName="!text-base !font-medium !mb-1"
                 className="!rounded-lg !text-base"
                 label="Hospital Affiliation"
                 value={form.hospital}
                 onChange={(v: string) => handleChange("hospital", v)}
               />
-              <Input labelClassName="!text-base !font-medium !mb-1"
-                className="!rounded-lg !text-base"
-                label="Language Spoken"
-                value={form.language}
-                onChange={(v: string) => handleChange("language", v)}
-              />
-              <Input labelClassName="!text-base !font-medium !mb-1"
+              <div>
+                <label className="block mb-1 font-medium text-base">
+                  Language Spoken
+                </label>
+
+                <div
+                  className="w-full border bg-white rounded-lg border-[#00000033]
+               flex flex-wrap items-center gap-2 px-3 py-2 min-h-[40px] lg:min-h-[56px]"
+                >
+                  {languages.map((lang, index) => (
+                    <span
+                      key={index}
+                      className="flex items-center gap-1 bg-[#E5F8FC] break-all text-[#00598D]
+                   px-3 py-1 rounded-full text-sm lg:text-base"
+                    >
+                      {lang}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setLanguages(languages.filter((_, i) => i !== index))
+                        }
+                        className="text-[#00598D] font-bold"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+
+                  <input
+                    value={languageInput}
+                    onChange={(e) => setLanguageInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && languageInput.trim()) {
+                        e.preventDefault();
+                        if (!languages.includes(languageInput.trim())) {
+                          setLanguages([...languages, languageInput.trim()]);
+                        }
+                        setLanguageInput("");
+                      }
+                      if (
+                        e.key === "Backspace" &&
+                        !languageInput &&
+                        languages.length
+                      ) {
+                        setLanguages(languages.slice(0, -1));
+                      }
+                    }}
+                    placeholder={languages.length ? "" : "Add language"}
+                    className="flex-1 outline-none border-none bg-transparent
+                 text-base placeholder:text-[#00000080]"
+                  />
+                </div>
+
+                {errors.language && (
+                  <p className="text-red-500 text-xs">{errors.language}</p>
+                )}
+              </div>
+
+              <Input
+                labelClassName="!text-base !font-medium !mb-1"
                 className="!rounded-lg !text-base"
                 label="Password"
                 type="password"

@@ -13,57 +13,54 @@ import CustomSelect from "../components/common/customSelect";
 import CreatePrescriptionsModal from "./CreatePrescriptionModal";
 import IntakeFormModal from "./IntakeFormModal";
 import NoteModal from "./NoteModal";
-import {
-  getConsultationsFilterApi,
-} from "../api/auth.api";
+import { getConsultationsFilterApi } from "../api/auth.api";
 import useDebounce from "../hooks/useDebounce";
-import  {  useAuth } from "../routes/AuthContext";
+import { useAuth } from "../routes/AuthContext";
 
+const ConsultationSkeleton = () => (
+  <div className="rounded-lg md:rounded-[20px] bg-[#D9D9D933] md:p-6 p-3 flex flex-col gap-5 animate-pulse">
+    <div className="flex justify-between items-start gap-5 md:flex-row flex-col">
+      <div className="flex gap-4 items-center">
+        <div className="w-[80px] h-[80px] rounded-full bg-gray-300" />
+        <div>
+          <div className="h-5 w-40 bg-gray-300 rounded mb-2" />
+          <div className="h-4 w-24 bg-gray-200 rounded" />
+        </div>
+      </div>
 
-// const ConsultationSkeleton = () => (
-//   <div className="rounded-lg md:rounded-[20px] bg-[#D9D9D933] md:p-6 p-3 flex flex-col gap-5 animate-pulse">
-//     <div className="flex justify-between items-start gap-5 md:flex-row flex-col">
-//       <div className="flex gap-4 items-center">
-//         <div className="w-[80px] h-[80px] rounded-full bg-gray-300" />
-//         <div>
-//           <div className="h-5 w-40 bg-gray-300 rounded mb-2" />
-//           <div className="h-4 w-24 bg-gray-200 rounded" />
-//         </div>
-//       </div>
+      <div className="flex gap-3">
+        <div className="h-8 w-20 bg-gray-200 rounded-full" />
+        <div className="h-8 w-20 bg-gray-200 rounded-full" />
+      </div>
+    </div>
 
-//       <div className="flex gap-3">
-//         <div className="h-8 w-20 bg-gray-200 rounded-full" />
-//         <div className="h-8 w-20 bg-gray-200 rounded-full" />
-//       </div>
-//     </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
+        <div className="h-5 w-40 bg-gray-300 rounded mb-4" />
 
-//     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//       <div>
-//         <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
-//         <div className="h-5 w-40 bg-gray-300 rounded mb-4" />
+        <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
+        <div className="h-5 w-32 bg-gray-300 rounded" />
+      </div>
 
-//         <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
-//         <div className="h-5 w-32 bg-gray-300 rounded" />
-//       </div>
+      <div>
+        <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
+        <div className="h-5 w-full bg-gray-300 rounded mb-4" />
 
-//       <div>
-//         <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
-//         <div className="h-5 w-full bg-gray-300 rounded mb-4" />
+        <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
+        <div className="flex gap-3">
+          <div className="w-5 h-5 bg-gray-300 rounded-full" />
+          <div className="w-5 h-5 bg-gray-300 rounded-full" />
+        </div>
+      </div>
+    </div>
 
-//         <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
-//         <div className="flex gap-3">
-//           <div className="w-5 h-5 bg-gray-300 rounded-full" />
-//           <div className="w-5 h-5 bg-gray-300 rounded-full" />
-//         </div>
-//       </div>
-//     </div>
-
-//     <div className="flex flex-col sm:flex-row gap-4">
-//       <div className="flex-1 h-[48px] bg-gray-300 rounded-full" />
-//       <div className="flex-1 h-[48px] bg-gray-300 rounded-full" />
-//     </div>
-//   </div>
-// );
+    <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex-1 h-[48px] bg-gray-300 rounded-full" />
+      <div className="flex-1 h-[48px] bg-gray-300 rounded-full" />
+    </div>
+  </div>
+);
 
 const STATUS_OPTIONS = [
   { label: "All Status", value: "" },
@@ -87,9 +84,9 @@ export default function Consultation() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const debouncedSearch = useDebounce(search, 500);
-  const doctorId =auth?.doctor?._id;
-  console.log({loading})
-    const LIMIT = 10;
+  const doctorId = auth?.doctor?._id;
+  console.log({ loading });
+  const LIMIT = 10;
   const fetchConsultations = async () => {
     setLoading(true);
     try {
@@ -112,7 +109,7 @@ export default function Consultation() {
   }, [doctorId, specialization, debouncedSearch, page]);
 
   return (
-    <>
+    <div className="lg:min-h-[calc(100vh-160px)] min-h-[calc(100vh-70px)] overflow-auto scroll-hide flex flex-col justify-between">
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
         <div className="mb-8">
           <h2 className="lg:text-[28px] text-[24px] font-medium text-[#000]">
@@ -148,6 +145,11 @@ export default function Consultation() {
         </div>
 
         <div className="space-y-6 mb-8">
+          {loading &&
+            Array.from({ length: 2 }).map((_, i) => (
+              <ConsultationSkeleton key={i} />
+            ))}
+
           {(consultationsAPI ?? []).map((item) => (
             <div
               key={item.id}
@@ -249,7 +251,36 @@ export default function Consultation() {
               </div>
             </div>
           ))}
+          {(consultationsAPI ?? []).length == 0 && !loading  && (
+            <p className="text-center text-gray-400 py-6 h-[250px] flex justify-center items-center">
+              No consultation found
+            </p>
+          )}
         </div>
+
+        {(consultationsAPI ?? []).length > 0 && (
+          <div className="flex justify-center items-center gap-4 mt-6">
+            <button
+              disabled={page === 1}
+              onClick={() => setPage((p) => p - 1)}
+              className="px-4 py-2 rounded-full border disabled:opacity-50"
+            >
+              Prev
+            </button>
+
+            <span className="text-sm">
+              Page {page} of {totalPages}
+            </span>
+
+            <button
+              disabled={page === totalPages}
+              onClick={() => setPage((p) => p + 1)}
+              className="px-4 py-2 rounded-full border disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
 
       {openNote && <NoteModal onClose={() => setOpenNote(false)} />}
@@ -269,33 +300,12 @@ export default function Consultation() {
           refill={false}
         />
       )}
-      <div className="flex justify-center items-center gap-4 mt-6">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage((p) => p - 1)}
-          className="px-4 py-2 rounded-full border disabled:opacity-50"
-        >
-          Prev
-        </button>
-
-        <span className="text-sm">
-          Page {page} of {totalPages}
-        </span>
-
-        <button
-          disabled={page === totalPages}
-          onClick={() => setPage((p) => p + 1)}
-          className="px-4 py-2 rounded-full border disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
 
       <div className="bg-[#E5F8FC] p-3 text-center">
         <span className="text-[16px] text-[#b0b0b0] font-medium">
           CompanyName2025 © All Rights Reserved
         </span>
       </div>
-    </>
+    </div>
   );
 }
