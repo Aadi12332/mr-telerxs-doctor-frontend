@@ -220,6 +220,7 @@ export const getConsultationsFilterApi = ({
     }
   );
 };
+
 export const getProfileApi = ({
   doctorId
 }: {
@@ -232,6 +233,41 @@ export const getProfileApi = ({
   return axiosInstance.get(
     `api/v1/admin/doctors/${doctorId}`
   );
+};
+
+export const createSpecializationApi = ({
+  name,
+  description,
+  isActive = true,
+}: {
+  name: string;
+  description?: string;
+  isActive?: boolean;
+}) => {
+  return axiosInstance.post("api/v1/admin/specializations", {
+    name,
+    description,
+    isActive,
+  });
+};
+
+
+export const getSpecializationsApi = ({
+  page = 1,
+  limit = 50,
+  search,
+}: {
+  page?: number;
+  limit?: number;
+  search?: string;
+}) => {
+  return axiosInstance.get("api/v1/admin/specializations", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
 };
 
 

@@ -6,28 +6,29 @@ type AuthState = {
   tokens: {
     accessToken: string;
     refreshToken: string;
-  } | null;
+  };
 };
 
 const AuthContext = createContext<any>(null);
 
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [auth, setAuth] = useState<AuthState | null>(null);
 
-  const login = (data: any) => {
+  const login = (data: AuthState) => {
     setAuth(data);
     localStorage.setItem("auth", JSON.stringify(data));
   };
-  useEffect(()=>{
-    const authData = localStorage.getItem("auth");
-    if (authData) {
-      setAuth(JSON.parse(authData));
-    }
-  },[])  
+
   const logout = () => {
     setAuth(null);
     localStorage.removeItem("auth");
   };
+
+  useEffect(() => {
+    const stored = localStorage.getItem("auth");
+    if (stored) setAuth(JSON.parse(stored));
+  }, []);
 
   return (
     <AuthContext.Provider value={{ auth, login, logout }}>

@@ -6,34 +6,36 @@ import calendaricon from "../assets/calendaricon.svg";
 import CustomSelect from "../components/common/customSelect";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { updateDoctorApi } from "../api/auth.api";
+import {
+  createSpecializationApi,
+  getSpecializationsApi,
+  updateDoctorApi,
+} from "../api/auth.api";
 import AlertIcon from "../assets/AlertIcon";
-
-const SPECIALIZATIONS = [
-  "Cardiology",
-  "Dermatology",
-  "Neurology",
-  "Orthopedics",
-  "Pediatrics",
-];
 
 export function ProfileTab({ user, doctor }: any) {
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [profileFile, setProfileFile] = useState<File | null>(null);
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
   const [gender, setGender] = useState("");
-  const [dob, setDob] = useState<any>(null);
+  const [dateOfBirth, setDob] = useState<any>(null);
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [specialization, setSpecialization] = useState("");
+  const [specializationId, setSpecializationId] = useState("");
+  const [specializationMap, setSpecializationMap] = useState<
+    { id: string; label: string }[]
+  >([]);
   const [experience, setExperience] = useState("");
   const [hospital, setHospital] = useState("");
   const [consultationFee, setConsultationFee] = useState("");
   const [licenseNumber, setLicenseNumber] = useState("");
   const [licenseFile, setLicenseFile] = useState<File | null>(null);
-  console.log(licenseFile)
+  console.log(licenseFile);
   const [licenseFileName, setLicenseFileName] = useState("");
   const [languages, setLanguages] = useState<string[]>([]);
   const [languageInput, setLanguageInput] = useState("");
@@ -41,8 +43,42 @@ export function ProfileTab({ user, doctor }: any) {
   const [errors, setErrors] = useState<any>({});
   const [saving, setSaving] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
-const [licensePreviewUrl, setLicensePreviewUrl] = useState<string | null>(null);
+  const [licensePreviewUrl, setLicensePreviewUrl] = useState<string | null>(
+    null
+  );
 
+  const [openSpecModal, setOpenSpecModal] = useState(false);
+  const [specName, setSpecName] = useState("");
+  const [specDesc, setSpecDesc] = useState("");
+  const [specLoading, setSpecLoading] = useState(false);
+  const [specError, setSpecError] = useState("");
+
+  const fetchSpecializations = async () => {
+    const res = await getSpecializationsApi({});
+    const list = res.data.data.map((item: any) => ({
+      id: item._id,
+      label: item.name,
+    }));
+    setSpecializationMap(list);
+  };
+
+  useEffect(() => {
+    fetchSpecializations();
+  }, []);
+
+  useEffect(() => {
+    const fetchSpecializations = async () => {
+      const res = await getSpecializationsApi({});
+      const list = res.data.data.map((item: any) => ({
+        id: item._id,
+        label: item.name,
+      }));
+
+      setSpecializationMap(list);
+    };
+
+    fetchSpecializations();
+  }, []);
 
   useEffect(() => {
     if (user || doctor) {
@@ -51,6 +87,8 @@ const [licensePreviewUrl, setLicensePreviewUrl] = useState<string | null>(null);
       setLastName(user?.lastName || "");
       setMobile(user?.phoneNumber || "");
       setEmail(user?.email || "");
+      setDob(user?.dateOfBirth ? dayjs(user.dateOfBirth) : null);
+      setGender(user?.gender || "");
       setSpecialization(doctor?.specialty || "");
       setExperience(
         doctor?.experience !== undefined ? String(doctor.experience) : ""
@@ -64,8 +102,27 @@ const [licensePreviewUrl, setLicensePreviewUrl] = useState<string | null>(null);
           : ""
       );
       setLicenseNumber(doctor?.licenseNumber || "");
+
+      if (doctor?.profileImage?.url) {
+        setProfileImage(
+          `${import.meta.env.VITE_API_BASE_URL}${doctor.profileImage.url}`
+        );
+      }
     }
   }, [user, doctor]);
+
+  useEffect(() => {
+    if (!doctor?.specialty || !specializationMap.length) return;
+
+    const found = specializationMap.find(
+      (item) => item.id === doctor.specialty
+    );
+
+    if (found) {
+      setSpecialization(found.label);
+      setSpecializationId(found.id);
+    }
+  }, [doctor?.specialty, specializationMap]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -85,27 +142,26 @@ const [licensePreviewUrl, setLicensePreviewUrl] = useState<string | null>(null);
     return Object.keys(newErrors).length === 0;
   };
 
-const handleLicenseUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  setLicenseFile(file);
-  setLicenseFileName(file.name);
-  const url = URL.createObjectURL(file);
-  setLicensePreviewUrl(url);
-};
+  const handleLicenseUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setLicenseFile(file);
+    setLicenseFileName(file.name);
+    const url = URL.createObjectURL(file);
+    setLicensePreviewUrl(url);
+  };
 
-const handleViewLicense = () => {
-  if (licensePreviewUrl) {
-    setPreviewOpen(true);
-    return;
-  }
+  const handleViewLicense = () => {
+    if (licensePreviewUrl) {
+      setPreviewOpen(true);
+      return;
+    }
 
-  if (doctor?.medicalLicense) {
-    setLicensePreviewUrl(doctor.medicalLicense);
-    setPreviewOpen(true);
-  }
-};
-
+    if (doctor?.medicalLicense) {
+      setLicensePreviewUrl(doctor.medicalLicense);
+      setPreviewOpen(true);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!validate()) return;
@@ -118,9 +174,11 @@ const handleViewLicense = () => {
       middleName,
       lastName,
       email,
+      dateOfBirth: dateOfBirth ? dateOfBirth.toISOString() : undefined,
+      gender,
       phoneNumber: mobile,
       countryCode: user?.countryCode || "+91",
-      specialty: specialization,
+      specialty: specializationId,
       experience: experience ? Number(experience) : undefined,
       bio,
       languages,
@@ -194,7 +252,15 @@ const handleViewLicense = () => {
         />
         <Input label="Last Name" value={lastName} onChange={setLastName} />
 
-        <Input label="Gender" value={gender} onChange={setGender} />
+        <CustomSelect
+          title="Gender"
+          data={["male", "female", "other"]}
+          value={gender}
+          onChange={setGender}
+          placeholder="Select gender"
+          className="lg:!rounded-[20px] !rounded-lg !text-[16px] lg:!text-[20px] !border-[#00000033] !h-[40px] lg:!h-[56px] capitalize"
+          labelclassName="lg:!mb-3 !mb-1 !text-[16px] lg:!text-[20px] !font-normal leading-[24px]"
+        />
 
         <div>
           <label className="lg:text-[20px] text-base text-[#012047] lg:mb-3 mb-1 block leading-[24px]">
@@ -202,7 +268,7 @@ const handleViewLicense = () => {
           </label>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              value={dob}
+              value={dateOfBirth}
               onChange={(newValue) => setDob(newValue)}
               slots={{
                 openPickerIcon: () => (
@@ -248,17 +314,120 @@ const handleViewLicense = () => {
           )}
         </div>
 
-        <CustomSelect
-          title="Specialization"
-          data={SPECIALIZATIONS}
-          value={specialization}
-          onChange={setSpecialization}
-          placeholder="ALL"
-          openDirection="bottom"
-          width="w-full"
-          className="lg:!rounded-[20px] !rounded-lg !text-[16px] lg:!text-[20px] !border-[#00000033] !h-[40px] lg:!h-[56px]"
-          labelclassName="lg:!mb-3 !mb-1 !text-[16px] lg:!text-[20px] !font-normal leading-[24px]"
-        />
+        <div className="flex items-start gap-2">
+          <CustomSelect
+            title="Specialization"
+            data={specializationMap.map((s) => s.label)}
+            value={specialization}
+            onChange={(label: string) => {
+              setSpecialization(label);
+
+              const found = specializationMap.find(
+                (item) => item.label === label
+              );
+
+              setSpecializationId(found?.id || "");
+            }}
+            placeholder="ALL"
+            openDirection="bottom"
+            width="w-full"
+            className="lg:!rounded-[20px] !rounded-lg !text-[16px] lg:!text-[20px] !border-[#00000033] !h-[40px] lg:!h-[56px]"
+            labelclassName="lg:!mb-3 !mb-1 !text-[16px] lg:!text-[20px] !font-normal leading-[24px]"
+          />
+
+          <div>
+            <label
+              htmlFor=""
+              className="lg:mb-3 mb-1 !text-[16px] lg:!text-[20px] !font-normal leading-[24px] block opacity-0"
+            >
+              Add
+            </label>
+            <button
+              onClick={() => setOpenSpecModal(true)}
+              className="border border-[#D9D9D9] rounded-lg lg:rounded-[20px] !text-[16px] lg:!text-[20px] min-w-max px-4 h-10 lg:h-[56px] cursor-pointer flex justify-between text-white items-center bg-[linear-gradient(133.68deg,#2CBEFF_1.1%,#00598D_98.9%)]"
+            >
+              + Add
+            </button>
+          </div>
+        </div>
+
+        {openSpecModal && (
+          <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+            <div className="bg-white w-full max-w-[420px] rounded-xl p-6">
+              <h3 className="text-lg font-semibold mb-4">Add Specialization</h3>
+
+              <Input
+                label="Specialization Name"
+                value={specName}
+                onChange={setSpecName}
+                labelClassName="!text-base"
+                className="!rounded-lg"
+              />
+
+              <div className="mt-3">
+                <label className="block mb-1 font-medium text-base">
+                  Description
+                </label>
+                <textarea
+                  value={specDesc}
+                  onChange={(e) => setSpecDesc(e.target.value)}
+                  className="w-full border rounded-lg px-3 py-2 h-24 outline-none"
+                />
+              </div>
+
+              {specError && (
+                <p className="text-red-500 text-sm mt-2">{specError}</p>
+              )}
+
+              <div className="flex justify-end gap-3 mt-6">
+                <button
+                  onClick={() => setOpenSpecModal(false)}
+                  className="px-4 py-2 rounded-lg border"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  disabled={specLoading}
+                  onClick={async () => {
+                    if (!specName.trim()) {
+                      setSpecError("Name is required");
+                      return;
+                    }
+
+                    try {
+                      setSpecLoading(true);
+                      setSpecError("");
+
+                      await createSpecializationApi({
+                        name: specName.trim(),
+                        description: specDesc.trim(),
+                      });
+
+                      // modal close + reset
+                      setOpenSpecModal(false);
+                      setSpecName("");
+                      setSpecDesc("");
+
+                      // dropdown refresh
+                      await fetchSpecializations();
+                    } catch (err: any) {
+                      setSpecError(
+                        err?.response?.data?.message ||
+                          "Failed to create specialization"
+                      );
+                    } finally {
+                      setSpecLoading(false);
+                    }
+                  }}
+                  className="px-5 py-2 rounded-lg text-white bg-[#00598D] disabled:opacity-60"
+                >
+                  {specLoading ? "Saving..." : "Save"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <Input
           label="Years of Experience"
@@ -397,27 +566,26 @@ const handleViewLicense = () => {
               />
             )} */}
             {previewOpen && (
-  <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center">
-    <div className="relative w-full h-full flex items-center justify-center">
-      <button
-        onClick={() => setPreviewOpen(false)}
-        className="absolute top-6 right-6 text-white text-3xl"
-      >
-        ×
-      </button>
+              <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center">
+                <div className="relative w-full h-full flex items-center justify-center">
+                  <button
+                    onClick={() => setPreviewOpen(false)}
+                    className="absolute top-6 right-6 text-white text-3xl"
+                  >
+                    ×
+                  </button>
 
-      {licensePreviewUrl ? (
-        <img
-          src={licensePreviewUrl}
-          className="max-w-[90%] max-h-[90vh] object-contain bg-white rounded-lg min-h-[50vh] min-w-[50vw]"
-        />
-      ) : (
-        <p className="text-white text-lg">No preview available</p>
-      )}
-    </div>
-  </div>
-)}
-
+                  {licensePreviewUrl ? (
+                    <img
+                      src={licensePreviewUrl}
+                      className="max-w-[90%] max-h-[90vh] object-contain bg-white rounded-lg min-h-[50vh] min-w-[50vw]"
+                    />
+                  ) : (
+                    <p className="text-white text-lg">No preview available</p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

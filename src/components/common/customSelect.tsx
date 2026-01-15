@@ -55,7 +55,7 @@ export default function CustomSelect({
 
       <div
         onClick={() => setOpen(!open)}
-        className={`border border-[#D9D9D9] rounded-lg px-4 h-[56px] cursor-pointer flex justify-between items-center bg-white ${className}`}
+        className={`border border-[#D9D9D9] capitalize rounded-lg px-4 h-[56px] cursor-pointer flex justify-between items-center bg-white ${className}`}
       >
         <span className={value ? "text-[#012047]" : "text-gray-400"}>
           {value || placeholder}
@@ -73,7 +73,11 @@ export default function CustomSelect({
       {open && (
         <div
           className={`absolute z-20 overflow-hidden ${
-            openDirection === "top" ? "bottom-[64px]" : "top-[64px]"
+            openDirection === "top"
+              ? "bottom-[64px]"
+              : title
+              ? "top-[100px]"
+              : "top-[55px]"
           } w-full bg-white border border-[#D9D9D9] rounded-lg shadow-md`}
         >
           {data.map((item) => (
@@ -83,7 +87,7 @@ export default function CustomSelect({
                 onChange(item);
                 setOpen(false);
               }}
-              className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-base"
+              className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-base capitalize"
             >
               {item}
             </div>

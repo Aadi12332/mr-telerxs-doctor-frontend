@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
+import PublicRoute from "./PublicRoute";
 import Dashboard from "../app/Dashboard";
 import Login from "../pages/Login";
 import Layout from "../app/layout";
@@ -21,13 +23,16 @@ import AutoTransfer from "../app/AutoTransfer";
 
 export default function AppRoutes() {
   return (
-      <Routes>
+    <Routes>
+      <Route element={<PublicRoute />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/otp" element={<Otp />} />
+        <Route path="/forget-password" element={<ForgetPassword />} />
+        <Route path="/new-credential" element={<NewCredential />} />
+      </Route>
+      <Route element={<ProtectedRoute />}>
         <Route element={<Layout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/otp" element={<Otp />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forget-password" element={<ForgetPassword />} />
-          <Route path="/new-credential" element={<NewCredential />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/settings" element={<Setting />} />
           <Route path="/consultations" element={<Consultation />} />
@@ -38,10 +43,14 @@ export default function AppRoutes() {
           <Route path="/auto-transfer" element={<AutoTransfer />} />
           <Route path="/request-payout" element={<RequestPayout />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="/prescription-management" element={<PrescriptionManagement />} />
+          <Route
+            path="/prescription-management"
+            element={<PrescriptionManagement />}
+          />
           <Route path="/payment-history" element={<PaymentHistory />} />
           <Route path="/reports" element={<Reports />} />
         </Route>
-      </Routes>
+      </Route>
+    </Routes>
   );
 }

@@ -1,3 +1,4 @@
+// routes/ProtectedRoute.tsx
 import { Navigate, Outlet } from "react-router-dom";
 import { getToken } from "../utils/storage";
 
@@ -7,3 +8,4 @@ const ProtectedRoute = () => {
 };
 
 export default ProtectedRoute;
+

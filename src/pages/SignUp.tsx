@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -10,16 +10,12 @@ import cameraicon from "../assets/cameraicon.svg";
 import calendaricon from "../assets/calendaricon.svg";
 import uploadicon from "../assets/uploadicon.svg";
 import CustomSelect from "../components/common/customSelect";
-import { createDoctorApi } from "../api/auth.api";
+import {
+  createDoctorApi,
+  createSpecializationApi,
+  getSpecializationsApi,
+} from "../api/auth.api";
 import { Input } from "../components/common/Input";
-
-const SPECIALIZATIONS = [
-  "Cardiology",
-  "Dermatology",
-  "Neurology",
-  "Orthopedics",
-  "Pediatrics",
-];
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z0-9]).{6,}$/;
@@ -28,10 +24,49 @@ export default function Signup() {
   const navigate = useNavigate();
   const [dob, setDob] = useState<any>(null);
   const [specialization, setSpecialization] = useState("");
+  const [specializationId, setSpecializationId] = useState("");
+  const [specializationMap, setSpecializationMap] = useState<
+    { id: string; label: string }[]
+  >([]);
   const [licenseFile, setLicenseFile] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const [languages, setLanguages] = useState<string[]>([]);
   const [languageInput, setLanguageInput] = useState("");
+  const [openSpecModal, setOpenSpecModal] = useState(false);
+  const [specName, setSpecName] = useState("");
+  const [specDesc, setSpecDesc] = useState("");
+  const [specLoading, setSpecLoading] = useState(false);
+  const [specError, setSpecError] = useState("");
+
+  useEffect(() => {
+    const fetchSpecializations = async () => {
+      try {
+        const res = await getSpecializationsApi({});
+        const list = res.data.data.map((item: any) => ({
+          id: item._id,
+          label: item.name,
+        }));
+        setSpecializationMap(list);
+      } catch (err) {
+        console.error("Failed to load specializations", err);
+      }
+    };
+
+    fetchSpecializations();
+  }, []);
+
+  const fetchSpecializations = async () => {
+    const res = await getSpecializationsApi({});
+    const list = res.data.data.map((item: any) => ({
+      id: item._id,
+      label: item.name,
+    }));
+    setSpecializationMap(list);
+  };
+
+  useEffect(() => {
+    fetchSpecializations();
+  }, []);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -77,7 +112,7 @@ export default function Signup() {
     if (!/^\d{10}$/.test(form.phoneNumber)) e.phoneNumber = "Invalid number";
     if (!passwordRegex.test(form.password))
       e.password = "Min 6 chars, 1 uppercase, 1 special";
-    if (!specialization) e.specialization = "Required";
+    if (!specializationId) e.specialization = "Required";
     if (!licenseFile) e.license = "Required";
 
     setErrors(e);
@@ -99,7 +134,7 @@ export default function Signup() {
         countryCode: "+91",
         gender: form.gender as "male" | "female" | "other",
         dateOfBirth: dob.format("YYYY-MM-DD"),
-        specialty: specialization,
+        specialty: specializationId,
         licenseNumber: licenseFile?.name || "",
         experience: Number(form.experience || 0),
         hospitalAffiliation: form.hospital,
@@ -222,6 +257,9 @@ export default function Signup() {
                             "& fieldset": { border: "none" },
                             "&:hover fieldset": { border: "none" },
                             "&.Mui-focused fieldset": { border: "none" },
+                             "@media(max-width:1024px)": {
+                                height: "40px",
+                              },
                           },
                           className:
                             "w-full text-[14px] placeholder:text-[#465D7C] outline-none bg-white",
@@ -265,7 +303,7 @@ export default function Signup() {
                 <label className="text-base font-medium text-[#012047] mb-1 block">
                   Upload Medical License
                 </label>
-                <label className="w-full h-[56px] flex items-center justify-between border border-[#D9D9D9] rounded-lg px-4 cursor-pointer bg-white">
+                <label className="w-full h-10 lg:h-[56px] flex items-center justify-between border border-[#D9D9D9] rounded-lg px-4 cursor-pointer bg-white">
                   <span className="text-[14px] text-[#465D7C] truncate">
                     {licenseFile ? licenseFile.name : "Browse File"}
                   </span>
@@ -288,20 +326,126 @@ export default function Signup() {
                 onChange={(v: string) => handleChange("consultationFee", v)}
               />
               <div>
-                <CustomSelect
+                <div className="flex items-start gap-2">
+                  <CustomSelect
                   title="Specialization"
-                  data={SPECIALIZATIONS}
+                  data={specializationMap.map((s) => s.label)}
                   value={specialization}
-                  onChange={setSpecialization}
+                  onChange={(label: string) => {
+                    setSpecialization(label);
+
+                    const found = specializationMap.find(
+                      (item) => item.label === label
+                    );
+
+                    setSpecializationId(found?.id || "");
+                  }}
                   placeholder="ALL"
                   width="w-full"
+                  className="!h-[40px] lg:!h-[56px]"
                 />
+                <div>
+                  <label
+                    htmlFor=""
+                    className="text-base font-medium text-[#012047] mb-1 block opacity-0"
+                  >
+                    Add
+                  </label>
+                  <button
+                    onClick={() => setOpenSpecModal(true)}
+                    className="border border-[#D9D9D9] min-w-max rounded-lg px-4 h-10 lg:h-[56px] cursor-pointer flex justify-between text-white items-center bg-[linear-gradient(133.68deg,#2CBEFF_1.1%,#00598D_98.9%)]"
+                  >
+                    + Add
+                  </button>
+                </div>
+                </div>
+
                 {errors.specialization && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.specialization}
                   </p>
                 )}
               </div>
+
+              {openSpecModal && (
+                <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+                  <div className="bg-white w-full max-w-[420px] rounded-xl p-6">
+                    <h3 className="text-lg font-semibold mb-4">
+                      Add Specialization
+                    </h3>
+
+                    <Input
+                      label="Specialization Name"
+                      value={specName}
+                      onChange={setSpecName}
+                      labelClassName="!text-base"
+                      className="!rounded-lg"
+                    />
+
+                    <div className="mt-3">
+                      <label className="block mb-1 font-medium text-base">
+                        Description
+                      </label>
+                      <textarea
+                        value={specDesc}
+                        onChange={(e) => setSpecDesc(e.target.value)}
+                        className="w-full border rounded-lg px-3 py-2 h-24 outline-none"
+                      />
+                    </div>
+
+                    {specError && (
+                      <p className="text-red-500 text-sm mt-2">{specError}</p>
+                    )}
+
+                    <div className="flex justify-end gap-3 mt-6">
+                      <button
+                        onClick={() => setOpenSpecModal(false)}
+                        className="px-4 py-2 rounded-lg border"
+                      >
+                        Cancel
+                      </button>
+
+                      <button
+                        disabled={specLoading}
+                        onClick={async () => {
+                          if (!specName.trim()) {
+                            setSpecError("Name is required");
+                            return;
+                          }
+
+                          try {
+                            setSpecLoading(true);
+                            setSpecError("");
+
+                            await createSpecializationApi({
+                              name: specName.trim(),
+                              description: specDesc.trim(),
+                            });
+
+                            // modal close + reset
+                            setOpenSpecModal(false);
+                            setSpecName("");
+                            setSpecDesc("");
+
+                            // dropdown refresh
+                            await fetchSpecializations();
+                          } catch (err: any) {
+                            setSpecError(
+                              err?.response?.data?.message ||
+                                "Failed to create specialization"
+                            );
+                          } finally {
+                            setSpecLoading(false);
+                          }
+                        }}
+                        className="px-5 py-2 rounded-lg text-white bg-[#00598D] disabled:opacity-60"
+                      >
+                        {specLoading ? "Saving..." : "Save"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <Input
                 labelClassName="!text-base !font-medium !mb-1"

@@ -31,35 +31,54 @@ export default function Header() {
   const user = auth?.user;
   const initials = `${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`.toUpperCase();
   const [open, setOpen] = useState(false);
-  const [locationList, setLocationList] = useState("Pune");
+  const dropdownLocationRef = useRef<HTMLDivElement | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const [openProfile, setOpenProfile] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const [locationList, setLocationList] = useState("Pune");
 
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
     navigate("/login");
   };
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
+
       if (
+        isSidebarOpen &&
         sidebarRef.current &&
-        !sidebarRef.current.contains(e.target as Node)
+        !sidebarRef.current.contains(target)
       ) {
         setIsSidebarOpen(false);
       }
+
+      if (
+        openProfile &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(target)
+      ) {
+        setOpenProfile(false);
+      }
+
+      if (
+        open &&
+        dropdownLocationRef.current &&
+        !dropdownLocationRef.current.contains(target)
+      ) {
+        setOpen(false);
+      }
     };
 
-    if (isSidebarOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isSidebarOpen]);
+  }, [isSidebarOpen, openProfile, open]);
 
   return (
     <>
@@ -72,7 +91,7 @@ export default function Header() {
               className="lg:w-[108px] w-[80px]"
               onClick={() => navigate("/dashboard")}
             />
-            <div className="relative w-full max-w-[520px] hidden lg:block">
+            <div ref={dropdownLocationRef} className="relative w-full max-w-[520px] hidden lg:block">
               <div
                 onClick={() => setOpen(!open)}
                 className="
