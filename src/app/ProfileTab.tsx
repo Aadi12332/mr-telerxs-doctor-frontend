@@ -17,7 +17,6 @@ import AlertIcon from "../assets/AlertIcon";
 
 export function ProfileTab({ user, doctor }: any) {
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [profileFile, setProfileFile] = useState<File | null>(null);
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
