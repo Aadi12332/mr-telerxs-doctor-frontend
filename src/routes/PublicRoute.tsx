@@ -4,6 +4,7 @@ import { getToken } from "../utils/storage";
 
 const PublicRoute = () => {
   const token = getToken();
+  console.log("protexttoken", token);
   return token ? <Navigate to="/dashboard" replace /> : <Outlet />;
 };
 

@@ -4,6 +4,7 @@ import { getToken } from "../utils/storage";
 
 const ProtectedRoute = () => {
   const token = getToken();
+  console.log("token", token);
   return token ? <Outlet /> : <Navigate to="/login" replace />;
 };
 

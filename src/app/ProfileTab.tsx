@@ -64,7 +64,6 @@ export function ProfileTab({ user, doctor }: any) {
   useEffect(() => {
     fetchSpecializations();
   }, []);
-
   useEffect(() => {
     const fetchSpecializations = async () => {
       const res = await getSpecializationsApi({});
@@ -88,7 +87,8 @@ export function ProfileTab({ user, doctor }: any) {
       setEmail(user?.email || "");
       setDob(user?.dateOfBirth ? dayjs(user.dateOfBirth) : null);
       setGender(user?.gender || "");
-      setSpecialization(doctor?.specialty || "");
+      setSpecialization(doctor?.specialty?.name || "");
+      setSpecializationId(doctor?.specialty?._id || "");
       setExperience(
         doctor?.experience !== undefined ? String(doctor.experience) : ""
       );
@@ -104,7 +104,7 @@ export function ProfileTab({ user, doctor }: any) {
 
       if (doctor?.profileImage?.url) {
         setProfileImage(
-          `${import.meta.env.VITE_API_BASE_URL}${doctor.profileImage.url}`
+          `${doctor.profileImage.url}`
         );
       }
     }
@@ -122,6 +122,49 @@ export function ProfileTab({ user, doctor }: any) {
       setSpecializationId(found.id);
     }
   }, [doctor?.specialty, specializationMap]);
+
+//   const MAX_SIZE_MB = 2;
+// const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
+
+// const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+//   const file = e.target.files?.[0];
+//   if (!file) return;
+
+//   if (!ALLOWED_TYPES.includes(file.type)) {
+//     alert("Only JPG, PNG, JPEG, WEBP images are allowed");
+//     return;
+//   }
+
+//   const maxSize = MAX_SIZE_MB * 1024 * 1024;
+//   if (file.size > maxSize) {
+//     alert(`Image size must be less than ${MAX_SIZE_MB}MB`);
+//     return;
+//   }
+
+//   const reader = new FileReader();
+
+//   reader.onload = () => {
+//     const base64 = reader.result as string;
+
+//     if (!base64.startsWith("data:image/")) {
+//       alert("Invalid image format");
+//       return;
+//     }
+
+//     if (base64.length > 5_000_000) {
+//       alert("Image too large after encoding");
+//       return;
+//     }
+
+//     setProfileImage(base64);
+//   };
+
+//   reader.onerror = () => {
+//     alert("Failed to read image file");
+//   };
+
+//   reader.readAsDataURL(file);
+// };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -157,7 +200,7 @@ export function ProfileTab({ user, doctor }: any) {
     }
 
     if (doctor?.medicalLicense) {
-      setLicensePreviewUrl(doctor.medicalLicense);
+      setLicensePreviewUrl(doctor.medicalLicense?.documentUrl);
       setPreviewOpen(true);
     }
   };
@@ -215,7 +258,6 @@ export function ProfileTab({ user, doctor }: any) {
       setSaving(false);
     }
   };
-
   return (
     <div className="space-y-[30px]">
       <div className="flex items-center gap-6">

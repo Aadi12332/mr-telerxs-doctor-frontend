@@ -3,9 +3,10 @@ export const setToken = (token: string) => {
 };
 
 export const getToken = () => {
-  const auth = localStorage.getItem("auth");
+  const auth = localStorage.getItem("accessToken");
   if (!auth) return null;
-  return JSON.parse(auth)?.tokens?.accessToken;
+  return auth;
+  // return JSON.parse(auth)?.tokens?.accessToken;
 };
 
 export const removeToken = () => {
