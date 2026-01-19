@@ -152,14 +152,16 @@ export default function MedicineOrder() {
             {notifications.map((item, i) => (
               <div
                 key={i}
-                className="bg-white lg:rounded-[20px] rounded-lg md:p-6 p-3"
+                className="bg-white lg:rounded-[20px] rounded-lg md:p-6 p-3 flex flex-col justify-between"
               >
-                <h3 className="lg:text-[22px] text-[18px] mb-7">
+                <div>
+                  <h3 className="lg:text-[22px] text-[18px] mb-7">
                   {item.title}
                 </h3>
                 <p className="lg:text-[20px] text-base text-[#00000080]">
                   {item.description}
                 </p>
+                </div>
                 <p className="text-right mt-2 text-sm lg:text-base text-[#00000080]">
                   {item.date}
                 </p>

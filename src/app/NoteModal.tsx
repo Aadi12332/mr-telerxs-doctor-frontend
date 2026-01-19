@@ -12,7 +12,7 @@ export default function NoteModal({ onClose }: Props) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       {step === "list" && (
-        <div className="bg-[#B2E5FD] rounded-[20px] max-w-[998px]  max-h-[95vh] overflow-auto w-full px-8 py-4">
+        <div className="bg-[#B2E5FD] rounded-[20px] lg:max-w-[998px] max-w-[95%] max-h-[95vh] overflow-auto w-full px-8 py-4">
           <div className="flex items-center gap-3 mb-2">
             <img src={fileicon} className="w-6" />
             <p className="text-[26px] font-medium">Note List</p>

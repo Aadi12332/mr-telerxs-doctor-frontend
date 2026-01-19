@@ -103,7 +103,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 md:gap-5 gap-4 lg:mb-8 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:gap-5 gap-4 lg:mb-8 mb-4">
           {loading ? (
             <>
               <MetricSkeleton />
@@ -119,7 +119,7 @@ export default function Dashboard() {
                     : `- ${overview?.metrics?.totalConsultations?.change ?? 0}`}
                 </span>
                 <img src={Consultation} alt="" />
-                <p className="text-[#000000CC] text-xl mt-4 sm:mt-0 sm:text-[24px]">
+                <p className="text-[#000000CC] text-xl mt-4 sm:mt-0 md:text-[24px] text-center">
                   Total Consultations
                 </p>
                 <h3 className="text-[30px] font-medium text-[#084EAF] leading-[1]">
@@ -136,7 +136,7 @@ export default function Dashboard() {
                       }`}
                 </span>
                 <img src={Prescriptions} alt="" />
-                <p className="text-[#000000CC] text-xl mt-4 sm:mt-0 sm:text-[24px]">
+                <p className="text-[#000000CC] text-xl mt-4 sm:mt-0 md:text-[24px] text-center">
                   Prescriptions Issued
                 </p>
                 <h3 className="text-[30px] font-medium text-[#A239F9] leading-[1]">
@@ -153,7 +153,7 @@ export default function Dashboard() {
                       }`}
                 </span>
                 <img src={Rating} alt="" />
-                <p className="text-[#000000CC] text-xl mt-4 sm:mt-0 sm:text-[24px]">
+                <p className="text-[#000000CC] text-xl mt-4 sm:mt-0 md:text-[24px] text-center">
                   Patient Rating
                 </p>
                 <h3 className="text-[30px] font-medium text-[#808C26] leading-[1]">
@@ -176,7 +176,7 @@ export default function Dashboard() {
               consultations.map((item, i) => (
                 <div
                   key={i}
-                  className="flex justify-between items-center bg-[#D9D9D926] rounded-[20px] py-4 md:px-7 px-3 mb-4 last:mb-0"
+                  className="flex justify-between items-center bg-[#D9D9D926] rounded-lg md:rounded-[20px] py-4 md:px-7 px-3 mb-4 last:mb-0"
                 >
                   <div>
                     <p className="md:text-[22px] text-[18px] font-medium mb-4">
@@ -222,7 +222,7 @@ export default function Dashboard() {
               <div className="flex justify-center mt-8">
                 <button
                   onClick={() => navigate("/consultations")}
-                  className=" bg-[linear-gradient(133.68deg,#2CBEFF_1.1%,#00598D_98.9%)] text-white px-10 py-3 rounded-full md:text-[22px] text-[18px] font-medium"
+                  className=" bg-[linear-gradient(133.68deg,#2CBEFF_1.1%,#00598D_98.9%)] text-white md:px-10 px-6 md:py-3 py-2 rounded-full md:text-[22px] text-[16px] font-medium"
                 >
                   View All Consultations
                 </button>
@@ -240,7 +240,7 @@ export default function Dashboard() {
               schedule.map((item, i) => (
                 <div
                   key={i}
-                  className="flex justify-between items-center bg-[#D9D9D926] rounded-[20px] py-4 md:px-7 px-3 mb-4 last:mb-0"
+                  className="flex justify-between items-center bg-[#D9D9D926] rounded-lg md:rounded-[20px] py-4 md:px-7 px-3 mb-4 last:mb-0"
                 >
                   <div>
                     <p className="md:text-[22px] text-[18px] font-medium mb-4">

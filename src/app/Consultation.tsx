@@ -76,6 +76,7 @@ export default function Consultation() {
   const [specialization, setSpecialization] = useState("");
   const [openPrescription, setOpenPrescription] = useState(false);
   const [openIntakeForm, setOpenIntakeForm] = useState(false);
+  const [openingIntake, setOpeningIntake] = useState(false);
   const [openNote, setOpenNote] = useState(false);
   const [selectedConsultation, setSelectedConsultation] = useState<any>(null);
   const [consultationsAPI, setConsultations] = useState<any[]>([]);
@@ -158,9 +159,9 @@ export default function Consultation() {
               <div className="flex justify-between items-start gap-5 md:flex-row flex-col">
                 <div className="flex gap-4 items-center">
                   <img
-                    src={item?.patient?.profilePicture ?? ""}
-                    alt=""
-                    className="w-[80px] h-[80px] rounded-full object-cover"
+                    src={item?.patient?.profilePicture}
+                    alt="profile"
+                    className="w-[80px] h-[80px] rounded-full object-cover text-sm border-[2px] border-[#D1D5DB]"
                   />
                   <div>
                     <h3 className="text-lg font-semibold">
@@ -221,8 +222,8 @@ export default function Consultation() {
 
                   <p className="text-sm text-gray-400 mt-4">Contact</p>
                   <div className="flex gap-3 mt-1">
-                    <img src={callicon} className="w-5" />
-                    <img src={mailicon} className="w-5" />
+                    <span className="flex items-center gap-2"><img src={callicon} className="w-5" /> {item?.patient?.phone ?? ""} </span>
+                    <span className="flex items-center gap-2"><img src={mailicon} className="w-5" /> {item?.patient?.email ?? ""} </span>
                   </div>
                 </div>
               </div>
@@ -230,12 +231,18 @@ export default function Consultation() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={() => {
+                    setOpeningIntake(true);
                     setSelectedConsultation(item);
                     setOpenIntakeForm(true);
                   }}
-                  className="flex-1 h-[48px] py-2 rounded-full flex items-center justify-center gap-2 text-white bg-[linear-gradient(90deg,#25AEED_0%,#0A70A7_100%)]"
+                  disabled={openingIntake}
+                  className="flex-1 h-[48px] py-2 rounded-full flex items-center justify-center gap-2 text-white bg-[linear-gradient(90deg,#25AEED_0%,#0A70A7_100%)] disabled:opacity-70"
                 >
-                  <img src={viewicon} className="w-5" />
+                  {openingIntake ? (
+                    <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <img src={viewicon} className="w-5" />
+                  )}
                   View Intake Form
                 </button>
 
@@ -251,7 +258,7 @@ export default function Consultation() {
               </div>
             </div>
           ))}
-          {(consultationsAPI ?? []).length == 0 && !loading  && (
+          {(consultationsAPI ?? []).length == 0 && !loading && (
             <p className="text-center text-gray-400 py-6 h-[250px] flex justify-center items-center">
               No consultation found
             </p>
@@ -296,7 +303,11 @@ export default function Consultation() {
       {openIntakeForm && selectedConsultation && (
         <IntakeFormModal
           doctorId={doctorId}
-          onClose={() => setOpenIntakeForm(false)}
+          intakeFormId={selectedConsultation?.id}
+          onClose={() => {
+            setOpenIntakeForm(false);
+            setOpeningIntake(false);
+          }}
           refill={false}
         />
       )}

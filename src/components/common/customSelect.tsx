@@ -76,7 +76,7 @@ export default function CustomSelect({
             openDirection === "top"
               ? "bottom-[64px]"
               : title
-              ? "top-[100px]"
+              ? "top-[95px]"
               : "top-[55px]"
           } w-full bg-white border border-[#D9D9D9] rounded-lg shadow-md`}
         >

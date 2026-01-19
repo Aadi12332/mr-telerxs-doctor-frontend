@@ -344,20 +344,6 @@ export default function Signup() {
                   width="w-full"
                   className="!h-[40px] lg:!h-[56px]"
                 />
-                <div>
-                  <label
-                    htmlFor=""
-                    className="text-base font-medium text-[#012047] mb-1 block opacity-0"
-                  >
-                    Add
-                  </label>
-                  <button
-                    onClick={() => setOpenSpecModal(true)}
-                    className="border border-[#D9D9D9] min-w-max rounded-lg px-4 h-10 lg:h-[56px] cursor-pointer flex justify-between text-white items-center bg-[linear-gradient(133.68deg,#2CBEFF_1.1%,#00598D_98.9%)]"
-                  >
-                    + Add
-                  </button>
-                </div>
                 </div>
 
                 {errors.specialization && (

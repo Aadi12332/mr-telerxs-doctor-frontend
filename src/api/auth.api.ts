@@ -195,6 +195,7 @@ export const getConsultationsApi = (doctorId: string) => {
     }
   );
 };
+
 export const getConsultationsFilterApi = ({
   doctorId,
   status,
