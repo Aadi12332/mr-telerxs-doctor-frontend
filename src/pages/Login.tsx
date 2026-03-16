@@ -131,6 +131,11 @@ export default function Login() {
                 })}
                 type="text"
                 className="w-full border border-[#E6E8EE] rounded-[8px] lg:h-[56px] h-12 px-4 py-2 outline-none"
+                inputMode="numeric"
+                onInput={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  target.value = target.value.replace(/\s+/g, "");
+                }}
               />
               {errors.identifier && (
                 <p className="text-red-500 text-sm mt-1">
@@ -180,7 +185,7 @@ export default function Login() {
                   className="absolute right-3 top-[18px]"
                 >
                   <img
-                    src={showPassword ? closeeyeicon : EyeIcon}
+                    src={!showPassword ? closeeyeicon : EyeIcon}
                     className="w-5 h-5"
                   />
                 </button>

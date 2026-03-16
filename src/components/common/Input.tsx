@@ -48,7 +48,7 @@ export function Input({
             className="absolute right-4 top-1/2 -translate-y-1/2"
           >
             <img
-              src={showPassword ? closeeyeicon : EyeIcon}
+              src={!showPassword ? closeeyeicon : EyeIcon}
               className="w-5 h-5"
             />
           </button>

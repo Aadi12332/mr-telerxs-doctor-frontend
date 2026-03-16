@@ -4,7 +4,7 @@ import { changePasswordApi } from "../api/auth.api";
 import { useNavigate } from "react-router-dom";
 
 export function SecurityTab() {
-  const router=useNavigate()
+  const navigate=useNavigate()
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -21,54 +21,58 @@ export function SecurityTab() {
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z0-9]).{6,}$/;
 
-  const handleSubmit = async () => {
-    const newErrors: typeof errors = {};
+const handleSubmit = async () => {
+  const newErrors: typeof errors = {};
+  setErrors({});
+
+  if (!currentPassword) {
+    newErrors.currentPassword = "Current password is required";
+  }
+
+  if (!newPassword) {
+    newErrors.newPassword = "New password is required";
+  } else if (!passwordRegex.test(newPassword)) {
+    newErrors.newPassword =
+      "Min 6 chars, 1 uppercase, 1 special character required";
+  }
+
+  if (!confirmPassword) {
+    newErrors.confirmPassword = "Confirm password is required";
+  } else if (newPassword !== confirmPassword) {
+    newErrors.confirmPassword = "Passwords do not match";
+  }
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const res = await changePasswordApi({
+      oldPassword: currentPassword,
+      newPassword: newPassword,
+    });
+
+    if (res.status === 200) {
+      localStorage.removeItem("accessToken");
+      sessionStorage.clear();
+      navigate("/login");
+    }
+
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
     setErrors({});
-
-    if (!currentPassword) {
-      newErrors.currentPassword = "Current password is required";
-    }
-
-    if (!newPassword) {
-      newErrors.newPassword = "New password is required";
-    } else if (!passwordRegex.test(newPassword)) {
-      newErrors.newPassword =
-        "Min 6 chars, 1 uppercase, 1 special character required";
-    }
-
-    if (!confirmPassword) {
-      newErrors.confirmPassword = "Confirm password is required";
-    } else if (newPassword !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    try {
-      setLoading(true);
-     const res= await changePasswordApi({
-        oldPassword: currentPassword,
-        newPassword: newPassword,
-      });
-      if(res.status===200){
-        router("/login")
-      }
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      setErrors({});
-    } catch (err: any) {
-      setErrors({
-        apiError:
-          err?.response?.data?.message || "Failed to update password",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (err: any) {
+    setErrors({
+      apiError: err?.response?.data?.message || "Failed to update password",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="border border-[#00000033] lg:rounded-[20px] rounded-lg lg:p-6 p-3">
