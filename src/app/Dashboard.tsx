@@ -115,7 +115,7 @@ export default function Dashboard() {
               <div className="bg-[#E8F0FF] md:rounded-[20px] rounded-lg p-6 relative flex flex-col md:gap-7 gap-3 items-center">
                 <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
                   {overview?.metrics?.totalConsultations?.trend === "up"
-                    ? `+ ${overview?.metrics?.totalConsultations?.change ?? 0}`
+                    ? `${overview?.metrics?.totalConsultations?.change ?? 0}`
                     : `- ${overview?.metrics?.totalConsultations?.change ?? 0}`}
                 </span>
                 <img src={Consultation} alt="" />
@@ -130,7 +130,7 @@ export default function Dashboard() {
               <div className="bg-[#F3EDF9] md:rounded-[20px] rounded-lg p-6 relative flex flex-col md:gap-7 gap-3 items-center">
                 <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
                   {overview?.metrics?.prescriptionsIssued?.trend === "up"
-                    ? `+ ${overview?.metrics?.prescriptionsIssued?.change ?? 0}`
+                    ? `${overview?.metrics?.prescriptionsIssued?.change ?? 0}`
                     : `- ${
                         overview?.metrics?.prescriptionsIssued?.change ?? 0
                       }`}
