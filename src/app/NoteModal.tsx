@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import fileicon from "../assets/noteicon.svg";
 import backarrow from "../assets/backlongarrowicon.svg";
-import { deleteNoteApi, getNotesApi, postNotesApi, putNotesApi, updateNoteApi } from "../api/auth.api";
+import { deleteNoteApi, getNotesApi, postNotesApi, updateNoteApi } from "../api/auth.api";
 
 type Props = {
   onClose: () => void;
@@ -27,16 +27,6 @@ export default function NoteModal({ onClose, patient }: Props) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newNoteContent, setNewNoteContent] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const formatDate = () => {
-    const now = new Date();
-    return now.toLocaleString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
 
   useEffect(() => {
     if (isEditing && textareaRef.current) {
@@ -46,6 +36,7 @@ export default function NoteModal({ onClose, patient }: Props) {
 
   
   const [loading, setLoading] = useState(true);
+  console.log(loading)
   const [notes, setNotes] = useState<Note[]>([]);
   const [content, setContent] = useState("");
   const fetchNotesData = async () => {
@@ -129,7 +120,7 @@ fetchNotesData()
           </div>
 
           <div className="bg-white rounded-[16px] overflow-auto max-h-[460px] min-h-[200px]">
-            {(notes ?? []).map((note) => (
+            {(notes ?? []).map((note:any) => (
               <button
                 key={note._id}
                 onClick={() => {

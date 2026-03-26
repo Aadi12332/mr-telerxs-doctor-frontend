@@ -13,7 +13,6 @@ import {
   getDoctorRecentConsultationsApi,
 } from "../api/auth.api";
 import { useAuth } from "../routes/AuthContext";
-import useDebounce from "../hooks/useDebounce";
 
 
 const MetricSkeleton = () => (
@@ -35,21 +34,14 @@ const reporttype = ["Daily", "Weekly", "Monthly"];
 
 export default function Dashboard() {
   const { auth } = useAuth();
-  console.log({ auth: auth });
-
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [specialization, setSpecialization] = useState("");
-  const [search, setSearch] = useState("");
-
   const [specialization2, setSpecialization2] = useState("");
   const [overview, setOverview] = useState<any>(null);
   const [schedule, setSchedule] = useState<any[]>([]);
   const [consultations, setConsultations] = useState<any[]>([]);
   const doctorId = auth?.doctor?._id;
-  const debouncedSearch = useDebounce(search, 500);
 
-  console.log({ doctorId })
   useEffect(() => {
     if (!doctorId) return;
 

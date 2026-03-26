@@ -25,8 +25,6 @@ export default function MedicineOrder() {
 
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
-  const [selectedPatient, setSelectedPatient] = useState(null);
-
   const [input, setInput] = useState("");
 
   const currentUserId = user?._id;

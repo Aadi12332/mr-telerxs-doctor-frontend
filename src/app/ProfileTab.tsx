@@ -36,6 +36,7 @@ export function ProfileTab({ user, doctor }: any) {
   const [consultationFee, setConsultationFee] = useState("");
   const [licenseNumber, setLicenseNumber] = useState("");
   const [licenseFile, setLicenseFile] = useState<File | null>(null);
+  console.log(licenseFile)
   const [licenseFileName, setLicenseFileName] = useState("");
   const [languages, setLanguages] = useState<string[]>([]);
   const [languageInput, setLanguageInput] = useState("");

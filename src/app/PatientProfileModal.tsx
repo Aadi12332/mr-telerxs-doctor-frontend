@@ -23,6 +23,8 @@ export default function PatientProfileModal({ onClose, activeChat }: Props) {
     const [consultations, setConsultations] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  console.log(openProfile, consultations, loading)
+
   const [medicalHistory, setMedicalHistory] = useState(
     "Asthma (diagnosed 2018), Seasonal allergies"
   );

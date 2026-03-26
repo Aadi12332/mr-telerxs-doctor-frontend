@@ -25,6 +25,7 @@ export function NotificationTab() {
     const doctor = auth?.doctor;
   
     const [loading,setLoading]=useState(false)
+    console.log(loading)
 
 const fetchProfile = async () => {
     setLoading(true);
