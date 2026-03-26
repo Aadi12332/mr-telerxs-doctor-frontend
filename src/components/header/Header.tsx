@@ -41,6 +41,7 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
+    setIsSidebarOpen(false)
     navigate("/login");
   };
 
@@ -342,7 +343,8 @@ export default function Header() {
               })}
               <NavLink
                 to={"/login"}
-                onClick={() => setIsSidebarOpen(false)}
+                    onClick={handleLogout}
+
                 className={`text-[18px] font-semibold border rounded-lg px-3 py-2
                         bg-[#fff] text-[#4F4F4F] border-[#4F4F4F]
                     }`}

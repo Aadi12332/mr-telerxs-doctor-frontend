@@ -4,11 +4,10 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import backarrowicon from "../assets/backlongarrowicon.svg";
-import cameraicon from "../assets/cameraicon.svg";
 import calendaricon from "../assets/calendaricon.svg";
 import uploadicon from "../assets/uploadicon.svg";
 import addnewicon from "../assets/addnewicon.svg";
-import { getDoctorRecentConsultationsApi } from "../api/auth.api";
+import { getDoctorConsultations } from "../api/auth.api";
 
 type Props = {
   onClose: () => void;
@@ -16,19 +15,22 @@ type Props = {
   doctorId?: any;
   consultationsAPI?: any;
   intakeFormId?: string;
+  patient?: any;
+  selectedConsultation?:any
 };
 
 export default function IntakeFormModal({
   onClose,
   refill,
-  intakeFormId,
-  doctorId,
+  patient,
+  selectedConsultation
 }: Props) {
   const [dob, setDob] = useState<any>(null);
   const [items, setItems] = useState<string[]>([
     "Tri-Sprintec",
     "Tri-ESrythromycin-benzoyl peroxide gelprintec benzoyl peroxide gel",
   ]);
+  console.log({selectedConsultation})
   const [consultations, setConsultations] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showInput, setShowInput] = useState(false);
@@ -44,30 +46,37 @@ export default function IntakeFormModal({
   const removeItem = (index: number) => {
     setItems(items.filter((_, i) => i !== index));
   };
+console.log({patient})
+useEffect(() => {
+  if (!patient?.id) return;
 
-  useEffect(() => {
+
+}, [patient?.id]);
+const basicInfo = consultations?.basicInformation;
+const emergency = consultations?.emergencyContact;
+const medical = consultations?.medicalQuestions;
+const fetchFormData = async () => {
+  if(!selectedConsultation?.id) return
     setLoading(true);
-    getDoctorRecentConsultationsApi(doctorId)
-      .then((res: any) => {
-        const arr = res?.data?.data?.consultations || [];
-        const matched = arr.find(
-          (item: any) => item.intakeFormId === intakeFormId
-        );
-        setConsultations(matched || null);
+    try {
+      const res = await getDoctorConsultations(selectedConsultation?.id);
+      setConsultations(res.data?.data || []);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+  useEffect(() => {
 
-        if (matched?.intakeForm?.basicInformation?.dateOfBirth) {
-          setDob(
-            dayjs(matched.intakeForm.basicInformation.dateOfBirth)
-          );
-        }
-      })
-      .finally(() => setLoading(false));
-  }, [doctorId, intakeFormId]);
+    fetchFormData();
 
-  const basicInfo = consultations?.intakeForm?.basicInformation;
-  const emergency = consultations?.intakeForm?.emergencyContact;
-  const medical = consultations?.intakeForm?.medicalQuestions;
-
+  }, []);
+useEffect(() => {
+  if (basicInfo?.dateOfBirth) {
+    setDob(dayjs(basicInfo.dateOfBirth));
+  }
+}, [basicInfo]);
   if (loading) return null;
 
   return (
@@ -83,14 +92,24 @@ export default function IntakeFormModal({
         <div className="max-w-[960px] mx-auto bg-[#F9F9F9] pb-1 rounded-[20px]">
           <div className="flex justify-center border-b border-[#E6E8EE] p-5">
             <div className="flex items-center gap-6 border border-[#E6E8EE] bg-white rounded-[10px] p-5">
-              <img
-                src={basicInfo?.profileImage || ""}
-                alt="Profile"
-                className="w-24 h-24 rounded-full object-cover bg-gray-200 text-sm"
-              />
-              <button className="w-24 h-24 rounded-full bg-[#D9D9D9] flex items-center justify-center">
+            {basicInfo?.profileImage ? (
+  <img
+    src={basicInfo.profileImage}
+    alt="Profile"
+    className="w-24 h-24 rounded-full object-cover"
+  />
+) : (
+  <div className="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center">
+    <span className="text-black font-semibold text-xl uppercase">
+      {`${basicInfo?.firstName?.[0] || ""}${
+        basicInfo?.lastName?.[0] || ""
+      }`}
+    </span>
+  </div>
+)}
+              {/* <button className="w-24 h-24 rounded-full bg-[#D9D9D9] flex items-center justify-center">
                 <img src={cameraicon} alt="Camera" />
-              </button>
+              </button> */}
             </div>
           </div>
 
@@ -102,9 +121,9 @@ export default function IntakeFormModal({
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mb-5">
-              <Input label="First Name" defaultValue={basicInfo?.firstName} />
-              <Input label="Last Name" defaultValue={basicInfo?.lastName} />
-              <Input label="Middle Initial" defaultValue={basicInfo?.middleName} />
+              <Input label="First Name" defaultValue={basicInfo?.firstName} disabled/>
+              <Input label="Last Name" defaultValue={basicInfo?.lastName} disabled/>
+              <Input label="Middle Initial" defaultValue={basicInfo?.middleName} disabled/>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
@@ -116,6 +135,7 @@ export default function IntakeFormModal({
                       basicInfo.sex.slice(1)
                     : ""
                 }
+                disabled
               />
 
               <div>
@@ -131,6 +151,7 @@ export default function IntakeFormModal({
                         <img src={calendaricon} className="w-5 h-5" />
                       ),
                     }}
+                    disabled
                     slotProps={{
                       textField: {
                         fullWidth: true,
@@ -155,33 +176,34 @@ export default function IntakeFormModal({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-              <Input label="Email" defaultValue={basicInfo?.email} />
-              <Input label="Mobile Number" defaultValue={basicInfo?.phone} />
+              <Input label="Email" defaultValue={basicInfo?.email} disabled />
+              <Input label="Mobile Number" defaultValue={basicInfo?.phone} disabled />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-              <Input label="Work Phone Number" defaultValue={basicInfo?.workPhone || "-"} />
-              <Input label="Primary Phone Number" defaultValue={basicInfo?.primaryPhone || "-"} />
+              <Input label="Work Phone Number" defaultValue={basicInfo?.workPhone || "-"} disabled />
+              <Input label="Primary Phone Number" defaultValue={basicInfo?.primaryPhone || "-"} disabled />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-              <Input label="Address" defaultValue={basicInfo?.address} />
-              <Input label="City" defaultValue={basicInfo?.city} />
+              <Input label="Address" defaultValue={basicInfo?.address} disabled />
+              <Input label="City" defaultValue={basicInfo?.city} disabled />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-              <Input label="State" defaultValue={basicInfo?.state} />
-              <Input label="Zip" defaultValue={basicInfo?.zip} />
+              <Input label="State" defaultValue={basicInfo?.state} disabled />
+              <Input label="Zip" defaultValue={basicInfo?.zip} disabled />
             </div>
 
             <div className="mb-5">
-              <Input label="Marital Status" defaultValue={basicInfo?.maritalStatus} />
+              <Input label="Marital Status" defaultValue={basicInfo?.maritalStatus} disabled />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <Input
                 label="Government Issued Identification"
                 defaultValue={basicInfo?.govtIssuedCertificate}
+                disabled
               />
 
               <div>
@@ -208,33 +230,34 @@ export default function IntakeFormModal({
               <Input
                 label="Relationship to Contact"
                 defaultValue={emergency?.relationship}
+                disabled
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mb-5">
-              <Input label="First Name" defaultValue={emergency?.firstName} />
-              <Input label="Middle Name" defaultValue={emergency?.middleName} />
-              <Input label="Last Name" defaultValue={emergency?.lastName} />
+              <Input label="First Name" defaultValue={emergency?.firstName} disabled />
+              <Input label="Middle Name" defaultValue={emergency?.middleName} disabled />
+              <Input label="Last Name" defaultValue={emergency?.lastName} disabled />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-              <Input label="Email" defaultValue={emergency?.email} />
-              <Input label="Mobile Number" defaultValue={emergency?.phone} />
+              <Input label="Email" defaultValue={emergency?.email} disabled />
+              <Input label="Mobile Number" defaultValue={emergency?.phone} disabled />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-              <Input label="Primary Phone" defaultValue={emergency?.primaryPhone} />
-              <Input label="Work Phone Number" defaultValue={emergency?.workPhone} />
+              <Input label="Primary Phone" defaultValue={emergency?.primaryPhone} disabled />
+              <Input label="Work Phone Number" defaultValue={emergency?.workPhone} disabled />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-              <Input label="Address" defaultValue={emergency?.address} />
-              <Input label="City" defaultValue={emergency?.city} />
+              <Input label="Address" defaultValue={emergency?.address} disabled />
+              <Input label="City" defaultValue={emergency?.city} disabled />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <Input label="State" defaultValue={emergency?.state} />
-              <Input label="Zip" defaultValue={emergency?.zip} />
+              <Input label="State" defaultValue={emergency?.state} disabled />
+              <Input label="Zip" defaultValue={emergency?.zip} disabled />
             </div>
           </div>
 
@@ -249,6 +272,7 @@ export default function IntakeFormModal({
               <Input
                 label="List Your Past Medical History"
                 defaultValue={medical?.pastMedicalHistory?.join(", ")}
+                disabled
               />
             </div>
 
@@ -256,6 +280,7 @@ export default function IntakeFormModal({
               <Input
                 label="Current Medications"
                 defaultValue={medical?.currentMedications?.join(", ")}
+                disabled
               />
             </div>
 
@@ -313,6 +338,7 @@ export default function IntakeFormModal({
                     defaultValue={medical?.preferredPharmacies
                       ?.map((p: any) => p.pharmacyName)
                       .join(", ")}
+                    disabled
                   />
                 </div>
               </>
@@ -328,6 +354,7 @@ export default function IntakeFormModal({
       <Input
         label="Pharmacy Name"
         defaultValue={pharmacy?.pharmacyName}
+        disabled
       />
     </div>
 
@@ -335,10 +362,12 @@ export default function IntakeFormModal({
       <Input
         label="Address"
         defaultValue={pharmacy?.address}
+        disabled
       />
       <Input
         label="City"
         defaultValue={pharmacy?.city}
+        disabled
       />
     </div>
 
@@ -346,10 +375,12 @@ export default function IntakeFormModal({
       <Input
         label="State"
         defaultValue={pharmacy?.state}
+        disabled
       />
       <Input
         label="Zip"
         defaultValue={pharmacy?.zip}
+        disabled
       />
     </div>
   </div>
@@ -360,6 +391,7 @@ export default function IntakeFormModal({
               <Input
                 label="How did you hear about us?"
                 defaultValue={medical?.howDidYouHearAboutUs}
+                disabled
               />
             </div>
 
@@ -389,7 +421,7 @@ export default function IntakeFormModal({
   );
 }
 
-function Input({ label, defaultValue }: any) {
+function Input({ label, defaultValue ,disabled}: any) {
   return (
     <div>
       <label className="text-base font-medium text-[#012047] mb-1 block">
@@ -397,6 +429,7 @@ function Input({ label, defaultValue }: any) {
       </label>
       <input
         defaultValue={defaultValue || ""}
+        disabled={disabled}
         className="w-full text-[14px] capitalize placeholder:text-[#465D7C] text-[#465D7C] h-[56px] flex items-center border border-[#D9D9D9] rounded-lg px-4 py-2 outline-none"
       />
     </div>

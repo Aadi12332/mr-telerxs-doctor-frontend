@@ -14,8 +14,10 @@ import {
   updateDoctorApi,
 } from "../api/auth.api";
 import AlertIcon from "../assets/AlertIcon";
+import { useNavigate } from "react-router-dom";
 
 export function ProfileTab({ user, doctor }: any) {
+  const navigate = useNavigate();
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
@@ -34,7 +36,6 @@ export function ProfileTab({ user, doctor }: any) {
   const [consultationFee, setConsultationFee] = useState("");
   const [licenseNumber, setLicenseNumber] = useState("");
   const [licenseFile, setLicenseFile] = useState<File | null>(null);
-  console.log(licenseFile);
   const [licenseFileName, setLicenseFileName] = useState("");
   const [languages, setLanguages] = useState<string[]>([]);
   const [languageInput, setLanguageInput] = useState("");
@@ -89,9 +90,7 @@ export function ProfileTab({ user, doctor }: any) {
       setGender(user?.gender || "");
       setSpecialization(doctor?.specialty?.name || "");
       setSpecializationId(doctor?.specialty?._id || "");
-      setExperience(
-        doctor?.experience !== undefined ? String(doctor.experience) : ""
-      );
+      setExperience(doctor?.experience !== undefined ? String(doctor.experience) : "");
       setHospital(doctor?.address?.clinicName || "");
       setLanguages(doctor?.languages || []);
       setBio(doctor?.bio || "");
@@ -205,59 +204,72 @@ export function ProfileTab({ user, doctor }: any) {
     }
   };
 
-  const handleSubmit = async () => {
-    if (!validate()) return;
-    const doctorId = doctor?._id;
-    if (!doctorId) return;
-    setSaving(true);
+const handleSubmit = async () => {
+  if (!validate()) return;
 
-    const payload: any = {
-      firstName,
-      middleName,
-      lastName,
-      email,
-      dateOfBirth: dateOfBirth ? dateOfBirth.toISOString() : undefined,
-      gender,
-      phoneNumber: mobile,
-      countryCode: user?.countryCode || "+91",
-      specialty: specializationId,
-      experience: experience ? Number(experience) : undefined,
-      bio,
-      languages,
-      consultationFee: consultationFee ? Number(consultationFee) : undefined,
-      licenseNumber,
-      address: {
-        clinicName: hospital,
-        city: doctor?.address?.city || "",
-        state: doctor?.address?.state || "",
-        country: doctor?.address?.country || "",
-        pincode: doctor?.address?.pincode || "",
-      },
-      licenseVerified: doctor?.licenseVerified,
-      status: doctor?.status,
-      isActive: doctor?.isActive,
-      medicalLicense: doctor?.medicalLicense,
-      education: doctor?.education,
-      certifications: doctor?.certifications,
-      availability: doctor?.availability,
-      bankAccount: doctor?.bankAccount,
-    };
+  const doctorId = doctor?._id;
+  if (!doctorId) return;
 
-    try {
-      const res = await updateDoctorApi(doctorId, payload);
-      localStorage.setItem(
-        "auth",
-        JSON.stringify({
-          user: res?.data?.data?.user,
-          doctor: res?.data?.data,
-        })
-      );
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setSaving(false);
-    }
+  const isEmailChanged = email !== doctor?.email;
+  const isPhoneChanged = mobile !== doctor?.phoneNumber;
+
+  setSaving(true);
+
+  const payload: any = {
+    firstName,
+    middleName,
+    lastName,
+    email,
+    dateOfBirth: dateOfBirth ? dateOfBirth.toISOString() : undefined,
+    gender,
+    phoneNumber: mobile,
+    countryCode: user?.countryCode || "+91",
+    specialty: specializationId,
+    experience: experience ? Number(experience) : undefined,
+    bio,
+    languages,
+    consultationFee: consultationFee ? Number(consultationFee) : undefined,
+    licenseNumber,
+    address: {
+      clinicName: hospital,
+      city: doctor?.address?.city || "",
+      state: doctor?.address?.state || "",
+      country: doctor?.address?.country || "",
+      pincode: doctor?.address?.pincode || "",
+    },
+    licenseVerified: doctor?.licenseVerified,
+    status: doctor?.status,
+    isActive: doctor?.isActive,
+    medicalLicense: doctor?.medicalLicense,
+    education: doctor?.education,
+    certifications: doctor?.certifications,
+    availability: doctor?.availability,
+    bankAccount: doctor?.bankAccount,
   };
+
+  try {
+    const res = await updateDoctorApi(doctorId, payload);
+
+    if (isEmailChanged || isPhoneChanged) {
+      localStorage.clear();
+      navigate("/login");
+      return;
+    }
+
+    localStorage.setItem(
+      "auth",
+      JSON.stringify({
+        user: res?.data?.data?.user,
+        doctor: res?.data?.data,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setSaving(false);
+  }
+};
+
   return (
     <div className="space-y-[30px]">
       <div className="flex items-center gap-6">

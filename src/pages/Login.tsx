@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
 import { authLoginApi, loginOtpApi } from "../api/auth.api";
 import loginsideimg from "../assets/loginimg.jpg";
 // import closeicon from "../assets/closeicon.svg";

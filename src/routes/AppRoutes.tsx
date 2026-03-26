@@ -38,6 +38,8 @@ export default function AppRoutes() {
           <Route path="/consultations" element={<Consultation />} />
           <Route path="/medicine-orders" element={<MedicineOrder />} />
           <Route path="/messages" element={<Message />} />
+          {/* <Route path="/messages1" element={<Developer />} /> */}
+
           <Route path="/add-bank" element={<AddBank />} />
           <Route path="/payout-setting" element={<PayoutSetting />} />
           <Route path="/auto-transfer" element={<AutoTransfer />} />

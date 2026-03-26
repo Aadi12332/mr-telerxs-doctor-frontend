@@ -88,6 +88,7 @@ export default function Setting() {
                 <span className="lg:text-[22px] sm:text-[18px] text-base">
                   {tab.label}
                 </span>
+                
               </button>
             ))}
           </div>

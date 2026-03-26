@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getProfileApi, updateNotification } from "../api/auth.api";
+import { useAuth } from "../routes/AuthContext";
 
 const NOTIFICATION_SETTINGS = [
   { id: "consultation", label: "New patient consultation requests" },
@@ -8,8 +10,9 @@ const NOTIFICATION_SETTINGS = [
   { id: "policy", label: "Platform policy updates" },
   { id: "reports", label: "Weekly performance reports" },
 ];
+
 export function NotificationTab() {
-    const [toggles, setToggles] = useState<Record<string, boolean>>({
+  const [toggles, setToggles] = useState<Record<string, boolean>>({
     consultation: false,
     messages: false,
     prescription: false,
@@ -17,46 +20,105 @@ export function NotificationTab() {
     policy: false,
     reports: false,
   });
+    const { auth } = useAuth();
+    const user = auth?.user;
+    const doctor = auth?.doctor;
+  
+    const [loading,setLoading]=useState(false)
 
-  const handleToggle = (key: string) => {
-    setToggles((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
+const fetchProfile = async () => {
+    setLoading(true);
+    try {
+      const res = await getProfileApi({
+        doctorId:doctor?._id
+      });
+      if(res?.data?.data){
+        setToggles({
+          consultation: res.data.data.newPatientConsultationRequests,
+          messages: res.data.data.patientMessages,
+          prescription: res.data.data.prescriptionUpdates,
+          payment: res.data.data.paymentNotifications,
+          policy: res.data.data.platformPolicyUpdates,
+          reports: res.data.data.weeklyPerformanceReports,
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(()=>{
+    if(user?._id)
+    fetchProfile()
+  },[user?._id])
+  const handleToggle = async (key: string) => {
+    const updatedToggles = {
+      ...toggles,
+      [key]: !toggles[key],
+    };
+
+    setToggles(updatedToggles);
+
+    try {
+      const res = await updateNotification({
+        newPatientConsultationRequests: updatedToggles.consultation,
+        patientMessages: updatedToggles.messages,
+        prescriptionUpdates: updatedToggles.prescription,
+        paymentNotifications: updatedToggles.payment,
+        platformPolicyUpdates: updatedToggles.policy,
+        weeklyPerformanceReports: updatedToggles.reports,
+      });
+      if(res?.data?.data){
+        setToggles({
+          consultation: res.data.data.newPatientConsultationRequests,
+          messages: res.data.data.patientMessages,
+          prescription: res.data.data.prescriptionUpdates,
+          payment: res.data.data.paymentNotifications,
+          policy: res.data.data.platformPolicyUpdates,
+          reports: res.data.data.weeklyPerformanceReports,
+        });
+      }
+      
+      
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     <div className="border border-[#00000033] lg:rounded-[20px] rounded-lg lg:p-6 p-3">
-      <h3 className="text-[24px] font-medium lg:mb-[30px] mb-5">Notification Preferences</h3>
-    <div className="space-y-3">
-      {NOTIFICATION_SETTINGS.map((item) => (
-        <div
-          key={item.id}
-          className="flex items-center justify-between bg-[#F2F2F2] lg:rounded-[20px] rounded-lg lg:p-10 p-3"
-        >
-          <p className="lg:text-[22px] sm:text-lg text-base text-[#000]">
-            {item.label}
-          </p>
+      <h3 className="text-[24px] font-medium lg:mb-[30px] mb-5">
+        Notification Preferences
+      </h3>
 
-          <button
-            onClick={() => handleToggle(item.id)}
-            className={`w-[52px] min-w-[52px] h-[28px] rounded-full relative transition ${
-              toggles[item.id]
-                ? "bg-[#042F4D]"
-                : "bg-white border border-[#888888]"
-            }`}
+      <div className="space-y-3">
+        {NOTIFICATION_SETTINGS.map((item) => (
+          <div
+            key={item.id}
+            className="flex items-center justify-between bg-[#F2F2F2] lg:rounded-[20px] rounded-lg lg:p-10 p-3"
           >
-            <span
-              className={`absolute w-[22px] h-[22px] rounded-full transition ${
+            <p className="lg:text-[22px] sm:text-lg text-base text-[#000]">
+              {item.label}
+            </p>
+
+            <button
+              onClick={() => handleToggle(item.id)}
+              className={`w-[52px] min-w-[52px] h-[28px] rounded-full relative transition ${
                 toggles[item.id]
-                  ? "right-[3px] top-[3px] bg-white"
-                  : "left-[3px] top-[2px] bg-[#888888]"
+                  ? "bg-[#042F4D]"
+                  : "bg-white border border-[#888888]"
               }`}
-            />
-          </button>
-        </div>
-      ))}
-    </div>
+            >
+              <span
+                className={`absolute w-[22px] h-[22px] rounded-full transition ${
+                  toggles[item.id]
+                    ? "right-[3px] top-[3px] bg-white"
+                    : "left-[3px] top-[2px] bg-[#888888]"
+                }`}
+              />
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

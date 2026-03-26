@@ -6,23 +6,44 @@ import createfileicon from "../assets/whitecreatefileicon.svg";
 import reporticon from "../assets/reportsicon.svg";
 import redreporticon from "../assets/redresulticon.svg";
 import sendparmacy from "../assets/sendparmacyicon.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreatePrescriptionsModal from "./CreatePrescriptionModal";
+import { getDoctorConsultations } from "../api/auth.api";
 
 type Props = {
   onClose: () => void;
+  activeChat: any;
 };
 
-export default function PatientProfileModal({ onClose }: Props) {
+export default function PatientProfileModal({ onClose, activeChat }: Props) {
   const [isEdit, setIsEdit] = useState(false);
   const [openProfile, setOpenProfile] = useState(true);
-  console.log(openProfile);
+  console.log(activeChat);
   const [openPrescription, setOpenPrescription] = useState(false);
+    const [consultations, setConsultations] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
   const [medicalHistory, setMedicalHistory] = useState(
     "Asthma (diagnosed 2018), Seasonal allergies"
   );
   const [medications, setMedications] = useState("Albuterol as needed");
   const [allergies, setAllergies] = useState("Penicillin");
+  const fetchFormData = async () => {
+      setLoading(true);
+      try {
+        const res = await getDoctorConsultations("69c539fa4ebf78da8b40e7fa");
+        setConsultations(res.data?.data || []);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    useEffect(() => {
+  
+      fetchFormData();
+  
+    }, []);
   return (
     <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center">
       <div className="bg-white w-full max-h-[100vh] overflow-y-auto scroll-hide lg:p-6 p-3 relative">

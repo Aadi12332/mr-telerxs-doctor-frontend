@@ -24,7 +24,7 @@ export default function Signup() {
   const navigate = useNavigate();
   const [dob, setDob] = useState<any>(null);
   const [specialization, setSpecialization] = useState("");
-  const [specializationId, setSpecializationId] = useState("");
+  const [specializationId, setSpecializationId] = useState("69c154f1f22f7f8f6af0e849");
   const [specializationMap, setSpecializationMap] = useState<
     { id: string; label: string }[]
   >([]);
@@ -326,25 +326,45 @@ export default function Signup() {
                 onChange={(v: string) => handleChange("consultationFee", v)}
               />
               <div>
-                <div className="flex items-start gap-2">
-                  <CustomSelect
-                  title="Specialization"
-                  data={specializationMap.map((s) => s.label)}
-                  value={specialization}
-                  onChange={(label: string) => {
-                    setSpecialization(label);
+                <div className="flex items-start gap-2 w-full">
+  {specializationMap?.length ? (
+    <CustomSelect
+      title="Specialization"
+      data={specializationMap.map((s) => s.label)}
+      value={specialization}
+      onChange={(label: string) => {
+        setSpecialization(label);
 
-                    const found = specializationMap.find(
-                      (item) => item.label === label
-                    );
+        const found = specializationMap.find(
+          (item) => item.label === label
+        );
 
-                    setSpecializationId(found?.id || "");
-                  }}
-                  placeholder="ALL"
-                  width="w-full"
-                  className="!h-[40px] lg:!h-[56px]"
-                />
-                </div>
+        setSpecializationId(
+          found?.id || ""
+        );
+      }}
+      placeholder="ALL"
+      width="w-full"
+      className="!h-[40px] lg:!h-[56px]"
+    />
+  ) : (
+    <div className="w-full">
+ <label className="block mb-1 !rounded-lg !text-base">
+          Specialization
+        </label>
+      <input
+        type="text"
+        value={specialization}
+        onChange={(e) => {
+          setSpecialization(e.target.value);
+          setSpecializationId("");
+        }}
+        placeholder="Enter specialization"
+        className="w-full h-[40px] lg:h-[56px] px-3 rounded-md border border-gray-300 outline-none"
+      />
+    </div>
+  )}
+</div>
 
                 {errors.specialization && (
                   <p className="text-red-500 text-xs mt-1">

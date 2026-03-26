@@ -1,3 +1,4 @@
+import axios from "axios";
 import { axiosInstance } from "./axiosInstance";
 
 export const authLoginApi = (payload: {
@@ -160,30 +161,45 @@ export const updateDoctorApi = (
   );
 };
 
-export const getDoctorDashboardOverviewApi = (doctorId: string) => {
-  return axiosInstance.get(
+export const getDoctorDashboardOverviewApi =async (doctorId: string,timeFrame?:string) => {
+  const res=await axiosInstance.get(
     "/api/v1/doctor/dashboard/overview",
     {
-      params: { doctorId },
+      params: { doctorId, timeFrame },
     }
   );
+  return res;
 };
 
-export const getDoctorTodaysScheduleApi = (doctorId: string) => {
+
+export const getDoctorTodaysScheduleApi = (doctorId: string,timeFrame?:string) => {
   return axiosInstance.get(
     "/api/v1/doctor/dashboard/todays-schedule",
     {
-      params: { doctorId },
+      params: { doctorId, timeFrame },
+    }
+  );
+};
+export const getGlobalSearch = (searchParam : string) => {
+  return axiosInstance.get(
+    "/api/v1/doctor/dashboard/globalSearch",
+    {
+      params: { searchParam },
     }
   );
 };
 
-export const getDoctorRecentConsultationsApi = (doctorId: string) => {
+export const getDoctorRecentConsultationsApi = (doctorId: string,timeFrame?:string) => {
   return axiosInstance.get(
     "/api/v1/doctor/dashboard/recent-consultations",
     {
-      params: { doctorId },
+      params: { doctorId, timeFrame },
     }
+  );
+};
+export const getPatientIntakeForm = (patientId: string) => {
+  return axiosInstance.get(
+    `/api/v1/patient/getIntakeFormByPatientId/${patientId}`
   );
 };
 
@@ -193,6 +209,64 @@ export const getConsultationsApi = (doctorId: string) => {
     {
       params: { doctorId },
     }
+  );
+};
+
+export const getNotesApi = (patientId:string) => {
+  return axiosInstance.get(
+    `/api/v1/patient/intakeForm/Notes/All?${patientId}`
+  );
+};
+export const postNotesApi = (payload:any) => {
+  return axiosInstance.post(
+    `/api/v1/patient/intakeFormNotes/create/`,
+    payload
+    
+  );
+};
+export const updateNoteApi = (id:any,payload:any) => {
+  return axiosInstance.put(
+    `/api/v1/patient/intakeFormNotes/${id}/`,
+    payload
+    
+  );
+};
+export const deleteNoteApi = (id:any) => {
+  return axiosInstance.delete(
+    `/api/v1/patient/intakeFormNotes/${id}/`    
+  );
+};
+export const getUsersApi = () => {
+  return axios.get(`https://jsonplaceholder.typicode.com/users`);
+};
+export const createNotesApi = () => {
+  return axiosInstance.post(
+    "/api/v1/patient/intakeFormNotes/create",{
+      intakeFormId:"",
+      description:""
+    }
+  );
+};
+export const putNotesApi = () => {
+  return axiosInstance.put(
+    "/api/v1/patient/intakeFormNotes/",{
+      intakeFormId:"",
+      description:""
+    }
+  );
+};
+export const updateNotification = ( payload: any) => {
+      const auth = localStorage.getItem("auth");
+    const doctorId = auth ? JSON.parse(auth).doctor : null;
+console.log({auth,doctorId})
+  return axiosInstance.put(
+    `/api/v1/admin/doctors/${doctorId?._id}`,
+    payload
+  );
+};
+export const deleteNotesApi = () => {
+  return axiosInstance.delete(
+    "/api/v1/patient/intakeFormNotes/"
   );
 };
 
@@ -272,3 +346,35 @@ export const getSpecializationsApi = ({
 };
 
 
+  export const getPatientList = () => {
+  return axiosInstance.get("api/v1/admin/patients",{
+    params:{
+      page:1,
+      limit:100
+    }
+  });
+};
+ export const getDoctorConsultations = (doctorId: string) => {
+  return axiosInstance.get(`api/v1/doctor/consultations/${doctorId}`);
+};
+
+ export const getNotification = () => {
+  return axiosInstance.get(`api/v1/patient/notifications/`);
+};
+
+
+export const createPrescriptionApi = (payload: {
+  doctor: string;
+  patientId: string;
+  medicine: string;
+  brand: string;
+  description: string;
+  duration: string;
+  frequency: string;
+  refillsAllowed: number|string;
+  instruction: string;
+  warning: string;
+  patientName: string;
+}) => {
+  return axiosInstance.post("/api/v1/patient/prescriptions/create", payload);
+};

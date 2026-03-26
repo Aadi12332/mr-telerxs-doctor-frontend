@@ -3,8 +3,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { verifyOtpApi, resendOtpApi } from "../api/auth.api";
 import closeicon from "../assets/closeicon.svg";
 import logo from "../assets/logo.svg";
+import { useAuth } from "../routes/AuthContext";
 
 export default function Login() {
+    const { login } = useAuth();
+  
   const navigate = useNavigate();
   const location = useLocation();
   const identifier = location.state?.identifier;
@@ -70,8 +73,18 @@ const [serverOtp, setServerOtp] = useState(initialOtp);
         identifier,
         otp: otpValue,
       });
-
+      console.log({res})
       if (res?.data?.success) {
+                localStorage.setItem(
+          "accessToken",
+          res?.data?.data?.tokens?.accessToken
+        );
+        localStorage.setItem(
+          "refreshToken",
+          res?.data?.data?.tokens?.refreshToken
+        );
+        login(res.data.data);
+
         navigate("/dashboard");
       }
     } catch (err: any) {

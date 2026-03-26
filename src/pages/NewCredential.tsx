@@ -14,8 +14,8 @@ export default function NewCredential() {
 
   const identifier = location.state?.identifier;
   const serverOtp = location.state?.otp;
-
-  const [otp, setOtp] = useState(serverOtp || "");
+console.log({serverOtp})
+  const [otp, setOtp] = useState(serverOtp?.otp || "");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<any>({});
@@ -53,6 +53,7 @@ export default function NewCredential() {
       setLoading(false);
     }
   };
+  console.log({otp})
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#E1E9ED] lg:px-12 px-3 lg:py-10 py-3">
@@ -81,11 +82,11 @@ export default function NewCredential() {
               <p className="text-[#000000B2] text-[18px]">
                 Set your new password
               </p>
-              {serverOtp && (
+              {/* {serverOtp && (
                 <p className="text-lg font-bold text-gray-500 mt-4">
                   OTP: {serverOtp}
                 </p>
-              )}
+              )} */}
             </div>
           </div>
 

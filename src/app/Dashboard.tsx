@@ -13,13 +13,8 @@ import {
   getDoctorRecentConsultationsApi,
 } from "../api/auth.api";
 import { useAuth } from "../routes/AuthContext";
+import useDebounce from "../hooks/useDebounce";
 
-const SPECIALIZATIONS = [
-  "Total Consultations",
-  "Prescriptions Issued",
-  "Total Earnings",
-  "Patient Rating",
-];
 
 const MetricSkeleton = () => (
   <div className="bg-gray-100 md:rounded-[20px] h-[226px] rounded-lg p-6 flex flex-col items-center gap-8 animate-pulse">
@@ -45,29 +40,47 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [specialization, setSpecialization] = useState("");
+  const [search, setSearch] = useState("");
+
   const [specialization2, setSpecialization2] = useState("");
   const [overview, setOverview] = useState<any>(null);
   const [schedule, setSchedule] = useState<any[]>([]);
   const [consultations, setConsultations] = useState<any[]>([]);
   const doctorId = auth?.doctor?._id;
+  const debouncedSearch = useDebounce(search, 500);
+
+  console.log({ doctorId })
   useEffect(() => {
     if (!doctorId) return;
 
     setLoading(true);
 
-    Promise.all([
-      getDoctorDashboardOverviewApi(doctorId),
-      getDoctorTodaysScheduleApi(doctorId),
-      getDoctorRecentConsultationsApi(doctorId),
+    Promise.allSettled([
+      getDoctorDashboardOverviewApi(doctorId, specialization2.toLocaleLowerCase()),
+      getDoctorTodaysScheduleApi(doctorId, specialization2.toLocaleLowerCase()),
+      getDoctorRecentConsultationsApi(doctorId, specialization2.toLocaleLowerCase()),
     ])
-      .then(([overviewRes, scheduleRes, consultationsRes]) => {
-        setOverview(overviewRes.data.data);
-        setSchedule(scheduleRes.data.data.schedule);
-        setConsultations(consultationsRes.data.data.consultations);
+      .then((results) => {
+        const [overviewRes, scheduleRes, consultationsRes] = results;
+
+
+        if (overviewRes.status === "fulfilled") {
+          setOverview(overviewRes.value?.data?.data || {});
+        }
+
+        if (scheduleRes.status === "fulfilled") {
+          setSchedule(scheduleRes.value?.data?.data?.schedule || []);
+        }
+
+        if (consultationsRes.status === "fulfilled") {
+          setConsultations(
+            consultationsRes.value?.data?.data?.consultations || []
+          );
+        }
       })
       .finally(() => setLoading(false));
-  }, [doctorId]);
-
+  }, [doctorId, specialization2]);
+  console.log({ specialization2 })
   return (
     <div className="lg:min-h-[calc(100vh-160px)] min-h-[calc(100vh-70px)] overflow-auto scroll-hide flex flex-col justify-between">
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
@@ -82,15 +95,7 @@ export default function Dashboard() {
           </div>
 
           <div className="flex gap-4">
-            <CustomSelect
-              data={SPECIALIZATIONS}
-              value={specialization}
-              onChange={setSpecialization}
-              placeholder="ALL"
-              openDirection="bottom"
-              width="w-full"
-              className="lg:w-[250px] md:w-[170px] !h-[48px] flex-1"
-            />
+
             <CustomSelect
               data={reporttype}
               value={specialization2}
@@ -131,9 +136,8 @@ export default function Dashboard() {
                 <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
                   {overview?.metrics?.prescriptionsIssued?.trend === "up"
                     ? `${overview?.metrics?.prescriptionsIssued?.change ?? 0}`
-                    : `- ${
-                        overview?.metrics?.prescriptionsIssued?.change ?? 0
-                      }`}
+                    : `- ${overview?.metrics?.prescriptionsIssued?.change ?? 0
+                    }`}
                 </span>
                 <img src={Prescriptions} alt="" />
                 <p className="text-[#000000CC] text-xl mt-4 sm:mt-0 md:text-[24px] text-center">
@@ -148,9 +152,8 @@ export default function Dashboard() {
                 <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
                   {overview?.metrics?.patientRating?.trend === "down"
                     ? `- ${overview?.metrics?.patientRating?.totalRatings ?? 0}`
-                    : `+ ${
-                        overview?.metrics?.patientRating?.totalRatings ?? 0
-                      }`}
+                    : `+ ${overview?.metrics?.patientRating?.totalRatings ?? 0
+                    }`}
                 </span>
                 <img src={Rating} alt="" />
                 <p className="text-[#000000CC] text-xl mt-4 sm:mt-0 md:text-[24px] text-center">
@@ -193,13 +196,12 @@ export default function Dashboard() {
                     </p>
 
                     <span
-                      className={`mt-1 px-3 py-1 h-[36px] justify-center rounded-full md:text-base text-[14px] flex gap-1 items-center ${
-                        item.status === "Urgent"
+                      className={`mt-1 px-3 py-1 h-[36px] justify-center rounded-full md:text-base text-[14px] flex gap-1 items-center ${item.status === "Urgent"
                           ? "bg-[#FC9B7880] text-[#7D2C2C]"
                           : item.status === "Completed"
-                          ? "bg-[#B1FEB280] text-[#138015]"
-                          : "bg-[#EDBC4A80] text-[#624F25]"
-                      }`}
+                            ? "bg-[#B1FEB280] text-[#138015]"
+                            : "bg-[#EDBC4A80] text-[#624F25]"
+                        }`}
                     >
                       <img
                         src={item.statusType === "info" ? Pending : Completed}
@@ -252,11 +254,10 @@ export default function Dashboard() {
                   </div>
 
                   <span
-                    className={`px-4 py-2 rounded-[16px] md:text-[20px] text-[16px] font-medium ${
-                      item.time?.includes("AM")
+                    className={`px-4 py-2 rounded-[16px] md:text-[20px] text-[16px] font-medium ${item.time?.includes("AM")
                         ? "bg-[#B6FFB7B2] text-[#096B0B]"
                         : "bg-[#BAD7FF80] text-[#0B3977]"
-                    }`}
+                      }`}
                   >
                     {item.time}
                   </span>

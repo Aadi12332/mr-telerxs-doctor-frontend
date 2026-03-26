@@ -65,7 +65,7 @@ const ConsultationSkeleton = () => (
 const STATUS_OPTIONS = [
   { label: "All Status", value: "" },
   { label: "Pending", value: "pending" },
-  { label: "Submitted", value: "submitted" },
+  // { label: "Submitted", value: "submitted" },
   { label: "Reviewed", value: "reviewed" },
   { label: "Draft", value: "draft" },
 ];
@@ -86,7 +86,6 @@ export default function Consultation() {
   const [totalPages, setTotalPages] = useState(1);
   const debouncedSearch = useDebounce(search, 500);
   const doctorId = auth?.doctor?._id;
-  console.log({ loading });
   const LIMIT = 10;
   const fetchConsultations = async () => {
     setLoading(true);
@@ -108,7 +107,6 @@ export default function Consultation() {
     if (!doctorId) return;
     fetchConsultations();
   }, [doctorId, specialization, debouncedSearch, page]);
-
   return (
     <div className="lg:min-h-[calc(100vh-160px)] min-h-[calc(100vh-70px)] overflow-auto scroll-hide flex flex-col justify-between">
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
@@ -158,11 +156,26 @@ export default function Consultation() {
             >
               <div className="flex justify-between items-start gap-5 md:flex-row flex-col">
                 <div className="flex gap-4 items-center">
-                  <img
-                    src={item?.patient?.profilePicture}
-                    alt="profile"
-                    className="w-[80px] h-[80px] rounded-full object-cover text-sm border-[2px] border-[#D1D5DB]"
-                  />
+                {item?.patient?.profilePicture ? (
+  <img
+    src={item?.patient?.profilePicture}
+    alt="profile"
+    className="w-[80px] h-[80px] rounded-full object-cover border-[2px] border-[#D1D5DB]"
+    onError={(e) => {
+      (e.currentTarget as HTMLImageElement).style.display = "none";
+    }}
+  />
+) : (
+  <div className="w-[80px] h-[80px] rounded-full bg-gray-300 flex items-center justify-center border-[2px] border-[#D1D5DB]">
+    <span className="text-black font-semibold text-lg uppercase">
+      {item?.patient?.name
+        ?.split(" ")
+        .map((n: string) => n[0])
+        .slice(0, 2)
+        .join("") || ""}
+    </span>
+  </div>
+)}
                   <div>
                     <h3 className="text-lg font-semibold">
                       {item?.patient?.name ?? ""}
@@ -181,7 +194,10 @@ export default function Consultation() {
                   )}
 
                   <span
-                    onClick={() => setOpenNote(true)}
+                    onClick={() => {
+                    setSelectedConsultation(item);
+                      
+                      setOpenNote(true);}}
                     className="flex items-center gap-2 px-4 py-1 rounded-full cursor-pointer bg-sky-100 text-sky-700 text-sm"
                   >
                     <img src={noteicon} className="w-4" /> Note
@@ -247,9 +263,10 @@ export default function Consultation() {
                 </button>
 
                 <button
-                  onClick={() => {
-                    setOpenPrescription(true);
-                  }}
+                   onClick={() => {
+                      setSelectedConsultation(item);
+                      setOpenPrescription(true);
+                    }}
                   className="flex-1 h-[48px] py-2 rounded-full flex items-center justify-center gap-2 text-white bg-[linear-gradient(270deg,#308D32_0%,#86C987_100%)]"
                 >
                   <img src={createicon} className="w-5" />
@@ -266,7 +283,7 @@ export default function Consultation() {
         </div>
 
         {(consultationsAPI ?? []).length > 0 && (
-          <div className="flex justify-center items-center gap-4 mt-6">
+          <div className="flex justify-center items-center gap-4 mt-6 mb-5">
             <button
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
@@ -290,13 +307,18 @@ export default function Consultation() {
         )}
       </div>
 
-      {openNote && <NoteModal onClose={() => setOpenNote(false)} />}
+      {openNote && <NoteModal onClose={() => setOpenNote(false)} 
+          patient={selectedConsultation}
+        
+        />}
 
       {openPrescription && (
         <CreatePrescriptionsModal
           selectedConsultation={selectedConsultation}
           onClose={() => setOpenPrescription(false)}
           doctorId={doctorId}
+          patientId={selectedConsultation?.patient?.id || ""}
+          patientName={selectedConsultation?.patient?.name || ""}
         />
       )}
 
@@ -309,6 +331,8 @@ export default function Consultation() {
             setOpeningIntake(false);
           }}
           refill={false}
+          patient={selectedConsultation?.patient}
+          selectedConsultation={selectedConsultation}
         />
       )}
 
