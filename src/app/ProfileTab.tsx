@@ -64,9 +64,6 @@ export function ProfileTab({ user, doctor }: any) {
   };
 
   useEffect(() => {
-    fetchSpecializations();
-  }, []);
-  useEffect(() => {
     const fetchSpecializations = async () => {
       const res = await getSpecializationsApi({});
       const list = res.data.data.map((item: any) => ({
@@ -123,48 +120,48 @@ export function ProfileTab({ user, doctor }: any) {
     }
   }, [doctor?.specialty, specializationMap]);
 
-//   const MAX_SIZE_MB = 2;
-// const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
+  //   const MAX_SIZE_MB = 2;
+  // const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
 
-// const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-//   const file = e.target.files?.[0];
-//   if (!file) return;
+  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
 
-//   if (!ALLOWED_TYPES.includes(file.type)) {
-//     alert("Only JPG, PNG, JPEG, WEBP images are allowed");
-//     return;
-//   }
+  //   if (!ALLOWED_TYPES.includes(file.type)) {
+  //     alert("Only JPG, PNG, JPEG, WEBP images are allowed");
+  //     return;
+  //   }
 
-//   const maxSize = MAX_SIZE_MB * 1024 * 1024;
-//   if (file.size > maxSize) {
-//     alert(`Image size must be less than ${MAX_SIZE_MB}MB`);
-//     return;
-//   }
+  //   const maxSize = MAX_SIZE_MB * 1024 * 1024;
+  //   if (file.size > maxSize) {
+  //     alert(`Image size must be less than ${MAX_SIZE_MB}MB`);
+  //     return;
+  //   }
 
-//   const reader = new FileReader();
+  //   const reader = new FileReader();
 
-//   reader.onload = () => {
-//     const base64 = reader.result as string;
+  //   reader.onload = () => {
+  //     const base64 = reader.result as string;
 
-//     if (!base64.startsWith("data:image/")) {
-//       alert("Invalid image format");
-//       return;
-//     }
+  //     if (!base64.startsWith("data:image/")) {
+  //       alert("Invalid image format");
+  //       return;
+  //     }
 
-//     if (base64.length > 5_000_000) {
-//       alert("Image too large after encoding");
-//       return;
-//     }
+  //     if (base64.length > 5_000_000) {
+  //       alert("Image too large after encoding");
+  //       return;
+  //     }
 
-//     setProfileImage(base64);
-//   };
+  //     setProfileImage(base64);
+  //   };
 
-//   reader.onerror = () => {
-//     alert("Failed to read image file");
-//   };
+  //   reader.onerror = () => {
+  //     alert("Failed to read image file");
+  //   };
 
-//   reader.readAsDataURL(file);
-// };
+  //   reader.readAsDataURL(file);
+  // };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -205,71 +202,88 @@ export function ProfileTab({ user, doctor }: any) {
     }
   };
 
-const handleSubmit = async () => {
-  if (!validate()) return;
+  const hasChanges =
+    firstName !== user?.firstName ||
+    middleName !== user?.middleName ||
+    lastName !== user?.lastName ||
+    email !== (user?.email || "") ||
+    mobile !== (user?.phoneNumber || "") ||
+    gender !== user?.gender ||
+    bio !== doctor?.bio ||
+    licenseNumber !== doctor?.licenseNumber ||
+    hospital !== doctor?.address?.clinicName ||
+    specializationId !== doctor?.specialty?._id ||
+    Number(experience || 0) !== Number(doctor?.experience || 0) ||
+    Number(consultationFee || 0) !== Number(doctor?.consultationFee || 0) ||
+    JSON.stringify(languages) !== JSON.stringify(doctor?.languages || []);
 
-  const doctorId = doctor?._id;
-  if (!doctorId) return;
+  const handleSubmit = async () => {
+    if (!validate()) return;
 
-  const isEmailChanged = email !== doctor?.email;
-  const isPhoneChanged = mobile !== doctor?.phoneNumber;
+    const doctorId = doctor?._id;
+    if (!doctorId) return;
 
-  setSaving(true);
+    const isEmailChanged = email !== (user?.email || "");
+    const isPhoneChanged = mobile !== (user?.phoneNumber || "");
 
-  const payload: any = {
-    firstName,
-    middleName,
-    lastName,
-    email,
-    dateOfBirth: dateOfBirth ? dateOfBirth.toISOString() : undefined,
-    gender,
-    phoneNumber: mobile,
-    countryCode: user?.countryCode || "+91",
-    specialty: specializationId,
-    experience: experience ? Number(experience) : undefined,
-    bio,
-    languages,
-    consultationFee: consultationFee ? Number(consultationFee) : undefined,
-    licenseNumber,
-    address: {
-      clinicName: hospital,
-      city: doctor?.address?.city || "",
-      state: doctor?.address?.state || "",
-      country: doctor?.address?.country || "",
-      pincode: doctor?.address?.pincode || "",
-    },
-    licenseVerified: doctor?.licenseVerified,
-    status: doctor?.status,
-    isActive: doctor?.isActive,
-    medicalLicense: doctor?.medicalLicense,
-    education: doctor?.education,
-    certifications: doctor?.certifications,
-    availability: doctor?.availability,
-    bankAccount: doctor?.bankAccount,
-  };
+    console.log({ isEmailChanged, isPhoneChanged, doctorEmail: doctor?.email, doctorPhone: doctor?.phoneNumber })
 
-  try {
-    const res = await updateDoctorApi(doctorId, payload);
+    setSaving(true);
 
-    if (isEmailChanged || isPhoneChanged) {
-      localStorage.clear();
-      navigate("/login");
-      return;
+    const payload: any = {
+      firstName,
+      middleName,
+      lastName,
+      email,
+      dateOfBirth: dateOfBirth ? dateOfBirth.toISOString() : undefined,
+      gender,
+      phoneNumber: mobile,
+      countryCode: user?.countryCode || "+91",
+      specialty: specializationId,
+      experience: experience ? Number(experience) : undefined,
+      bio,
+      languages,
+      consultationFee: consultationFee ? Number(consultationFee) : undefined,
+      licenseNumber,
+      address: {
+        clinicName: hospital,
+        city: doctor?.address?.city || "",
+        state: doctor?.address?.state || "",
+        country: doctor?.address?.country || "",
+        pincode: doctor?.address?.pincode || "",
+      },
+      licenseVerified: doctor?.licenseVerified,
+      status: doctor?.status,
+      isActive: doctor?.isActive,
+      medicalLicense: doctor?.medicalLicense,
+      education: doctor?.education,
+      certifications: doctor?.certifications,
+      availability: doctor?.availability,
+      bankAccount: doctor?.bankAccount,
+    };
+
+    try {
+      const res = await updateDoctorApi(doctorId, payload);
+
+      if (isEmailChanged || isPhoneChanged) {
+        localStorage.clear();
+        navigate("/login");
+        return;
+      }
+
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          user: res?.data?.data?.user,
+          doctor: res?.data?.data,
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSaving(false);
     }
-
-    localStorage.setItem(
-      "auth",
-      JSON.stringify({
-        user: res?.data?.data?.user,
-        doctor: res?.data?.data,
-      })
-    );
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setSaving(false);
-  }
-};
+  };
 
   return (
     <div className="space-y-[30px]">
@@ -468,7 +482,7 @@ const handleSubmit = async () => {
                     } catch (err: any) {
                       setSpecError(
                         err?.response?.data?.message ||
-                          "Failed to create specialization"
+                        "Failed to create specialization"
                       );
                     } finally {
                       setSpecLoading(false);
@@ -647,10 +661,9 @@ const handleSubmit = async () => {
       <div className="flex justify-end">
         <button
           onClick={handleSubmit}
-          disabled={saving}
-          className={`bg-[#00598D] text-white px-6 py-2.5 lg:rounded-[10px] rounded-lg text-[16px] font-medium mt-3 flex items-center gap-2 ${
-            saving ? "opacity-70 cursor-not-allowed" : ""
-          }`}
+          disabled={saving || !hasChanges}
+          className={`bg-[#00598D] text-white px-6 py-2.5 lg:rounded-[10px] rounded-lg text-[16px] font-medium mt-3 flex items-center gap-2 ${saving || !hasChanges ? "opacity-70 cursor-not-allowed" : ""
+            }`}
         >
           {saving && (
             <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
