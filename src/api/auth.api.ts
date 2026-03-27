@@ -161,25 +161,34 @@ export const updateDoctorApi = (
   );
 };
 
-export const getDoctorDashboardOverviewApi =async (doctorId: string,timeFrame?:string) => {
+export const getDoctorDashboardOverviewApi =async (doctorId: string,period?:string) => {
   const res=await axiosInstance.get(
     "/api/v1/doctor/dashboard/overview",
     {
-      params: { doctorId, timeFrame },
+      params: { doctorId, ...(period && period !== "All" && { period }) },
     }
   );
   return res;
 };
 
 
-export const getDoctorTodaysScheduleApi = (doctorId: string,timeFrame?:string) => {
+export const getDoctorTodaysScheduleApi = (doctorId: string,period?:string) => {
   return axiosInstance.get(
     "/api/v1/doctor/dashboard/todays-schedule",
     {
-      params: { doctorId, timeFrame },
+params: { doctorId, ...(period && period !== "All" && { period }) }    }
+  );
+};
+
+export const getDoctorRecentConsultationsApi = (doctorId: string,period?:string) => {
+  return axiosInstance.get(
+    "/api/v1/doctor/dashboard/recent-consultations",
+    {
+      params: { doctorId, ...(period && period !== "All" && { period }) },
     }
   );
 };
+
 export const getGlobalSearch = (searchParam : string) => {
   return axiosInstance.get(
     "/api/v1/doctor/dashboard/globalSearch",
@@ -189,14 +198,6 @@ export const getGlobalSearch = (searchParam : string) => {
   );
 };
 
-export const getDoctorRecentConsultationsApi = (doctorId: string,timeFrame?:string) => {
-  return axiosInstance.get(
-    "/api/v1/doctor/dashboard/recent-consultations",
-    {
-      params: { doctorId, timeFrame },
-    }
-  );
-};
 export const getPatientIntakeForm = (patientId: string) => {
   return axiosInstance.get(
     `/api/v1/patient/getIntakeFormByPatientId/${patientId}`

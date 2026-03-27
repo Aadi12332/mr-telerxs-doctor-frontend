@@ -251,10 +251,10 @@ export default function Consultation() {
                     setSelectedConsultation(item);
                     setOpenIntakeForm(true);
                   }}
-                  disabled={openingIntake}
+                  disabled={openingIntake&&selectedConsultation?.id===item.id}
                   className="flex-1 h-[48px] py-2 rounded-full flex items-center justify-center gap-2 text-white bg-[linear-gradient(90deg,#25AEED_0%,#0A70A7_100%)] disabled:opacity-70"
                 >
-                  {openingIntake ? (
+                  {openingIntake&&selectedConsultation?.id===item.id ? (
                     <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
                     <img src={viewicon} className="w-5" />

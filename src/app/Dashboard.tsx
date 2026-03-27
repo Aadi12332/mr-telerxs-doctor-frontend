@@ -30,7 +30,28 @@ const ListSkeleton = () => (
   </div>
 );
 
-const reporttype = ["Daily", "Weekly", "Monthly"];
+const reporttype = [
+  "All",
+  "today",
+  "daily",
+  "weekly",
+  "last_7_days",
+  "monthly",
+  "this_month",
+  "last_30_days",
+  "last_month",
+];
+
+const formatLabel = (value: string) => {
+  return value
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
+const labelToValueMap = reporttype.reduce((acc, item) => {
+  acc[formatLabel(item)] = item;
+  return acc;
+}, {} as Record<string, string>);
 
 export default function Dashboard() {
   const { auth } = useAuth();
@@ -42,37 +63,36 @@ export default function Dashboard() {
   const [consultations, setConsultations] = useState<any[]>([]);
   const doctorId = auth?.doctor?._id;
 
-  useEffect(() => {
-    if (!doctorId) return;
+useEffect(() => {
+  if (!doctorId) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    Promise.allSettled([
-      getDoctorDashboardOverviewApi(doctorId, specialization2.toLocaleLowerCase()),
-      getDoctorTodaysScheduleApi(doctorId, specialization2.toLocaleLowerCase()),
-      getDoctorRecentConsultationsApi(doctorId, specialization2.toLocaleLowerCase()),
-    ])
-      .then((results) => {
-        const [overviewRes, scheduleRes, consultationsRes] = results;
+  Promise.allSettled([
+    getDoctorDashboardOverviewApi(doctorId, specialization2),
+    getDoctorTodaysScheduleApi(doctorId, specialization2),
+    getDoctorRecentConsultationsApi(doctorId, specialization2),
+  ])
+    .then((results) => {
+      const [overviewRes, scheduleRes, consultationsRes] = results;
 
+      if (overviewRes.status === "fulfilled") {
+        setOverview(overviewRes.value?.data?.data || {});
+      }
 
-        if (overviewRes.status === "fulfilled") {
-          setOverview(overviewRes.value?.data?.data || {});
-        }
+      if (scheduleRes.status === "fulfilled") {
+        setSchedule(scheduleRes.value?.data?.data?.schedule || []);
+      }
 
-        if (scheduleRes.status === "fulfilled") {
-          setSchedule(scheduleRes.value?.data?.data?.schedule || []);
-        }
+      if (consultationsRes.status === "fulfilled") {
+        setConsultations(
+          consultationsRes.value?.data?.data?.consultations || []
+        );
+      }
+    })
+    .finally(() => setLoading(false));
+}, [doctorId, specialization2]);
 
-        if (consultationsRes.status === "fulfilled") {
-          setConsultations(
-            consultationsRes.value?.data?.data?.consultations || []
-          );
-        }
-      })
-      .finally(() => setLoading(false));
-  }, [doctorId, specialization2]);
-  console.log({ specialization2 })
   return (
     <div className="lg:min-h-[calc(100vh-160px)] min-h-[calc(100vh-70px)] overflow-auto scroll-hide flex flex-col justify-between">
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
@@ -88,15 +108,18 @@ export default function Dashboard() {
 
           <div className="flex gap-4">
 
-            <CustomSelect
-              data={reporttype}
-              value={specialization2}
-              onChange={setSpecialization2}
-              placeholder="ALL"
-              openDirection="bottom"
-              width="w-full"
-              className="lg:w-[170px] md:w-[120px] !h-[48px] flex-1"
-            />
+           <CustomSelect
+  data={reporttype.map(formatLabel)}
+  value={formatLabel(specialization2)}
+  onChange={(label) => {
+    const originalValue = labelToValueMap[label];
+    setSpecialization2(originalValue);
+  }}
+  placeholder="ALL"
+  openDirection="bottom"
+  width="w-full"
+  className="w-[170px] !h-[48px] flex-1"
+/>
           </div>
         </div>
 
@@ -113,7 +136,7 @@ export default function Dashboard() {
                 <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
                   {overview?.metrics?.totalConsultations?.trend === "up"
                     ? `${overview?.metrics?.totalConsultations?.change ?? 0}`
-                    : `- ${overview?.metrics?.totalConsultations?.change ?? 0}`}
+                    : `${overview?.metrics?.totalConsultations?.change ?? 0}`}
                 </span>
                 <img src={Consultation} alt="" />
                 <p className="text-[#000000CC] text-xl mt-4 sm:mt-0 md:text-[24px] text-center">
@@ -128,7 +151,7 @@ export default function Dashboard() {
                 <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
                   {overview?.metrics?.prescriptionsIssued?.trend === "up"
                     ? `${overview?.metrics?.prescriptionsIssued?.change ?? 0}`
-                    : `- ${overview?.metrics?.prescriptionsIssued?.change ?? 0
+                    : `${overview?.metrics?.prescriptionsIssued?.change ?? 0
                     }`}
                 </span>
                 <img src={Prescriptions} alt="" />
@@ -143,8 +166,8 @@ export default function Dashboard() {
               <div className="bg-[#F7FFCC] md:rounded-[20px] rounded-lg p-6 relative flex flex-col md:gap-7 gap-3 items-center">
                 <span className="absolute right-5 top-5 text-[#369B37] text-[20px] font-medium">
                   {overview?.metrics?.patientRating?.trend === "down"
-                    ? `- ${overview?.metrics?.patientRating?.totalRatings ?? 0}`
-                    : `+ ${overview?.metrics?.patientRating?.totalRatings ?? 0
+                    ? `${overview?.metrics?.patientRating?.totalRatings ?? 0}`
+                    : `${overview?.metrics?.patientRating?.totalRatings ?? 0
                     }`}
                 </span>
                 <img src={Rating} alt="" />
