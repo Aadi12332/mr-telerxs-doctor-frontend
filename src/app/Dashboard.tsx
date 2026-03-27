@@ -33,13 +33,13 @@ const ListSkeleton = () => (
 const reporttype = [
   "All",
   "today",
-  "daily",
-  "weekly",
+  // "daily",
+  // "weekly",
   "last_7_days",
-  "monthly",
-  "this_month",
+  // "monthly",
+  // "this_month",
   "last_30_days",
-  "last_month",
+  // "last_month",
 ];
 
 const formatLabel = (value: string) => {

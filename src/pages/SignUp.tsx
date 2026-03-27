@@ -175,7 +175,7 @@ export default function Signup() {
             <div className="flex items-center gap-6 border rounded-[10px] p-5">
               <img
                 src={profilePreview || profileimg}
-                className="w-24 h-24 rounded-full object-cover"
+                className="w-24 h-24 rounded-full object-cover border"
               />
               <label className="w-24 h-24 rounded-full bg-[#D9D9D9] flex items-center justify-center cursor-pointer">
                 <img src={cameraicon} />

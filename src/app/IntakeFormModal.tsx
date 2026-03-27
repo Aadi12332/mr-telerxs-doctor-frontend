@@ -16,7 +16,7 @@ type Props = {
   consultationsAPI?: any;
   intakeFormId?: string;
   patient?: any;
-  selectedConsultation?:any
+  selectedConsultation?: any
 };
 
 export default function IntakeFormModal({
@@ -26,11 +26,12 @@ export default function IntakeFormModal({
   selectedConsultation
 }: Props) {
   const [dob, setDob] = useState<any>(null);
+  const [imgError, setImgError] = useState(false);
   const [items, setItems] = useState<string[]>([
     "Tri-Sprintec",
     "Tri-ESrythromycin-benzoyl peroxide gelprintec benzoyl peroxide gel",
   ]);
-  console.log({selectedConsultation})
+  console.log({ selectedConsultation })
   const [consultations, setConsultations] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showInput, setShowInput] = useState(false);
@@ -46,17 +47,17 @@ export default function IntakeFormModal({
   const removeItem = (index: number) => {
     setItems(items.filter((_, i) => i !== index));
   };
-console.log({patient})
-useEffect(() => {
-  if (!patient?.id) return;
+  console.log({ patient })
+  useEffect(() => {
+    if (!patient?.id) return;
 
 
-}, [patient?.id]);
-const basicInfo = consultations?.basicInformation;
-const emergency = consultations?.emergencyContact;
-const medical = consultations?.medicalQuestions;
-const fetchFormData = async () => {
-  if(!selectedConsultation?.id) return
+  }, [patient?.id]);
+  const basicInfo = consultations?.basicInformation;
+  const emergency = consultations?.emergencyContact;
+  const medical = consultations?.medicalQuestions;
+  const fetchFormData = async () => {
+    if (!selectedConsultation?.id) return
     setLoading(true);
     try {
       const res = await getDoctorConsultations(selectedConsultation?.id);
@@ -72,11 +73,11 @@ const fetchFormData = async () => {
     fetchFormData();
 
   }, []);
-useEffect(() => {
-  if (basicInfo?.dateOfBirth) {
-    setDob(dayjs(basicInfo.dateOfBirth));
-  }
-}, [basicInfo]);
+  useEffect(() => {
+    if (basicInfo?.dateOfBirth) {
+      setDob(dayjs(basicInfo.dateOfBirth));
+    }
+  }, [basicInfo]);
   if (loading) return null;
 
   return (
@@ -92,18 +93,17 @@ useEffect(() => {
         <div className="max-w-[960px] mx-auto bg-[#F9F9F9] pb-1 rounded-[20px]">
           <div className="flex justify-center border-b border-[#E6E8EE] p-5">
             <div className="flex items-center gap-6 border border-[#E6E8EE] bg-white rounded-[10px] p-5">
-            {basicInfo?.profileImage ? (
+              {basicInfo?.profileImage && !imgError ? (
   <img
     src={basicInfo.profileImage}
     alt="Profile"
-    className="w-24 h-24 rounded-full object-cover"
+    onError={() => setImgError(true)}
+    className="w-24 h-24 rounded-full object-cover border"
   />
 ) : (
   <div className="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center">
     <span className="text-black font-semibold text-xl uppercase">
-      {`${basicInfo?.firstName?.[0] || ""}${
-        basicInfo?.lastName?.[0] || ""
-      }`}
+      {`${basicInfo?.firstName?.[0] || ""}${basicInfo?.lastName?.[0] || ""}`}
     </span>
   </div>
 )}
@@ -121,9 +121,9 @@ useEffect(() => {
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mb-5">
-              <Input label="First Name" defaultValue={basicInfo?.firstName} disabled/>
-              <Input label="Last Name" defaultValue={basicInfo?.lastName} disabled/>
-              <Input label="Middle Initial" defaultValue={basicInfo?.middleName} disabled/>
+              <Input label="First Name" defaultValue={basicInfo?.firstName} disabled />
+              <Input label="Last Name" defaultValue={basicInfo?.lastName} disabled />
+              <Input label="Middle Initial" defaultValue={basicInfo?.middleName} disabled />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
@@ -132,7 +132,7 @@ useEffect(() => {
                 defaultValue={
                   basicInfo?.sex
                     ? basicInfo.sex.charAt(0).toUpperCase() +
-                      basicInfo.sex.slice(1)
+                    basicInfo.sex.slice(1)
                     : ""
                 }
                 disabled
@@ -344,47 +344,47 @@ useEffect(() => {
               </>
             )}
 
-           {medical?.preferredPharmacies?.map((pharmacy: any, index: number) => (
-  <div key={pharmacy._id || index}>
-    <h3 className="text-[#00598D] text-[18px] font-semibold mb-5">
-      Your Pharmacy Details {index + 1}
-    </h3>
+            {medical?.preferredPharmacies?.map((pharmacy: any, index: number) => (
+              <div key={pharmacy._id || index}>
+                <h3 className="text-[#00598D] text-[18px] font-semibold mb-5">
+                  Your Pharmacy Details {index + 1}
+                </h3>
 
-    <div className="mb-5">
-      <Input
-        label="Pharmacy Name"
-        defaultValue={pharmacy?.pharmacyName}
-        disabled
-      />
-    </div>
+                <div className="mb-5">
+                  <Input
+                    label="Pharmacy Name"
+                    defaultValue={pharmacy?.pharmacyName}
+                    disabled
+                  />
+                </div>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-      <Input
-        label="Address"
-        defaultValue={pharmacy?.address}
-        disabled
-      />
-      <Input
-        label="City"
-        defaultValue={pharmacy?.city}
-        disabled
-      />
-    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                  <Input
+                    label="Address"
+                    defaultValue={pharmacy?.address}
+                    disabled
+                  />
+                  <Input
+                    label="City"
+                    defaultValue={pharmacy?.city}
+                    disabled
+                  />
+                </div>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-      <Input
-        label="State"
-        defaultValue={pharmacy?.state}
-        disabled
-      />
-      <Input
-        label="Zip"
-        defaultValue={pharmacy?.zip}
-        disabled
-      />
-    </div>
-  </div>
-))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                  <Input
+                    label="State"
+                    defaultValue={pharmacy?.state}
+                    disabled
+                  />
+                  <Input
+                    label="Zip"
+                    defaultValue={pharmacy?.zip}
+                    disabled
+                  />
+                </div>
+              </div>
+            ))}
 
 
             <div>
@@ -421,7 +421,7 @@ useEffect(() => {
   );
 }
 
-function Input({ label, defaultValue ,disabled}: any) {
+function Input({ label, defaultValue, disabled }: any) {
   return (
     <div>
       <label className="text-base font-medium text-[#012047] mb-1 block">

@@ -167,18 +167,31 @@ export default function Consultation() {
   />
 ) : (
   <div className="w-[80px] h-[80px] rounded-full bg-gray-300 flex items-center justify-center border-[2px] border-[#D1D5DB]">
-    <span className="text-black font-semibold text-lg uppercase">
-      {item?.patient?.name
+    {item?.patient?.name?item?.patient?.name
         ?.split(" ")
         .map((n: string) => n[0])
         .slice(0, 2)
-        .join("") || ""}
-    </span>
+        .join(""):
+    <span className="text-black font-semibold text-lg uppercase">
+      {item?.intakeForm?.basicInfoComplete?.firstName?.[0]}
+      {item?.intakeForm?.basicInfoComplete?.lastName?.[0]}
+      {/* {item?.patient?.name
+        ?.split(" ")
+        .map((n: string) => n[0])
+        .slice(0, 2)
+        .join("") || ""} */}
+    </span>}
   </div>
 )}
                   <div>
-                    <h3 className="text-lg font-semibold">
-                      {item?.patient?.name ?? ""}
+                    <h3 className="text-lg font-semibold capitalize">
+                      {/* {item?.patient?.name ?? ""} */}
+                      {item?.patient?.name?item?.patient?.name:
+                      <>
+{
+  `${item?.intakeForm?.basicInfoComplete?.firstName || ""} ${item?.intakeForm?.basicInfoComplete?.lastName || ""}`
+}                      </>
+                      }
                     </h3>
                     <p className="text-sm text-gray-500">
                       {item?.patient?.age ?? ""} years • {item?.patient?.gender}
