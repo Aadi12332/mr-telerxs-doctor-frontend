@@ -4,49 +4,70 @@ import carriericon from "../assets/carriericon.svg";
 import trackingicon from "../assets/trackingicon.svg";
 import locationmodalicon from "../assets/localtionmodalicon.svg";
 
-const ORDER_INFO = [
+const getOrderInfo = (order: any) => [
   {
     label: "Medicine",
-    value: "Albuterol Inhaler",
+    value: order?.items?.[0]?.medicationName ?? "N/A",
     width: "lg:w-[25%] w-[45%]",
   },
   {
     label: "Pharmacy",
-    value: "CVS Pharmacy–Main St",
+    value: "CVS Pharmacy–Main St", // API me pharmacy field nahi hai, static rakhein ya backend se mangao
     width: "lg:w-[30%] w-[45%]",
   },
   {
     label: "Order Date",
-    value: "2025-12-06",
+    value: order?.last_updated
+      ? new Date(order.last_updated).toISOString().split("T")[0]
+      : "N/A",
     width: "lg:w-[20%] w-[45%]",
   },
   {
     label: "Est. Delivery",
-    value: "2025-12-08",
-    width: "lg:w-[17%] w-[45%] ",
+    value: order?.estimated_message ?? "N/A", // API me date nahi, message hai
+    width: "lg:w-[17%] w-[45%]",
   },
 ];
 
-const TRACKING_INFO = [
+const getTrackingInfo = (order: any) => [
   {
     icon: trackingicon,
     label: "Tracking Number",
-    value: "TRK-8901234567",
+    value: order?.tracking_number ?? "N/A",
     width: "lg:w-[33%] sm:w-[45%]",
   },
   {
     icon: carriericon,
     label: "Carrier",
-    value: "FedEx",
+    value: order?.shipments?.[0]?.carrier_title ?? "N/A",
     width: "lg:w-[23%] sm:w-[45%]",
   },
   {
     icon: locationmodalicon,
     label: "Current Location",
-    value: "Distribution Center – Chicago",
+    value: `${order?.shippingAddress?.city ?? ""} – ${order?.shippingAddress?.state ?? ""}`.trim() || "N/A",
     width: "lg:w-[37%] w-[100%]",
   },
 ];
+
+const mapApiStatus = (apiStatus: string): OrderStatus => {
+  switch (apiStatus?.toLowerCase()) {
+    case "complete":
+    case "delivered":
+      return "Delivered";
+    case "shipped":
+    case "in_transit":
+      return "In Transit";
+    case "pending":
+    case "processing":
+      return "Processing";
+    case "cancelled":
+    case "canceled":
+      return "Cancelled";
+    default:
+      return "Processing";
+  }
+};
 
 const getTimelineColumns = (status: OrderStatus) => {
   if (status === "Processing") {
@@ -251,6 +272,7 @@ const getTimelineColumns = (status: OrderStatus) => {
 type OrderTrackingModalProps = {
   status: OrderStatus;
   onClose: () => void;
+  order: any;
 };
 
 export type OrderStatus = "In Transit" | "Delivered" | "Processing" | "Cancelled"|string;
@@ -272,8 +294,13 @@ export const STATUS_STYLES_bg: Record<OrderStatus, string> = {
 export default function OrderTrackingModal({
   status,
   onClose,
+  order,
 }: OrderTrackingModalProps) {
-  const TIMELINE_COLUMNS = getTimelineColumns(status);
+  const mappedStatus: OrderStatus = mapApiStatus(order?.order_status ?? status);
+  const TIMELINE_COLUMNS = getTimelineColumns(mappedStatus);
+  const ORDER_INFO = getOrderInfo(order);
+  const TRACKING_INFO = getTrackingInfo(order);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
       <div className="bg-white max-h-[100vh] overflow-auto scroll-hide w-[100vw] lg:p-6 p-3">
@@ -288,25 +315,28 @@ export default function OrderTrackingModal({
 
         <div
           className={`xl:rounded-[20px] rounded-lg xl:px-16 sm:px-5 p-3 xl:py-12 sm:py-5 ${
-            STATUS_STYLES_bg[status as OrderStatus] || "bg-gray-100"
+            STATUS_STYLES_bg[mappedStatus] || "bg-gray-100"
           }`}
         >
           <div className="flex justify-between md:items-center md:flex-row flex-col md:gap-2 gap-4">
             <div className="flex-1">
               <div className="flex items-center xl:max-w-[500px] max-w-[400px] w-full justify-between">
                 <p className="xl:text-[32px] sm:text-[24px] text-[20px] font-medium text-[#000]">
-                  ORD-2025-001
+                  {order?.orderNumber || "N/A"}
                 </p>
                 <span
                   className={`text-white px-4 py-1 rounded-full xl:text-[15px] text-[13px] font-medium ${
-                    STATUS_STYLES[status as OrderStatus] || "bg-gray-400"
+                    STATUS_STYLES[mappedStatus] || "bg-gray-400"
                   }`}
                 >
-                  {status}
+                  {/* ✅ API ka original readable status show karo */}
+                  {order?.order_status_description
+                    ? mappedStatus
+                    : status}
                 </span>
               </div>
-              <p className="xl:text-[24px]  sm:text-[20px] text-[16px] text-[#00000080]">
-                Sarah Johnson
+              <p className="xl:text-[24px] sm:text-[20px] text-[16px] text-[#00000080]">
+                {order?.shippingAddress?.fullName || "Patient Name"}
               </p>
             </div>
 
@@ -315,7 +345,8 @@ export default function OrderTrackingModal({
                 Expected Delivery
               </p>
               <p className="xl:text-[28px] sm:text-[24px] text-[20px] text-[#000]">
-                2025-12-20
+                {/* ✅ API me estimated date nahi, message use karo */}
+                {order?.estimated_message || "Tracking available below"}
               </p>
             </div>
           </div>
@@ -352,6 +383,7 @@ export default function OrderTrackingModal({
             ))}
           </div>
 
+          {/* ──── TIMELINE — bilkul same, sirf mappedStatus pass karo ──── */}
           <p className="text-[24px] font-semibold text-[#000] mt-10 mb-4">
             Delivery Timeline
           </p>
@@ -366,7 +398,7 @@ export default function OrderTrackingModal({
                   {colIndex !== 0 && (
                     <div
                       className={`absolute -top-[110px] md:hidden left-[100px] md:left-1/2 -translate-x-1/2 w-[4px] h-[93px] rounded-full ${
-                        status === "Cancelled" ? "bg-black" : col.lineColor
+                        mappedStatus === "Cancelled" ? "bg-black" : col.lineColor
                       }`}
                     />
                   )}
@@ -382,7 +414,6 @@ export default function OrderTrackingModal({
                           alt=""
                           className="xl:w-[47px] w-[30px]"
                         />
-
                         <div className="xl:w-[250px] w-[200px]">
                           <p
                             className={`xl:text-[26px] sm:text-[22px] text-[18px] font-medium ${
@@ -399,7 +430,7 @@ export default function OrderTrackingModal({
 
                       {stepIndex === 0 && (
                         <div
-                          className={`w-[4px] h-[93px] ${col.lineColor} rounded-full relative left-[100px] md:left-[unset] `}
+                          className={`w-[4px] h-[93px] ${col.lineColor} rounded-full relative left-[100px] md:left-[unset]`}
                         />
                       )}
                     </div>
@@ -407,9 +438,9 @@ export default function OrderTrackingModal({
                 </div>
               ))}
             </div>
-            {status === "Cancelled" && (
+            {mappedStatus === "Cancelled" && (
               <p className="text-[#DD2424] lg:text-[26px] sm:text-xl text-base mt-6 text-end">
-                Cancellation Reason: Patient requested cancellation
+                Cancellation Reason: Patient requested cancellation
               </p>
             )}
           </div>

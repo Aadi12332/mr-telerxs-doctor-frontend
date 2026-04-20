@@ -225,6 +225,7 @@ export const postNotesApi = (payload:any) => {
     
   );
 };
+
 export const updateNoteApi = (id:any,payload:any) => {
   return axiosInstance.put(
     `/api/v1/patient/intakeFormNotes/${id}/`,
@@ -240,6 +241,7 @@ export const deleteNoteApi = (id:any) => {
 export const getUsersApi = () => {
   return axios.get(`https://jsonplaceholder.typicode.com/users`);
 };
+
 export const createNotesApi = () => {
   return axiosInstance.post(
     "/api/v1/patient/intakeFormNotes/create",{
@@ -248,6 +250,7 @@ export const createNotesApi = () => {
     }
   );
 };
+
 export const putNotesApi = () => {
   return axiosInstance.put(
     "/api/v1/patient/intakeFormNotes/",{
@@ -256,6 +259,7 @@ export const putNotesApi = () => {
     }
   );
 };
+
 export const updateNotification = ( payload: any) => {
       const auth = localStorage.getItem("auth");
     const doctorId = auth ? JSON.parse(auth).doctor : null;
@@ -265,6 +269,7 @@ console.log({auth,doctorId})
     payload
   );
 };
+
 export const deleteNotesApi = () => {
   return axiosInstance.delete(
     "/api/v1/patient/intakeFormNotes/"
@@ -355,6 +360,7 @@ export const getSpecializationsApi = ({
     }
   });
 };
+
  export const getDoctorConsultations = (doctorId: string) => {
   return axiosInstance.get(`api/v1/doctor/consultations/${doctorId}`);
 };
@@ -363,6 +369,15 @@ export const getSpecializationsApi = ({
   return axiosInstance.get(`api/v1/patient/notifications/`);
 };
 
+ export const getOrderList = () => {
+  return axiosInstance.get(`api/v1/doctor/order/getOrdersForDoctor`);
+};
+
+export const getOrdersByDoctorApi = (orderId: string) => {
+  return axiosInstance.get(
+    `/api/v1/doctor/order/orders/${orderId}`
+  );
+};
 
 export const createPrescriptionApi = (payload: {
   doctor: string;
@@ -378,4 +393,20 @@ export const createPrescriptionApi = (payload: {
   patientName: string;
 }) => {
   return axiosInstance.post("/api/v1/patient/prescriptions/create", payload);
+};
+
+export const sendPharmacyApi = (payload: {
+  doctor: string;
+  patientId: string;
+  medicine: string;
+  brand: string;
+  description: string;
+  duration: string;
+  frequency: string;
+  refillsAllowed: number|string;
+  instruction: string;
+  warning: string;
+  patientName: string;
+}) => {
+  return axiosInstance.post("/api/v1/doctor/order/ordersByDoctorWithPrescription", payload);
 };

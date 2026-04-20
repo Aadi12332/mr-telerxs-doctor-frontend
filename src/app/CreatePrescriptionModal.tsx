@@ -4,7 +4,7 @@ import sendparmacy from "../assets/sendparmacyicon.svg";
 import { useState } from "react";
 import CustomSelect from "../components/common/customSelect";
 import toast from "react-hot-toast";
-import { createPrescriptionApi } from "../api/auth.api";
+import { createPrescriptionApi, sendPharmacyApi } from "../api/auth.api";
 
 type Props = {
   onClose: () => void;
@@ -44,6 +44,7 @@ export default function CreatePrescriptionsModal({
   const [patientName, setPatientName] = useState(selectedPatientName ?? "");
 
   const navigate = useNavigate();
+
   const handleSubmit = async () => {
     if (!dosage || !duration || !frequency) {
       alert("Please fill required fields");
@@ -78,7 +79,49 @@ export default function CreatePrescriptionsModal({
       setLoading(false);
     }
   };
-  console.log({ patientName })
+
+  console.log({patientName})
+
+  const handleSubmitPharmacy = async () => {
+  if (!dosage || !duration || !frequency) {
+    alert("Please fill required fields");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const payload = {
+      doctor: doctorId || selectedConsultation?.doctor?.id,
+      patientId: patientId || selectedConsultation?.patient?.id,
+      medicine: medicine,
+      brand: "Generic",
+      description: dosage,
+      duration,
+      frequency,
+      refillsAllowed: refill,
+      instruction,
+      warning,
+      patientName,
+    };
+
+    const res = await sendPharmacyApi(payload);
+
+    if (res.status === 200 || res.status === 201) {
+      toast.success(res.data?.message || "Prescription sent successfully");
+      navigate("/consultations");
+      onClose();
+    } else {
+      toast.error(res.data?.message || "Something went wrong");
+    }
+  } catch (err: any) {
+    console.log(err);
+    toast.error(err?.response?.data?.message || "API Error");
+  } finally {
+    setLoading(false);
+  }
+};
+
   return (
     <div className="fixed inset-0 z-50">
       <div className="bg-white w-full lg:p-6 p-3 relative h-svh overflow-auto scroll-hide !pt-20">
@@ -210,7 +253,7 @@ export default function CreatePrescriptionsModal({
             {loading ? "Creating..." : "Issue Prescription"}
           </button>
 
-          <button className="flex items-center justify-center gap-3 h-[48px] lg:h-[77px] w-full rounded-lg px-2 lg:rounded-[20px] text-base lg:text-[26px] font-medium text-white bg-[linear-gradient(270deg,#308D32_0%,#86C987_100%)]">
+          <button onClick={handleSubmitPharmacy} className="flex items-center justify-center gap-3 h-[48px] lg:h-[77px] w-full rounded-lg px-2 lg:rounded-[20px] text-base lg:text-[26px] font-medium text-white bg-[linear-gradient(270deg,#308D32_0%,#86C987_100%)]">
             <img src={sendparmacy} alt="" />
             Send to Pharmacy
           </button>

@@ -72,7 +72,6 @@ const STATUS_OPTIONS = [
 
 export default function Consultation() {
   const { auth } = useAuth();
-
   const [specialization, setSpecialization] = useState("");
   const [openPrescription, setOpenPrescription] = useState(false);
   const [openIntakeForm, setOpenIntakeForm] = useState(false);
@@ -87,6 +86,7 @@ export default function Consultation() {
   const debouncedSearch = useDebounce(search, 500);
   const doctorId = auth?.doctor?._id;
   const LIMIT = 10;
+
   const fetchConsultations = async () => {
     setLoading(true);
     try {
@@ -103,10 +103,13 @@ export default function Consultation() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     if (!doctorId) return;
     fetchConsultations();
   }, [doctorId, specialization, debouncedSearch, page]);
+
+
   return (
     <div className="lg:min-h-[calc(100vh-160px)] min-h-[calc(100vh-70px)] overflow-auto scroll-hide flex flex-col justify-between">
       <div className="w-full max-w-[1440px] mx-auto lg:px-6 px-3 lg:pt-[94px] pt-10">
@@ -156,42 +159,47 @@ export default function Consultation() {
             >
               <div className="flex justify-between items-start gap-5 md:flex-row flex-col">
                 <div className="flex gap-4 items-center">
-                {item?.patient?.profilePicture ? (
-  <img
-    src={item?.patient?.profilePicture}
-    alt="profile"
-    className="w-[80px] h-[80px] rounded-full object-cover border-[2px] border-[#D1D5DB]"
-    onError={(e) => {
-      (e.currentTarget as HTMLImageElement).style.display = "none";
-    }}
-  />
-) : (
-  <div className="w-[80px] h-[80px] rounded-full bg-gray-300 flex items-center justify-center border-[2px] border-[#D1D5DB]">
-    {item?.patient?.name?item?.patient?.name
-        ?.split(" ")
-        .map((n: string) => n[0])
-        .slice(0, 2)
-        .join(""):
-    <span className="text-black font-semibold text-lg uppercase">
-      {item?.intakeForm?.basicInfoComplete?.firstName?.[0]}
-      {item?.intakeForm?.basicInfoComplete?.lastName?.[0]}
-      {/* {item?.patient?.name
-        ?.split(" ")
-        .map((n: string) => n[0])
-        .slice(0, 2)
-        .join("") || ""} */}
-    </span>}
-  </div>
-)}
+                  {item?.patient?.profilePicture ? (
+                    <img
+                      src={item?.patient?.profilePicture}
+                      alt="profile"
+                      className="w-[80px] h-[80px] rounded-full object-cover border-[2px] border-[#D1D5DB]"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display =
+                          "none";
+                      }}
+                    />
+                  ) : (
+                    <div className="w-[80px] h-[80px] rounded-full bg-gray-300 flex items-center justify-center border-[2px] border-[#D1D5DB]">
+                      {item?.patient?.name ? (
+                        item?.patient?.name
+                          ?.split(" ")
+                          .map((n: string) => n[0])
+                          .slice(0, 2)
+                          .join("")
+                      ) : (
+                        <span className="text-black font-semibold text-lg uppercase">
+                          {item?.intakeForm?.basicInfoComplete?.firstName?.[0]}
+                          {item?.intakeForm?.basicInfoComplete?.lastName?.[0]}
+                          {/* {item?.patient?.name
+                          ?.split(" ")
+                          .map((n: string) => n[0])
+                          .slice(0, 2)
+                          .join("") || ""} */}
+                        </span>
+                      )}
+                    </div>
+                  )}
                   <div>
                     <h3 className="text-lg font-semibold capitalize">
                       {/* {item?.patient?.name ?? ""} */}
-                      {item?.patient?.name?item?.patient?.name:
-                      <>
-{
-  `${item?.intakeForm?.basicInfoComplete?.firstName || ""} ${item?.intakeForm?.basicInfoComplete?.lastName || ""}`
-}                      </>
-                      }
+                      {item?.patient?.name ? (
+                        item?.patient?.name
+                      ) : (
+                        <>
+                          {`${item?.intakeForm?.basicInfoComplete?.firstName || ""} ${item?.intakeForm?.basicInfoComplete?.lastName || ""}`}{" "}
+                        </>
+                      )}
                     </h3>
                     <p className="text-sm text-gray-500">
                       {item?.patient?.age ?? ""} years • {item?.patient?.gender}
@@ -208,9 +216,10 @@ export default function Consultation() {
 
                   <span
                     onClick={() => {
-                    setSelectedConsultation(item);
-                      
-                      setOpenNote(true);}}
+                      setSelectedConsultation(item);
+
+                      setOpenNote(true);
+                    }}
                     className="flex items-center gap-2 px-4 py-1 rounded-full cursor-pointer bg-sky-100 text-sky-700 text-sm"
                   >
                     <img src={noteicon} className="w-4" /> Note
@@ -251,8 +260,14 @@ export default function Consultation() {
 
                   <p className="text-sm text-gray-400 mt-4">Contact</p>
                   <div className="flex gap-3 mt-1">
-                    <span className="flex items-center gap-2"><img src={callicon} className="w-5" /> {item?.patient?.phone ?? ""} </span>
-                    <span className="flex items-center gap-2"><img src={mailicon} className="w-5" /> {item?.patient?.email ?? ""} </span>
+                    <span className="flex items-center gap-2">
+                      <img src={callicon} className="w-5" />{" "}
+                      {item?.patient?.phone ?? ""}{" "}
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <img src={mailicon} className="w-5" />{" "}
+                      {item?.patient?.email ?? ""}{" "}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -264,10 +279,12 @@ export default function Consultation() {
                     setSelectedConsultation(item);
                     setOpenIntakeForm(true);
                   }}
-                  disabled={openingIntake&&selectedConsultation?.id===item.id}
+                  disabled={
+                    openingIntake && selectedConsultation?.id === item.id
+                  }
                   className="flex-1 h-[48px] py-2 rounded-full flex items-center justify-center gap-2 text-white bg-[linear-gradient(90deg,#25AEED_0%,#0A70A7_100%)] disabled:opacity-70"
                 >
-                  {openingIntake&&selectedConsultation?.id===item.id ? (
+                  {openingIntake && selectedConsultation?.id === item.id ? (
                     <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
                     <img src={viewicon} className="w-5" />
@@ -276,10 +293,10 @@ export default function Consultation() {
                 </button>
 
                 <button
-                   onClick={() => {
-                      setSelectedConsultation(item);
-                      setOpenPrescription(true);
-                    }}
+                  onClick={() => {
+                    setSelectedConsultation(item);
+                    setOpenPrescription(true);
+                  }}
                   className="flex-1 h-[48px] py-2 rounded-full flex items-center justify-center gap-2 text-white bg-[linear-gradient(270deg,#308D32_0%,#86C987_100%)]"
                 >
                   <img src={createicon} className="w-5" />
@@ -320,10 +337,12 @@ export default function Consultation() {
         )}
       </div>
 
-      {openNote && <NoteModal onClose={() => setOpenNote(false)} 
+      {openNote && (
+        <NoteModal
+          onClose={() => setOpenNote(false)}
           patient={selectedConsultation}
-        
-        />}
+        />
+      )}
 
       {openPrescription && (
         <CreatePrescriptionsModal
