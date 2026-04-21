@@ -395,18 +395,21 @@ export const createPrescriptionApi = (payload: {
   return axiosInstance.post("/api/v1/patient/prescriptions/create", payload);
 };
 
-export const sendPharmacyApi = (payload: {
-  doctor: string;
-  patientId: string;
-  medicine: string;
-  brand: string;
-  description: string;
-  duration: string;
-  frequency: string;
-  refillsAllowed: number|string;
-  instruction: string;
-  warning: string;
-  patientName: string;
+export const sendPharmacyApi = ({prescriptionData, orderId}: {
+  orderId?:string;
+  prescriptionData: {
+    doctor: string;
+    patientId: string;
+    medicine: string;
+    brand: string;
+    description: string;
+    duration: string;
+    frequency: string;
+    refillsAllowed: number|string;
+    instruction: string;
+    warning: string;
+    patientName: string;
+  }  
 }) => {
-  return axiosInstance.post("/api/v1/doctor/order/ordersByDoctorWithPrescription", payload);
+  return axiosInstance.post("/api/v1/doctor/order/ordersByDoctorWithPrescription", {  orderId, prescriptionData});
 };

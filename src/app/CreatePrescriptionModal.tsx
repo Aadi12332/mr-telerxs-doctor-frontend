@@ -44,7 +44,6 @@ export default function CreatePrescriptionsModal({
   const [patientName, setPatientName] = useState(selectedPatientName ?? "");
 
   const navigate = useNavigate();
-
   const handleSubmit = async () => {
     if (!dosage || !duration || !frequency) {
       alert("Please fill required fields");
@@ -66,6 +65,7 @@ export default function CreatePrescriptionsModal({
         warning,
         patientName
       });
+   
       if (res.status === 201) {
         navigate("/consultations");
         onClose();
@@ -105,7 +105,7 @@ export default function CreatePrescriptionsModal({
       patientName,
     };
 
-    const res = await sendPharmacyApi(payload);
+    const res = await sendPharmacyApi({orderId: selectedConsultation?.id || "", prescriptionData: payload});
 
     if (res.status === 200 || res.status === 201) {
       toast.success(res.data?.message || "Prescription sent successfully");
