@@ -369,8 +369,11 @@ export const getSpecializationsApi = ({
   return axiosInstance.get(`api/v1/patient/notifications/`);
 };
 
- export const getOrderList = () => {
-  return axiosInstance.get(`api/v1/doctor/order/getOrdersForDoctor`);
+export const getOrderList = (params?: any) => {
+  return axiosInstance.get(
+    `api/v1/doctor/order/getOrdersForDoctor`,
+    { params }
+  );
 };
 
 export const getOrdersByDoctorApi = (orderId: string) => {

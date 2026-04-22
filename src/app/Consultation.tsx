@@ -171,24 +171,22 @@ export default function Consultation() {
                     />
                   ) : (
                     <div className="w-[80px] h-[80px] rounded-full bg-gray-300 flex items-center justify-center border-[2px] border-[#D1D5DB]">
-                      {item?.patient?.name ? (
-                        item?.patient?.name
-                          ?.split(" ")
-                          .map((n: string) => n[0])
-                          .slice(0, 2)
-                          .join("")
-                      ) : (
-                        <span className="text-black font-semibold text-lg uppercase">
-                          {item?.intakeForm?.basicInfoComplete?.firstName?.[0]}
-                          {item?.intakeForm?.basicInfoComplete?.lastName?.[0]}
-                          {/* {item?.patient?.name
-                          ?.split(" ")
-                          .map((n: string) => n[0])
-                          .slice(0, 2)
-                          .join("") || ""} */}
-                        </span>
-                      )}
-                    </div>
+  {item?.patient?.name ? (
+    <span className="text-black font-semibold text-lg uppercase">
+      {item?.patient?.name
+        ?.split(" ")
+        .map((n: string) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()}
+    </span>
+  ) : (
+    <span className="text-black font-semibold text-lg uppercase">
+      {item?.intakeForm?.basicInfoComplete?.firstName?.[0]?.toUpperCase()}
+      {item?.intakeForm?.basicInfoComplete?.lastName?.[0]?.toUpperCase()}
+    </span>
+  )}
+</div>
                   )}
                   <div>
                     <h3 className="text-lg font-semibold capitalize">

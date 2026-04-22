@@ -80,8 +80,6 @@ export default function CreatePrescriptionsModal({
     }
   };
 
-  console.log({patientName})
-
   const handleSubmitPharmacy = async () => {
   if (!dosage || !duration || !frequency) {
     alert("Please fill required fields");
@@ -105,8 +103,7 @@ export default function CreatePrescriptionsModal({
       patientName,
     };
 
-    const res = await sendPharmacyApi({orderId: selectedConsultation?.id || "", prescriptionData: payload});
-
+    const res = await sendPharmacyApi({orderId: selectedConsultation?.order?._id || "", prescriptionData: payload});
     if (res.status === 200 || res.status === 201) {
       toast.success(res.data?.message || "Prescription sent successfully");
       navigate("/consultations");
@@ -121,6 +118,8 @@ export default function CreatePrescriptionsModal({
     setLoading(false);
   }
 };
+
+console.log({"Selected Consultation:": selectedConsultation}, selectedConsultation?.order?._id);
 
   return (
     <div className="fixed inset-0 z-50">

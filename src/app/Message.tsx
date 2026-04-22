@@ -74,7 +74,6 @@ export default function MedicineOrder() {
     fetchUsers();
     handleNotification();
   }, []);
-  console.log(notification);
   useEffect(() => {
     if (!activeChat) return;
 
