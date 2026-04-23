@@ -82,7 +82,7 @@ export default function Consultation() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [pages, setPages] = useState(1);
   const debouncedSearch = useDebounce(search, 500);
   const doctorId = auth?.doctor?._id;
   const LIMIT = 10;
@@ -98,7 +98,7 @@ export default function Consultation() {
         limit: LIMIT,
       });
       setConsultations(res.data.data.consultations || []);
-      setTotalPages(res.data.data.pagination.total || 1);
+      setPages(res.data.data.pagination.pages || 1);
     } finally {
       setLoading(false);
     }
@@ -310,7 +310,7 @@ export default function Consultation() {
           )}
         </div>
 
-        {(consultationsAPI ?? []).length > 0 && (
+        {pages > 1 && (
           <div className="flex justify-center items-center gap-4 mt-6 mb-5">
             <button
               disabled={page === 1}
@@ -321,11 +321,11 @@ export default function Consultation() {
             </button>
 
             <span className="text-sm">
-              Page {page} of {totalPages}
+              Page {page} of {pages}
             </span>
 
             <button
-              disabled={page === totalPages}
+              disabled={page === pages}
               onClick={() => setPage((p) => p + 1)}
               className="px-4 py-2 rounded-full border disabled:opacity-50"
             >

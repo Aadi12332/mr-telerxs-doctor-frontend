@@ -11,11 +11,6 @@ const getOrderInfo = (order: any) => [
     width: "lg:w-[25%] w-[45%]",
   },
   {
-    label: "Pharmacy",
-    value: "CVS Pharmacy–Main St", // API me pharmacy field nahi hai, static rakhein ya backend se mangao
-    width: "lg:w-[30%] w-[45%]",
-  },
-  {
     label: "Order Date",
     value: order?.last_updated
       ? new Date(order.last_updated).toISOString().split("T")[0]
@@ -24,8 +19,8 @@ const getOrderInfo = (order: any) => [
   },
   {
     label: "Est. Delivery",
-    value: order?.estimated_message ?? "N/A", // API me date nahi, message hai
-    width: "lg:w-[17%] w-[45%]",
+    value: order?.estimated_message ?? "N/A",
+    width: "lg:w-[45%] w-[45%]",
   },
 ];
 
@@ -304,24 +299,25 @@ export default function OrderTrackingModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
       <div className="bg-white max-h-[100vh] overflow-auto scroll-hide w-[100vw] lg:p-6 p-3">
-        <div className="flex justify-end items-start mb-4">
+        <div className="flex justify-between gap-2 items-center mb-4">
+          <p className="px-2 py-1 rounded-lg bg-green-300">Note: {order.order_status_description}</p>
           <button
             onClick={onClose}
-            className="border border-[#0000004D] px-5 sm:py-2 py-1.5 rounded-[8px] sm:text-[20px] text-base"
+            className="border border-[#0000004D] px-5 sm:py-2 py-1.5 rounded-[8px] sm:text-[16px] text-sm"
           >
             Hide
           </button>
         </div>
 
         <div
-          className={`xl:rounded-[20px] rounded-lg xl:px-16 sm:px-5 p-3 xl:py-12 sm:py-5 ${
+          className={`xl:rounded-[20px] rounded-lg xl:px-8 sm:px-5 p-3 xl:py-8 sm:py-5 ${
             STATUS_STYLES_bg[mappedStatus] || "bg-gray-100"
           }`}
         >
           <div className="flex justify-between md:items-center md:flex-row flex-col md:gap-2 gap-4">
             <div className="flex-1">
               <div className="flex items-center xl:max-w-[500px] max-w-[400px] w-full justify-between">
-                <p className="xl:text-[32px] sm:text-[24px] text-[20px] font-medium text-[#000]">
+                <p className="xl:text-[28px] sm:text-[24px] text-[20px] font-medium text-[#000]">
                   {order?.orderNumber || "N/A"}
                 </p>
                 <span
@@ -329,23 +325,21 @@ export default function OrderTrackingModal({
                     STATUS_STYLES[mappedStatus] || "bg-gray-400"
                   }`}
                 >
-                  {/* ✅ API ka original readable status show karo */}
                   {order?.order_status_description
                     ? mappedStatus
                     : status}
                 </span>
               </div>
-              <p className="xl:text-[24px] sm:text-[20px] text-[16px] text-[#00000080]">
+              <p className="xl:text-[20px] sm:text-[18px] text-[16px text-[#00000080]">
                 {order?.shippingAddress?.fullName || "Patient Name"}
               </p>
             </div>
 
             <div className="md:text-right">
-              <p className="xl:text-[24px] sm:text-[20px] text-[16px] text-[#00000080]">
+              <p className="xl:text-[24px] sm:text-[20px] text-[16px] font-medium text-[#000]">
                 Expected Delivery
               </p>
-              <p className="xl:text-[28px] sm:text-[24px] text-[20px] text-[#000]">
-                {/* ✅ API me estimated date nahi, message use karo */}
+              <p className="xl:text-[20px] sm:text-[18px] text-[16px] text-[#00000080]">
                 {order?.estimated_message || "Tracking available below"}
               </p>
             </div>

@@ -42,7 +42,7 @@ export default function CreatePrescriptionsModal({
   const [loading, setLoading] = useState(false);
   const [medicine, setMedicine] = useState("");
   const [patientName, setPatientName] = useState(selectedPatientName ?? "");
-
+const hasOrderId = !!selectedConsultation?.order?._id;
   const navigate = useNavigate();
   const handleSubmit = async () => {
     if (!dosage || !duration || !frequency) {
@@ -119,23 +119,37 @@ export default function CreatePrescriptionsModal({
   }
 };
 
-console.log({"Selected Consultation:": selectedConsultation}, selectedConsultation?.order?._id);
-
   return (
     <div className="fixed inset-0 z-50">
-      <div className="bg-white w-full lg:p-6 p-3 relative h-svh overflow-auto scroll-hide !pt-20">
-        <button onClick={onClose} className="absolute right-6 top-6 text-2xl">
-          ✕
-        </button>
+      <div className="bg-white w-full lg:p-5 p-3 relative h-svh overflow-auto scroll-hide flex flex-col justify-between">
+        <div>
+          <div className="flex justify-between gap-2 items-center mb-5">
+        <p
+  className={`px-2 py-1 rounded-lg ${
+    hasOrderId ? "bg-green-300" : "bg-red-300"
+  }`}
+>
+  Note:{" "}
+  {hasOrderId
+    ? "Ready for send to pharmacy"
+    : "Order ID not found, unable to send to pharmacy"}
+</p>
+        <button
+            onClick={onClose}
+            className="border border-[#0000004D] px-5 sm:py-2 py-1.5 rounded-[8px] sm:text-[16px] text-sm"
+          >
+            Hide
+          </button>
+        </div>
 
         <div className="bg-[#E6F5FD] lg:rounded-[20px] rounded-lg lg:p-6 p-3">
           <p className="text-[26px] font-medium text-[#000] mb-4">
             Create Prescription
           </p>
 
-          <div className="grid sm:grid-cols-2 grid-cols-1 gap-5">
+          <div className="grid sm:grid-cols-2 grid-cols-1 gap-3">
             <div>
-              <p className="text-base lg:text-[18px] text-[#00000080] mb-2">
+              <p className="text-sm lg:text-[16px] text-[#00000080] mb-2">
                 Patient Name
               </p>
               <input
@@ -147,7 +161,7 @@ console.log({"Selected Consultation:": selectedConsultation}, selectedConsultati
             </div>
 
             <div>
-              <p className="text-base lg:text-[18px] text-[#00000080] mb-2">
+              <p className="text-sm lg:text-[16px] text-[#00000080] mb-2">
                 Medicine Name
               </p>
               <input
@@ -159,7 +173,7 @@ console.log({"Selected Consultation:": selectedConsultation}, selectedConsultati
             </div>
 
             <div>
-              <p className="text-base lg:text-[18px] text-[#00000080] mb-2">
+              <p className="text-sm lg:text-[16px] text-[#00000080] mb-2">
                 Dosage
               </p>
               <input
@@ -171,7 +185,7 @@ console.log({"Selected Consultation:": selectedConsultation}, selectedConsultati
             </div>
 
             <div>
-              <p className="text-base lg:text-[18px] text-[#00000080] mb-2">
+              <p className="text-sm lg:text-[16px] text-[#00000080] mb-2">
                 Duration
               </p>
               <input
@@ -183,7 +197,7 @@ console.log({"Selected Consultation:": selectedConsultation}, selectedConsultati
             </div>
 
             <div>
-              <p className="text-base lg:text-[18px] text-[#00000080] mb-2">
+              <p className="text-sm lg:text-[16px] text-[#00000080] mb-2">
                 Frequency
               </p>
 
@@ -200,7 +214,7 @@ console.log({"Selected Consultation:": selectedConsultation}, selectedConsultati
             </div>
 
             <div>
-              <p className="text-base lg:text-[18px] text-[#00000080] mb-2">
+              <p className="text-sm lg:text-[16px] text-[#00000080] mb-2">
                 Refills Allowed
               </p>
 
@@ -217,8 +231,8 @@ console.log({"Selected Consultation:": selectedConsultation}, selectedConsultati
             </div>
           </div>
 
-          <div className="mt-5">
-            <p className="text-base lg:text-[18px] text-[#00000080] mb-2">
+          <div className="mt-3">
+            <p className="text-sm lg:text-[16px] text-[#00000080] mb-2">
               Instructions for Patient
             </p>
             <textarea
@@ -229,8 +243,8 @@ console.log({"Selected Consultation:": selectedConsultation}, selectedConsultati
             />
           </div>
 
-          <div className="mt-5">
-            <p className="text-base lg:text-[18px] text-[#00000080] mb-2">
+          <div className="mt-2">
+            <p className="text-sm lg:text-[16px] text-[#00000080] mb-2">
               Disclaimers / Warnings
             </p>
             <textarea
@@ -241,21 +255,30 @@ console.log({"Selected Consultation:": selectedConsultation}, selectedConsultati
             />
           </div>
         </div>
+        </div>
 
-        <div className="flex justify-between sm:gap-6 gap-2 mt-7">
+        <div className="flex justify-between sm:gap-6 gap-2 mt-4">
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="flex items-center justify-center gap-3 h-[48px] lg:h-[77px] w-full rounded-lg px-2 lg:rounded-[20px] text-base lg:text-[26px] font-medium text-white bg-[linear-gradient(90deg,#25AEED_0%,#0A70A7_100%)]"
+            className="flex items-center justify-center gap-3 h-[40px] lg:h-[60px] w-full rounded-lg px-2 lg:rounded-[14px] text-base lg:text-[26px] font-medium text-white bg-[linear-gradient(90deg,#25AEED_0%,#0A70A7_100%)]"
           >
             <img src={createfileicon} alt="" />
             {loading ? "Creating..." : "Issue Prescription"}
           </button>
 
-          <button onClick={handleSubmitPharmacy} className="flex items-center justify-center gap-3 h-[48px] lg:h-[77px] w-full rounded-lg px-2 lg:rounded-[20px] text-base lg:text-[26px] font-medium text-white bg-[linear-gradient(270deg,#308D32_0%,#86C987_100%)]">
-            <img src={sendparmacy} alt="" />
-            Send to Pharmacy
-          </button>
+          <button
+  onClick={handleSubmitPharmacy}
+  disabled={!hasOrderId}
+  className={`flex items-center justify-center gap-3 h-[40px] lg:h-[60px] w-full rounded-lg px-2 lg:rounded-[14px] text-base lg:text-[26px] font-medium text-white ${
+    hasOrderId
+      ? "bg-[linear-gradient(270deg,#308D32_0%,#86C987_100%)] cursor-pointer"
+      : "bg-[linear-gradient(270deg,#308D32_0%,#86C987_100%)] cursor-not-allowed"
+  }`}
+>
+  <img src={sendparmacy} alt="" />
+  Send to Pharmacy
+</button>
         </div>
       </div>
     </div>
